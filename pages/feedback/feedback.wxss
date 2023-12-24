@@ -1,0 +1,47 @@
+/* pages/feedback/feedback.wxss */
+page {
+    font-size: 32rpx;
+    font-family: 'PingFang SC','Helvetica Neue',Helvetica,'Droid Sans Fallback','Microsoft Yahei',sans-serif;
+    background-color: #ffffff;
+  }
+  .remark {
+    margin-top: 5rpx;
+    background-color: #fff;
+    border-bottom: 2rpx #efefef solid;
+  }
+  
+  .remark-title {
+    display: flex;
+    color: #46C6BA;
+    padding: 10rpx 0rpx 40rpx 20rpx;
+  }
+  .remark-title text{
+  color: red;
+  }
+  .inputRemark {
+    padding: 0rpx 20rpx 0rpx 20rpx;
+    width: 90%;
+  }
+  .button {
+    display: flex;
+    justify-content: center;
+    margin-top: 60rpx;
+  }
+  
+  .button{
+    width: 45%;
+    height: 80rpx;
+    line-height: 80rpx;
+    background: #46C6BA;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 32rpx;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    margin-top: 60rpx;
+  }
+  button,button::after {
+    background: none;
+    border: none;
+  }

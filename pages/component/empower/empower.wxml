@@ -1,0 +1,13 @@
+<view class="warrant" wx:if="{{isLogin}}">
+    <view class='white'>
+        <view class='tap'>您还未登录</view>
+        <view class='tip'>请先登录再进行操作</view>
+        <view class='pictrue'></view>
+        <view style='display:flex;'>
+            <button class='no' type="primary" bindtap='noLogin' lang="zh_CN">暂不登录</button>
+            <button class='but' type="primary" bindtap="goLogin">立即登录</button>
+        </view>
+    </view>
+    <view class='mask'></view>
+</view>
+<i-toast id="toast" />

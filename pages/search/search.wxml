@@ -1,0 +1,9 @@
+<!--pages/search/search.wxml-->
+<van-search value="{{ value }}" placeholder="请输入搜索关键词" use-action-slot shape="round" background="#f3f3f3" bind:change="onChange" bind:search="onSearch">
+  <view slot="action" bind:tap="onSearch">搜索</view>
+</van-search>
+<view class="list">
+    <view class="row" wx:for="{{questionList}}" data-id="{{item.id}}" bindtap="question">
+        <view class="question"><text class="type">[{{item.typeName}}] </text> {{item.title}}</view>
+    </view>
+</view>

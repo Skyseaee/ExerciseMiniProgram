@@ -1,0 +1,38 @@
+<!--pages/component/status/status.wxml-->
+<view catchtouchmove class="status-wrap" wx:if="{{showStatus}}">
+    <view class="status-center">
+        <view class="title" style="color:#ff6430;"  wx:if="{{statusOptions.statusPassf==0}}">
+            <text>成绩不合格</text>
+        </view>
+        <view class="title" style="color:#46C6BA;" wx:if="{{statusOptions.statusPassf==1}}">
+            <text>成绩合格</text>
+        </view>
+        <view class="canvas-wrap">
+            <canvas canvasId="status" style="width:100%;"></canvas>
+            <canvas canvasId="status-gap" class="status-gap" style="width:100%;"></canvas>
+            <view class="center" wx:if="{{statusOptions.statusType==0}}">
+                <view>你已答错</view>
+                <view>{{statusOptions.statusError}}题</view>
+            </view>
+            <view class="center" wx:if="{{statusOptions.statusType==1}}">
+                <view>剩余未做</view>
+                <view>{{statusOptions.statusAnswer}}题</view>
+            </view>
+        </view>
+        <view class="content">
+            <view wx:if="{{statusOptions.statusAnswer&&statusOptions.statusType==0}}">未答{{statusOptions.statusAnswer}}题</view>
+            <view style='margin-top:40rpx;'>当前考试得分{{statusOptions.statusScore}}分</view>
+            <view style='margin-bottom:20rpx;'>正确{{statusOptions.statusRight}}道，错误{{statusOptions.statusError}}道</view>
+        </view>
+        <view class="button">
+            <view bindtap="choose_btn" class="btn_border" data-msg="result">查看结果</view>
+            <view bindtap="choose_btn" data-msg="again">重新考试</view>
+            <!-- <view bindtap="choose_btn" data-msg="up">现在交卷</view> -->
+        </view>
+        <!-- <view class="button" wx:if="{{statusOptions.statusType==1}}">
+            <view bindtap="choose_btn" class="btn_border" data-msg="goon">继续答题</view>
+            <view bindtap="choose_btn" data-msg="up">现在交卷</view>
+        </view> -->
+    </view>
+</view>
+

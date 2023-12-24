@@ -1,0 +1,121 @@
+/* pages/result/result.wxss */
+.header{
+    width: 100%;
+    height: 300rpx;
+    background: #46C6BA;
+}
+.result-box{
+    background: #fff;
+    width: 90%;
+    position: absolute;
+    top:50rpx;
+    left:5%;
+    border-radius: 10rpx;
+    box-shadow:1px 1px 6px 1px #DDD;
+    height: 570rpx;
+}
+.rank{
+    display: flex;
+    justify-content: space-between;
+    padding: 30rpx;
+    align-items: center;
+}
+.title-box{
+    height: 50rpx;
+    line-height: 50rpx;
+    width: 80%;
+    display: flex;
+}
+.title{
+    margin-left: 20rpx;
+    font-size: 30rpx;
+    overflow:hidden; 
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    width:90%;
+}
+.title-line{
+    border-left:4px solid #46C6BA;
+}
+.rank-image{
+    width:80rpx;
+    height:80rpx;
+}
+.line{
+    width: 100%;
+    background-color: rgb(143, 142, 142,0.3);
+    height: 1px;
+}
+.result{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30rpx;
+}
+.avatar{
+    display: flex;
+    align-items: center;
+}
+.avatarUrl{
+    width: 130rpx;
+    height: 130rpx;
+    margin-right: 20rpx;
+    border-radius: 50%;
+}
+.nickname{
+    font-weight: bold;
+}
+.point{
+    font-size: 64rpx;
+    color: #46C6BA;
+    font-weight: bold;
+    margin-right: 10rpx;
+}
+.table {
+    border-right: 0;
+    border-bottom: 0;
+    padding: 30rpx;
+}
+.tr {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.th,.td {
+    padding: 10px;
+    border-bottom: 1px solid #dadada;
+    border-right: 1px solid #dadada;
+    text-align: center;
+    width:100%
+}
+.td:nth-child(1){
+    border-left: 1px solid #dadada;
+    color: #4381E3;
+}
+.td:nth-child(2){
+    color: #46C6BA;
+}
+.td:nth-child(3){
+    color: #33c500;
+}
+.th {
+    border-bottom: 1px solid #dadada;
+    border-right: 1px solid #dadada;
+    border-top: 1px solid #dadada;
+}
+.th:nth-child(1){
+    border-left: 1px solid #dadada;
+}
+.see{
+    width: 90%;
+    height: 80rpx;
+    line-height: 80rpx;
+    color: #fff;
+    text-align: center;
+    font-size: 32rpx;
+    background-color: #46C6BA;
+    position: absolute;
+    top: 680rpx;
+    left: 5%;
+    border-radius: 50rpx;
+}

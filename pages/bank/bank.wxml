@@ -1,0 +1,14 @@
+<!--pages/bank/bank.wxml-->
+<view>
+  <view sticky wx:if="{{categoryList.length}}">
+    <view class="m-category">
+      <text class="m-category-word">题<text class="under">库分</text>类</text>
+    </view>
+    <van-cell size="large" center title="{{item.name}}" is-link label="{{item.count}}道 | {{item.start}}" wx:for="{{categoryList}}"  data-id="{{item.id}}" data-name="{{item.name}}" data-time="{{item.q_update_time}}" data-count="{{item.count}}" bind:click="detail">
+      <van-icon slot="icon" name="records" color="#46C6BA" size="35px" class="custom-icon" />
+    </van-cell>
+  </view>
+  <view class="empty" wx:else>
+    <van-empty description="暂无题库"/>
+  </view>
+</view>

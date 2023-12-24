@@ -1,0 +1,31 @@
+<!--pages/point/point.wxml-->
+<view class="point">
+  <view class="title">当前积分</view>
+  <view class="number">{{userInfo.integral}}</view>
+</view>
+<view class="action">
+  <view class="btn" bindtap="goList">
+    <view><van-icon name="orders-o" size="22px" color="#46C6BA"/></view>
+    积分记录
+  </view>
+  <view class="btn" bindtap="goExchange">
+    <view><van-icon name="shop-o" size="22px" color="#46C6BA"/></view>
+    积分兑换
+  </view>
+  <view class="btn" bindtap="goRule">
+    <view><van-icon name="question-o" size="22px" color="#46C6BA"/></view>
+    积分规则
+  </view>
+</view>
+<view class="line"></view>
+<view class="task">
+  <view class="task-box">
+    <view class="task-title">积分任务</view>
+    <view class="cell-g">
+        <van-cell is-link icon="edit" size="large" title="模拟考试" link-type="navigateTo" bind:click="goCategory" />
+        <van-cell is-link icon="play-circle-o" size="large" title="观看激励视频" link-type="navigateTo" bind:click="seeVideo"/>
+    </view>
+  </view>
+</view>
+
+

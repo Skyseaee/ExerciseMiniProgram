@@ -1,0 +1,34 @@
+<!--pages/result/result.wxml-->
+<view>
+    <view class="header"></view>
+    <view class="result-box">
+        <view class="rank" bindtap="goRank">
+            <view class="title-box">
+                <view class="title-line"></view>
+                <view class="title">{{title}}</view> 
+            </view>
+            <image src="/images/rank.png" class="rank-image"></image>
+        </view>
+        <view class="line"></view>
+        <view class="result">
+            <view class="avatar">
+                <image class="avatarUrl" src="{{avatarUrl}}"></image>
+                <view class="nickname">{{nickName}}</view>
+            </view>
+            <view><text class="point">{{score}}</text>分</view>
+        </view>
+        <view class="table">
+            <view class="tr">
+                <view class="th">用时</view>
+                <view class="th">正确数</view>
+                <view class="th">正确率</view>
+            </view>
+            <view class="tr">
+                <view class="td">{{time}}</view>
+                <view class="td">{{green}}</view>
+                <view class="td">{{right}}%</view>
+            </view>
+        </view>
+    </view>
+    <view class="see" data-id="{{record}}" bindtap="getRecordDetail">查看答题解析</view>
+</view>

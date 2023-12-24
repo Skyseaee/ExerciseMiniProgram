@@ -1,0 +1,37 @@
+<!--pages/my/my.wxml-->
+<view class="center-wrap">
+    <view class="topBG">
+        <image class="topImage" src="/images/bg.png"></image>
+        <view class="header" wx:if="{{userInfo.avatarUrl}}">
+          <image class="head" src="{{userInfo.avatarUrl}}"></image>
+          <view class="name">{{userInfo.nickName}}</view>
+        </view>
+        <button hover-class='none' class="btn" bindtap='login' wx:else>
+          <view style='z-index:999;background:c3c3c3;'>
+            <image class='head' style='z-index:9;background:c3c3c3;' src='/images/header.jpg'></image>
+            <view class="name">点击登录</view>
+          </view>
+        </button>
+    </view>
+    <view class="cell-g">
+        <van-cell is-link icon="points" size="large" title="我的积分" link-type="navigateTo" bind:click="goPoint" />
+        <!-- <van-cell is-link icon="send-gift-o" size="large" title="我的激活码" link-type="navigateTo" bind:click="goCode" /> -->
+        <van-cell is-link icon="records" size="large" title="考试记录" link-type="navigateTo" bind:click="goRecord"/>
+        <van-cell is-link icon="setting-o" size="large" title="练习设置" link-type="navigateTo" bind:click="goSetting"/>
+        <van-cell is-link icon="edit" size="large" title="在线签到" link-type="navigateTo" bind:click="goSign"/>
+        <van-cell is-link icon="delete-o" size="large" title="清空缓存" link-type="navigateTo" bind:click="clearStorage"/>
+    </view>
+    <view class="cell-g">
+        <van-cell is-link icon="share-o" size="large" title="分享好友" style="position:relative;">
+            <button openType="share" hover-class="none" class="service-button"></button> 
+        </van-cell>
+        <van-cell is-link icon="comment-o" size="large" title="意见反馈" link-type="navigateTo" bind:click="goFeedback"/>
+        <van-cell is-link icon="service-o" size="large" title="在线客服">
+            <button openType="contact" hover-class="none" class="service-button"></button>
+        </van-cell>
+        <van-cell is-link icon="info-o" size="large" title="关于我们" link-type="navigateTo" bind:click="goAbout"/>
+    </view>
+</view>
+<van-toast id="van-toast" />
+<van-action-sheet show="{{ show }}" actions="{{ actions }}" bind:close="onClose" bind:select="onSelect" bind:cancel="onClose" cancel-text="取消"/>
+<component-empower bindmyevent="onMyEvent" isLogin="{{isLogin}}"></component-empower>

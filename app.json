@@ -1,0 +1,82 @@
+{
+    "pages": [
+        "pages/index/index",
+        "pages/category/category",
+        "pages/activity/activity",
+        "pages/my/my",
+        "pages/search/search",
+        "pages/course/course",
+        "pages/detail/detail",
+        "pages/sign/sign",
+        "pages/setting/setting",
+        "pages/feedback/feedback",
+        "pages/component/moniq/moniq",
+        "pages/component/notice/notice",
+        "pages/component/status/status",
+        "pages/component/empower/empower",
+        "pages/examhome/examhome",
+        "pages/learn/learn",
+        "pages/exam/exam",
+        "pages/bank/bank",
+        "pages/list/list",
+        "pages/errorstar/errorstar",
+        "pages/question/question",
+        "pages/signList/signList",
+        "pages/record/record",
+        "pages/point/point",
+        "pages/result/result",
+        "pages/article/article",
+        "pages/articleDetail/articleDetail",
+        "pages/login/login",
+        "pages/userInfo/userInfo",
+        "pages/rank/rank",
+        "pages/pointList/pointList",
+        "pages/pointRule/pointRule",
+        "pages/exchange/exchange",
+        "pages/code/code"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#46C6BA",
+        "navigationBarTitleText": "智慧考题宝",
+        "navigationBarTextStyle": "white"
+    },
+    "tabBar": {
+        "borderStyle": "black",
+        "backgroundColor": "#ffffff",
+        "color": "#8A8A8A",
+        "selectedColor": "#46C6BA",
+        "list": [{
+                "pagePath": "pages/index/index",
+                "iconPath": "images/first.png",
+                "selectedIconPath": "images/first-selected.png",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/category/category",
+                "iconPath": "images/category.png",
+                "selectedIconPath": "images/category-selected.png",
+                "text": "分类"
+            },
+            {
+                "pagePath": "pages/article/article",
+                "iconPath": "images/news.png",
+                "selectedIconPath": "images/news-selected.png",
+                "text": "资讯"
+            },
+            {
+                "pagePath": "pages/my/my",
+                "iconPath": "images/my.png",
+                "selectedIconPath": "images/my-selected.png",
+                "text": "我的"
+            }
+        ]
+    },
+    "plugins": {
+        "htmltowxml": {
+          "version": "1.4.0",
+          "provider": "wxa51b9c855ae38f3c"
+        }
+      },
+    "sitemapLocation": "sitemap.json"
+}

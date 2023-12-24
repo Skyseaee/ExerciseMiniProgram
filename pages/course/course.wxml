@@ -1,0 +1,20 @@
+<!--pages/course/course.wxml-->
+<van-search value="{{ value }}" placeholder="请输入搜索关键词" use-action-slot shape="round" background="#f3f3f3" bind:change="onChange" bind:search="onSearch">
+  <view slot="action" bind:tap="onSearch">搜索</view>
+</van-search>
+<view class="list">
+    <view>
+        {{firstCategoryName}} 
+        <van-icon name="arrow" /> 
+        <text class="second-cate"> {{secondCategoryName}}</text>
+    </view>
+    <view wx:if="{{thirdCategoryList.length}}">
+        <view class="category" wx:for="{{thirdCategoryList}}" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="goBank">
+        {{item.name}}
+            <van-icon name="arrow"/> 
+        </view>
+    </view>
+    <view class="empty" wx:else>
+        <van-empty description="暂无题库"/>
+    </view>
+</view>

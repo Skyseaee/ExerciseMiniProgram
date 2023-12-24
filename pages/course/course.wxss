@@ -1,0 +1,23 @@
+/* pages/course/course.wxss */
+.list{
+    padding: 30rpx 80rpx 30rpx 30rpx;
+}
+.second-cate{
+    color:#46C6BA;
+    font-weight: 700;
+}
+.category{
+    margin: 30rpx 0;
+    background-color: #f7f8fa;
+    width: 100%;
+    height: 100rpx;
+    line-height: 100rpx;
+    border-radius: 10rpx;
+    padding: 0 30rpx;
+    display: flex;
+    justify-content: space-between;
+}
+.empty{
+    text-align: center;
+    margin-left: 50rpx;
+}

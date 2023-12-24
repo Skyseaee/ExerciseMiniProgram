@@ -1,0 +1,8 @@
+{
+    "usingComponents": {
+        "van-dialog": "/dist/dialog/index",
+        "van-toast": "/dist/toast/index",
+        "van-rate": "/dist/rate/index",
+        "component-status": "../component/status/status"
+    }
+}

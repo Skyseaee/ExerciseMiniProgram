@@ -1,0 +1,47 @@
+/* pages/point/point.wxss */
+page{
+  background-color: #f3f3f3;
+}
+.point{
+  background-color: #46C6BA;
+  height:90px;
+  text-align:center;
+}
+.title{
+  font-size: 30rpx;
+  color: #fff;
+}
+.number{
+  margin-top: 20px;
+  font-size: 50rpx;
+  font-weight: bold;
+  color: #fff;
+}
+.action{
+  display:flex;
+  align-items: center;
+  padding: 20rpx 0;
+  background-color: #fff;
+}
+.btn{
+  display: inline-block;
+  text-align: center;
+  flex: auto;
+}
+.line{
+  width:100%;
+  height:10px;
+  background:#f3f3f3;
+}
+.task{
+  background-color: #f3f3f3;
+  margin-bottom: 20px;
+}
+.task-title{
+  padding: 15px;
+}
+.task-box{
+  margin: 0 20rpx;
+  background-color: #fff;
+  border-radius: 5px;
+}

@@ -1,0 +1,39 @@
+<view class="page">
+    <view class="wrap">
+        <view class="wrap-box">
+            <text class="car">考试题目</text>
+            <view class="title">{{detail.title}}</view>
+        </view>
+        <view class="wrap-box">
+            <text class="car">考题数量</text>
+            <view class="title">共<text class="blue">{{detail.number}}</text>题目</view>
+        </view>
+        <view class="wrap-box">
+            <text class="car">考试时间</text>
+            <view class="title">限时<text class="blue">{{detail.time}}</text>分钟</view>
+        </view>
+        <view class="wrap-box">
+            <text class="car">合格标准</text>
+            <view class="title">
+              满分<text class="blue">{{(detail.radio * detail.r_score) + (detail.multiple * detail.m_score) + (detail.judge * detail.j_score) + (detail.fill * detail.f_score) + (detail.more * detail.more_score)}}</text>分，及格<text class="blue">{{detail.pass}}</text>分
+            </view>
+        </view>
+        <view class="wrap-box">
+            <text class="car">组题规则</text>
+            <view class="title">
+              <view wx:if="{{detail.radio > 0}}">单选题<text class="blue"> {{detail.radio}}</text>道，每道<text class="blue"> {{detail.r_score}}</text>分</view>
+              <view wx:if="{{detail.multiple > 0}}">多选题<text class="blue"> {{detail.multiple}}</text>道，每道<text class="blue"> {{detail.m_score}}</text>分</view>
+              <view wx:if="{{detail.judge > 0}}">判断题<text class="blue"> {{detail.judge}}</text>道，每道<text class="blue"> {{detail.j_score}} </text>分</view>
+              <view wx:if="{{detail.fill > 0}}">填空题<text class="blue"> {{detail.fill}}</text>道，每道<text class="blue"> {{detail.f_score}} </text>分</view>
+              <view wx:if="{{detail.more > 0}}">多项填空题<text class="blue"> {{detail.more}}</text>道，每道<text class="blue"> {{detail.more_score}} </text>分</view>
+            </view>
+        </view>
+        <view class="wrap-box">
+            <text class="car">考试规则</text>
+            <view class="title">{{detail.explain}}</view>
+        </view>
+        <view class="button">
+            <view bindtap="examGo" data-time="{{detail.q_update_time}}" data-ind="0">开始答题</view>
+        </view>
+    </view>
+</view>

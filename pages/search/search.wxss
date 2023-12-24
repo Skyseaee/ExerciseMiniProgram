@@ -1,0 +1,13 @@
+/* pages/search/search.wxss */
+.list{
+    margin: 30rpx 0;
+}
+.row{
+    border-bottom: 1px solid #ececec;
+}
+.question{
+    padding: 30rpx;
+}
+.type{
+    color: #46C6BA;
+}

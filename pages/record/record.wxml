@@ -1,0 +1,33 @@
+<!--pages/record/record.wxml-->
+<view>
+    <view wx:if="{{nodata}}" style='width:100%;text-align:center;margin-top: 80rpx;'>
+        <image src="/images/no-record.png" style='width:300rpx;height:300rpx;'></image>
+    </view>
+    <view wx:if="{{!nodata}}" class="result-box" wx:for="{{recordList}}" wx:key="record">
+        <view class="rank">
+            <view class="title-box">
+                <view class="title-line"></view>
+                <view class="time-b">
+                    <view class="title">{{item.title}}</view>
+                    <view class="time">时间：{{item.add_time}}</view>
+                </view> 
+            </view>
+            <view class="record" data-id="{{item.id}}" bindtap="getRecordDetail">查看记录</view>
+        </view>
+        <view class="line"></view>
+        <view class="table">
+            <view class="tr">
+                <view class="th">用时</view>
+                <view class="th">题目数</view>
+                <view class="th">正确数</view>
+                <view class="th">正确率</view>
+            </view>
+            <view class="tr">
+                <view class="td">{{item.use_time}}</view>
+                <view class="td">{{item.nums}}</view>
+                <view class="td">{{item.greenNum}}</view>
+                <view class="td">{{item.right}}%</view>
+            </view>
+        </view>
+    </view>
+</view>

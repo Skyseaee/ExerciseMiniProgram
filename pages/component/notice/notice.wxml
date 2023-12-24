@@ -1,0 +1,13 @@
+<!--pages/component/notice/notice.wxml-->
+<template name="notice">
+  <view class="notice" wx:if="{{!notice}}">
+    <view class="notice-box">
+        <view class='pictrue'>
+            <image src="/images/notice.png"></image>
+        </view>
+        <view class="word">左右滑动，可以切换上下题</view>
+        <view class="close" bindtap="closeNotice">知道了</view>
+    </view>
+    <view class="mask" catchtouchmove="preventdefault"></view>
+  </view>
+</template>

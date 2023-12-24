@@ -1,0 +1,4 @@
+/* pages/code/code.wxss */
+.copy{
+  width: 50rpx;
+}

@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "van-cell": "/dist/cell/index",
+    "van-toast": "/dist/toast/index",
+    "van-action-sheet": "/dist/action-sheet/index",
+    "component-empower": "../component/empower/empower"
+  },
+  "navigationStyle": "custom"
+}

@@ -1,0 +1,14 @@
+<view>
+  <form>
+    <view class="remark">
+      <text class="remark-title"><text>*</text> 反馈标题:</text>
+      <textarea bindinput="bindTextAreaInputTitle" class="inputRemark" maxlength="100" name="title" placeholder="请输入反馈标题" style="height:120rpx;"></textarea>
+    </view>
+    <view class='remark'>
+      <text class="remark-title"><text>*</text> 反馈内容：</text>
+      <textarea bindinput="bindTextAreaInputContent" class="inputRemark" maxlength="500" name="content" placeholder="请输入反馈内容"></textarea>
+    </view>
+    <button class="button" bindtap="bindsubmit">提交</button>
+  </form>
+</view>
+<i-toast id="toast" />

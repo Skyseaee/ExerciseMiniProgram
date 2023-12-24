@@ -1,0 +1,24 @@
+/* pages/setting/setting.wxss */
+.word-list{
+    display: flex;
+    float: right;
+}
+.right{
+    margin-right: 15rpx;
+}
+.word1{
+    font-size: 28rpx;
+}
+.word2{
+    font-size: 32rpx;
+}
+.word3{
+    font-size: 40rpx;
+}
+.word4{
+    font-size: 46rpx;
+}
+.active-color{
+    font-weight: 700;
+    color: #46C6BA;
+}

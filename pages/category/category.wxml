@@ -1,0 +1,4 @@
+<!--pages/category/category.wxml-->
+<view>
+  <van-tree-select items="{{ items }}" main-active-index="{{ mainActiveIndex }}" active-id="{{ activeId }}" bind:click-nav="onClickNav" bind:click-item="goCategory" height="100%" />
+</view>

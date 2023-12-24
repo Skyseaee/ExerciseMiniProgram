@@ -1,0 +1,33 @@
+/* pages/exchange/exchange.wxss */
+.exchange{
+  border: 1rpx solid #9E9E9E;
+  width: 38%;
+  margin: 15px;
+  padding: 10px;
+  border-radius: 20rpx;
+  text-align: center;
+  line-height: 1.5;
+}
+.image{
+  width: 40px;
+  height: 40px;
+}
+.title{
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.content{
+  font-weight: bold;
+  font-weight: 36rpx;
+  color: #ff9050;
+}
+.btn{
+  margin-top: 10px;
+  background-color: #46C6BA;
+  height: 70rpx;
+  line-height: 70rpx;
+  border-radius: 50px;
+  color: #fff;
+  width: 180rpx;
+  margin: 10px auto 0;
+}

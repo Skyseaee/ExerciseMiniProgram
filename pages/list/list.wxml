@@ -1,0 +1,4 @@
+<!--pages/list/list.wxml-->
+<van-cell-group>
+  <van-cell title="{{item.name}}" label="共{{item.count}}题" wx:for="{{list}}" url="/pages/learn/learn?mode=2&id={{category}}&lid={{item.type}}&type={{type}}&name={{name}}&q_update_time={{q_update_time}}" link_type="reLaunch" is-link></van-cell>
+</van-cell-group>

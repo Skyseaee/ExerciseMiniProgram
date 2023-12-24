@@ -1,0 +1,29 @@
+/* pages/bank/bank.wxss */
+page{
+  background-color:#f3f3f3;
+}
+
+.empty{
+  text-align: center;
+}
+
+.m-category{
+  padding-top: 20rpx;
+  font-size: 40rpx;
+  width: 100%;
+  height: 100rpx;
+  background: #fff;
+  border-bottom: 1px solid #ebedf0;
+}
+
+.m-category-word{
+  margin-left: 40rpx;
+  font-size: 32rpx;
+}
+
+.under{
+  text-decoration:none; 
+  border-bottom:2px solid #46C6BA; 
+  display: inline-block; 
+  padding-bottom:30rpx;
+}

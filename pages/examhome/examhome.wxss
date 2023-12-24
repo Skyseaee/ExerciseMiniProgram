@@ -1,0 +1,76 @@
+.page {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+  }
+  .rank{
+    position: fixed;
+    right: 0;
+    margin-right: 50rpx;
+    margin-top: 40rpx;
+    text-align: center;
+    margin-bottom: 140rpx;
+  }
+  .rank-image{
+    width:100rpx;
+    height:100rpx;
+  }
+  .rank-w{
+    margin-top: -20rpx;
+    color: #a3a3a3;
+  }
+  
+  .wrap {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 50rpx;
+  }
+  
+  .wrap>view {
+    padding-bottom: 10px;
+  }
+  .wrap-box{
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .title {
+    font-size: 30rpx;
+    margin-left: 40rpx;
+    width: 100%;
+  }
+  
+  .car {
+    width: 160rpx;
+    font-size: 30rpx;
+    color: #a3a3a3;
+  }
+  
+  .blue {
+    color: #46C6BA;
+    width: 60rpx;
+    display: inline-table;
+    text-align: center;
+  }
+  
+  .button {
+    display: flex;
+    justify-content: center;
+    margin-top: 60rpx;
+  }
+  
+  .button view {
+    width: 45%;
+    background: #46C6BA;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 32rpx;
+    padding-top: 15rpx;
+    padding-bottom: 15rpx;
+    color: #fff;
+  }
+  
+  .button .green {
+    background: #52c023;
+  }

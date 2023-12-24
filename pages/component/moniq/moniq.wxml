@@ -1,0 +1,609 @@
+<!--pages/component/moniq/moniq.wxml-->
+<!--model 模式 1考试 2练习 3背题-->
+<template name="answer">
+    <view class="all-wrap" wx:if="{{!iconInd}}">
+        <scroll-view scrollY class="scroll">
+            <!--背题模式-->
+            <view class="content-box" wx:if="{{model == 3}}">
+                <view class="question" style="font-size:{{fontSize}}">
+                    <view class="type">
+                        <view>
+                            <image class="type-img" wx:if="{{downContent.type == 1}}" src="/images/danxuan.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 2}}" src="/images/duoxuan.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 3}}" src="/images/panduan.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 4 || downContent.type == 5}}" src="/images/tiankong.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 6}}" src="/images/jianda.png"></image>
+                        </view>
+                        <view>
+                            <text class="number">{{indexInd*1+1}}</text>/{{length}}
+                        </view>
+                    </view>
+                    <view class="line"></view>
+                    <view class="content">
+                        <view class="title">{{downContent.title}}</view>
+                        <!--题目中包含图片-->
+                        <view class="answer-ziyuan" bindtap="preview" data-src="{{downContent.media}}">
+                            <image mode="aspectFit" src="{{downContent.media}}" wx:if="{{downContent.media_type==2}}"></image>
+                        </view>
+                        <view class="options" wx:if="{{downContent.type == 1 || downContent.type == 2 || downContent.type == 3}}">
+                            <view class="option {{ISCN.ISContain(downContent['answerArr'],options[ind]) ? 'green' : ''}}" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}" data-ind="{{ind}}" wx:for="{{downContent.options}}" wx:for-index="ind" wx:for-item="itemName" wx:key="index">
+                                <text>{{options[ind]}}</text>
+                                <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                    <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                </view><!--选项为图片-->
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="comments" style="font-size:{{fontSize}}">
+                    <view class="answer" wx:if="{{downContent.type == '6'}}">
+                        <view>
+                            <view class="difficult">
+                                <view class="b-word d-word">参考答案：</view>
+                                <view class="difficulty">
+                                    <view class="b-word">难度：</view>
+                                    <van-rate value="{{ downContent.difficulty }}" disabled disabled-color="#ffd21e" gutter="2" size='16' />
+                                </view>
+                            </view>
+                            <view class="d-word" wx:if="{{downContent.answer}}">{{downContent.answer}}</view>
+                            <view class="d-word" wx:else>暂无</view>
+                        </view>
+                    </view>
+                    <view class="answer" wx:else>
+                        <view class="answer-box">
+                            <view class="a-word r-line">
+                                <view class="b-word">正确答案：</view>
+                                <view class="c-word">{{downContent.answer}}</view>
+                            </view>
+                            <view class="a-word">
+                                <view class="b-word">您选择的答案：</view>
+                                <view class="e-word">暂无</view>
+                            </view>
+                        </view>
+                        <view class="line"></view>
+                        <view>
+                            <view class="difficult">
+                                <view class="b-word d-word">参考解析：</view>
+                                <view class="difficulty">
+                                    <view class="b-word">难度：</view>
+                                    <van-rate value="{{ downContent.difficulty }}" disabled disabled-color="#ffd21e" gutter="2" size='16' />
+                                </view>
+                            </view>
+                            <view class="d-word" wx:if="{{downContent.comments}}">
+                              <view>{{downContent.comments}}</view>
+                              <image class="comments_img" mode="aspectFit" bindtap="preview" data-src="{{downContent.comments_img}}" wx:if="{{downContent.comments_img}}" src="{{downContent.comments_img}}"></image>
+                            </view>
+                            <view class="d-word" wx:else>暂无</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <!--练习模式-->
+            <view class="content-box" wx:if="{{model == 2}}">
+                <view class="question {{downContent['order']['subup']=='1' || downContent['order']['downAnswer'] ? 'question-x' : ''}}" style="font-size:{{fontSize}}">
+                    <view class="type">
+                        <view>
+                            <image class="type-img" wx:if="{{downContent.type == 1}}" src="/images/danxuan.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 2}}" src="/images/duoxuan.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 3}}" src="/images/panduan.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 4 || downContent.type == 5}}" src="/images/tiankong.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 6}}" src="/images/jianda.png"></image>
+                        </view>
+                        <view>
+                            <text class="number">{{indexInd*1+1}}</text>/{{length}}
+                        </view>
+                    </view>
+                    <view class="line"></view>
+                    <view class="content">
+                        <view class="title">{{downContent.title}}</view>
+                        <!--题目中包含图片-->
+                        <view class="answer-ziyuan" bindtap="preview" data-src="{{downContent.media}}">
+                            <image mode="aspectFit" src="{{downContent.media}}" wx:if="{{downContent.media_type==2}}"></image>
+                        </view>
+                        <!--单选,判断-->
+                        <view class="options" wx:if="{{downContent.type == 1 || downContent.type == 3}}">
+                            <view bindtap="selectAnswer" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}" data-ind="{{options[ind]}}" wx:for="{{downContent.options}}" wx:for-index="ind" wx:for-item="itemName" wx:key="index">
+                                <!--未选择-->
+                                <view class="option" wx:if="{{downContent['order']['downAnswer']!=options[ind]&&!( downContent['answer']==options[ind]&&downContent['order']['downAnswer'] )}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <!--正确选择-->
+                                <view class="option green" wx:if="{{downContent['answer']==options[ind]&&downContent['order']['downAnswer']}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <!--错误选择-->
+                                <view class="option red" wx:if="{{downContent['order']['downAnswer']==options[ind]&&downContent['answer']!=options[ind]}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                            </view>
+                        </view>
+                        <!--单选,判断-->
+                        <!--多选-->
+                        <view class="options" wx:if="{{downContent.type == 2}}">
+                            <view bindtap="selectAnswerMore" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}" data-ind="{{options[ind]}}" wx:for="{{downContent.options}}" wx:for-index="ind" wx:for-item="itemName" wx:key="index">
+                                <!--未提交-->
+                                <view class="option {{downContent['order']['down'][options[ind]]&&downContent['order']['subup']=='0'?'selected':''}}" wx:if="{{downContent['order']['subup']=='0'}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <!--已提交-->
+                                <view class="option" wx:if="{{downContent['order']['subup']=='1'&&downContent['order']['down'][options[ind]]==false&&downContent['answerArr'][0]!=options[ind]&&downContent['answerArr'][1]!=options[ind]&&downContent['answerArr'][2]!=options[ind]&&downContent['answerArr'][3]!=options[ind]&&downContent['answerArr'][4]!=options[ind]&&downContent['answerArr'][5]!=options[ind]&&downContent['answerArr'][6]!=options[ind]&&downContent['answerArr'][7]!=options[ind]&&downContent['answerArr'][8]!=options[ind]&&downContent['answerArr'][9]!=options[ind]}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <view class="option green" wx:if="{{downContent['order']['subup']=='1'&&(downContent['answerArr'][0]==options[ind]||downContent['answerArr'][1]==options[ind]||downContent['answerArr'][2]==options[ind]||downContent['answerArr'][3]==options[ind]||downContent['answerArr'][4]==options[ind]||downContent['answerArr'][5]==options[ind]||downContent['answerArr'][6]==options[ind]||downContent['answerArr'][7]==options[ind]||downContent['answerArr'][8]==options[ind]||downContent['answerArr'][9]==options[ind])}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <view class="option red" wx:if="{{downContent['order']['subup']=='1'&&downContent['order']['down'][options[ind]]==true&&downContent['answerArr'][0]!=options[ind]&&downContent['answerArr'][1]!=options[ind]&&downContent['answerArr'][2]!=options[ind]&&downContent['answerArr'][3]!=options[ind]&&downContent['answerArr'][4]!=options[ind]&&downContent['answerArr'][5]!=options[ind]&&downContent['answerArr'][6]!=options[ind]&&downContent['answerArr'][7]!=options[ind]&&downContent['answerArr'][8]!=options[ind]&&downContent['answerArr'][9]!=options[ind]}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                            </view>
+                        </view>
+                        <view class="submit" wx:if="{{downContent.type == 2 && downContent['order']['subup']!='1'}}">
+                            <view class="s-btn" bindtap="moreSelectSub" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}">提交并查看结果</view>
+                        </view>
+                        <!--多选-->
+                        <!--单项填空-->
+                        <!--未提交-->
+                        <view class="submit" wx:if="{{(downContent.type == 4) && downContent['order']['subup']!='1'}}">
+                            <form bindsubmit="fillSub" report-submit='true'>
+                                <input name="answer" value="{{downContent.answer}}" hidden="true" />
+                                <input name="id" value="{{downContent.id}}" hidden="true" />
+                                <input class="answerIpt" name="subAnswer" type="text"  placeholder="请输入答案"/>
+                                <button class="s-btn" formType="submit" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}">提交并查看结果</button>
+                            </form>
+                        </view>
+                        <!--单项填空-->
+                        <!--多项填空-->
+                        <!--未提交-->
+                        <view class="submit" wx:if="{{(downContent.type == 5) && downContent['order']['subup']!='1'}}">
+                            <form bindsubmit="moreFillSub" report-submit='true'>
+                                <input name="answer" value="{{downContent.answer}}" hidden="true" />
+                                <input name="id" value="{{downContent.id}}" hidden="true" />
+                                <input class="answerIpt" name="subAnswer{{optind}}" type="text"  placeholder="请输入答案" wx:for="{{downContent.options}}" wx:for-index="optind" />
+                                <button class="s-btn" formType="submit" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}">提交并查看结果</button>
+                            </form>
+                        </view>
+                        <!--多项填空-->
+                        <!--简答-->
+                        <view class="submit" wx:if="{{(downContent.type == 6) && downContent['order']['subup']!='1'}}">
+                            <form bindsubmit="showAnswer" report-submit='true'>
+                                <input name="id" value="{{downContent.id}}" hidden="true" />
+                                <button class="s-btn" data-id="{{downContent.id}}" formType="submit">查看答案</button>
+                            </form>
+                        </view>
+                    </view>
+                </view>
+                <view class="comments" style="font-size:{{fontSize}}" wx:if="{{downContent['order']['subup']=='1' && downContent.type == 2}}">
+                    <view class="right" wx:if="{{downContent['answer']==downContent['order']['downAnswer']}}"><i-icon size="20" type="success" />答题正确</view>
+                    <view class="wrong" wx:if="{{downContent['order']['downAnswer']!=downContent['answer']}}"><i-icon size="20" type="delete" />答题错误</view>
+                    <view class="answer">
+                        <view class="answer-box">
+                            <view class="a-word r-line">
+                                <view class="b-word">正确答案：</view>
+                                <view class="c-word">{{downContent.answer}}</view>
+                            </view>
+                            <view class="a-word">
+                                <view class="b-word">您选择的答案：</view>
+                                <view class="e-word">{{downContent['order']['downAnswer']}}</view>
+                            </view>
+                        </view>
+                        <view class="line"></view>
+                        <view>
+                            <view class="difficult">
+                                <view class="b-word d-word">参考解析：</view>
+                                <view style="display: flex;align-items: center;">
+                                    <view class="b-word">难度：</view>
+                                    <van-rate value="{{ downContent.difficulty }}" disabled disabled-color="#ffd21e" gutter="2" size='16' />
+                                </view>
+                            </view>
+                            <view class="d-word" wx:if="{{downContent.comments}}">
+                              <view>{{downContent.comments}}</view>
+                              <image class="comments_img" mode="aspectFit" bindtap="preview" data-src="{{downContent.comments_img}}" wx:if="{{downContent.comments_img}}" src="{{downContent.comments_img}}"></image>
+                            </view>
+                            <view class="d-word" wx:else>暂无</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="comments" style="font-size:{{fontSize}}" wx:if="{{downContent['order']['subup']=='1' && (downContent.type == 4 || downContent.type ==5)}}">
+                    <view class="right" wx:if="{{downContent['answer']==downContent['order']['downAnswer']}}"><i-icon size="20" type="success" />答题正确</view>
+                    <view class="wrong" wx:if="{{downContent['order']['downAnswer']!=downContent['answer']}}"><i-icon size="20" type="delete" />答题错误</view>
+                    <view class="answer">
+                        <view class="answer-box">
+                            <view class="a-word r-line">
+                                <view class="b-word">正确答案：</view>
+                                <view class="c-word">{{downContent.answer}}</view>
+                            </view>
+                            <view class="a-word">
+                                <view class="b-word">您输入的答案：</view>
+                                <view class="e-word">{{downContent['order']['downAnswer']}}</view>
+                            </view>
+                        </view>
+                        <view class="line"></view>
+                        <view>
+                            <view class="difficult">
+                                <view class="b-word d-word">参考解析：</view>
+                                <view style="display: flex;align-items: center;">
+                                    <view class="b-word">难度：</view>
+                                    <van-rate value="{{ downContent.difficulty }}" disabled disabled-color="#ffd21e" gutter="2" size='16' />
+                                </view>
+                            </view>
+                            <view class="d-word" wx:if="{{downContent.comments}}">
+                              <view>{{downContent.comments}}</view>
+                              <image class="comments_img" mode="aspectFit" bindtap="preview" data-src="{{downContent.comments_img}}" wx:if="{{downContent.comments_img}}" src="{{downContent.comments_img}}"></image>
+                            </view>
+                            <view class="d-word" wx:else>暂无</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="comments" style="font-size:{{fontSize}}" wx:if="{{downContent['order']['downAnswer'] && (downContent.type == 1 || downContent.type == 3)}}">
+                    <view class="right" wx:if="{{downContent['answer']==downContent['order']['downAnswer']}}"><i-icon size="20" type="success" />答题正确</view>
+                    <view class="wrong" wx:if="{{downContent['order']['downAnswer']!=downContent['answer']}}"><i-icon size="20" type="delete" />答题错误</view>
+                    <view class="answer">
+                        <view class="answer-box">
+                            <view class="a-word r-line">
+                                <view class="b-word">正确答案：</view>
+                                <view class="c-word">{{downContent.answer}}</view>
+                            </view>
+                            <view class="a-word">
+                                <view class="b-word">您选择的答案：</view>
+                                <view class="e-word">{{downContent['order']['downAnswer']}}</view>
+                            </view>
+                        </view>
+                        <view class="line"></view>
+                        <view>
+                            <view class="difficult">
+                                <view class="b-word d-word">参考解析：</view>
+                                <view style="display: flex;align-items: center;">
+                                    <view class="b-word">难度：</view>
+                                    <van-rate value="{{ downContent.difficulty }}" disabled disabled-color="#ffd21e" gutter="2" size='16' />
+                                </view>
+                            </view>
+                            <view class="d-word" wx:if="{{downContent.comments}}">
+                              <view>{{downContent.comments}}</view>
+                              <image class="comments_img" mode="aspectFit" bindtap="preview" data-src="{{downContent.comments_img}}" wx:if="{{downContent.comments_img}}" src="{{downContent.comments_img}}"></image>
+                            </view>
+                            <view class="d-word" wx:else>暂无</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="comments" style="font-size:{{fontSize}}" wx:if="{{downContent['order']['subup']=='1' && downContent.type == 6}}">
+                    <view class="answer">
+                        <view>
+                            <view class="difficult">
+                                <view class="b-word d-word">参考答案：</view>
+                                <view class="difficulty">
+                                    <view class="b-word">难度：</view>
+                                    <van-rate value="{{ downContent.difficulty }}" disabled disabled-color="#ffd21e" gutter="2" size='16' />
+                                </view>
+                            </view>
+                            <view class="d-word" wx:if="{{downContent.answer}}">{{downContent.answer}}</view>
+                            <view class="d-word" wx:else>暂无</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <!--考试模式-->
+            <view class="content-box" wx:if="{{model == 1 && !timeback}}">
+                <view class="question question-x" style="font-size:{{fontSize}}">
+                    <view class="type">
+                        <view>
+                            <image class="type-img" wx:if="{{downContent.type == 1}}" src="/images/danxuan.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 2}}" src="/images/duoxuan.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 3}}" src="/images/panduan.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 4 || downContent.type == 5}}" src="/images/tiankong.png"></image>
+                            <image class="type-img" wx:if="{{downContent.type == 6}}" src="/images/jianda.png"></image>
+                        </view>
+                        <view>
+                            <text class="number">{{indexInd*1+1}}</text>/{{length}}
+                        </view>
+                    </view>
+                    <view class="line"></view>
+                    <view class="content">
+                        <view class="title">{{downContent.title}}</view>
+                        <!--题目中包含图片-->
+                        <view class="answer-ziyuan" bindtap="preview" data-src="{{downContent.media}}">
+                            <image mode="aspectFit" src="{{downContent.media}}" wx:if="{{downContent.media_type==2}}"></image>
+                        </view>
+                        <!--单选,判断-->
+                        <view class="options" wx:if="{{downContent.type == 1 || downContent.type == 3}}">
+                            <view bindtap="selectAnswer" data-answer="{{downContent.answer}}" data-type="{{downContent.type}}" data-id="{{downContent.id}}" data-ind="{{options[ind]}}" wx:for="{{downContent.options}}" wx:for-index="ind" wx:for-item="itemName" wx:key="index">
+                                <!--未选择-->
+                                <view class="option" wx:if="{{!downContent['order']['downAnswer']}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <!--已选择-->
+                                <view class="option selected" wx:if="{{options[ind]==downContent['order']['downAnswer']}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <view class="option" wx:if="{{downContent['order']['downAnswer'] && options[ind]!=downContent['order']['downAnswer']}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                            </view>
+                        </view>
+                        <!--多选-->
+                        <view class="options" wx:if="{{downContent.type == 2}}">
+                            <view bindtap="selectAnswerMore" data-type="{{downContent.type}}" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}" data-ind="{{options[ind]}}" wx:for="{{downContent.options}}" wx:for-index="ind" wx:for-item="itemName" wx:key="index">
+                                <!--未提交-->
+                                <view class="option {{downContent['order']['down'][options[ind]]?'selected':''}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                
+                            </view>
+                            <view class="submit" wx:if="{{downContent.type == 2}}">
+                                <view class="s-btn" bindtap="moreSelectSub" data-type="{{downContent.type}}" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}">提交答案</view>
+                            </view>
+                        </view>
+                        <!--单项填空-->
+                        <!--未提交-->
+                        <view class="submit" wx:if="{{(downContent.type == 4)}}">
+                            <form bindsubmit="fillSub" report-submit='true'>
+                                <input name="answer" value="{{downContent.answer}}" hidden="true" />
+                                <input name="id" value="{{downContent.id}}" hidden="true" />
+                                <!-- <input class="answerIpt" name="subAnswer" type="text"  placeholder="请输入答案"/> -->
+                                <input class="answerIpt" name="subAnswer" type="text" value="{{downContent['order']['downAnswer'] ? downContent['order']['downAnswer'] : ''}}" placeholder="请输入答案" />
+                                <view class="title" wx:if="downContent['order']['downAnswer']">已提交的答案：{{downContent['order']['downAnswer']}}</view>
+                                <button class="s-btn" formType="submit" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}">提交答案</button>
+                            </form>
+                        </view>
+                        <!--单项填空-->
+                        <!--多项填空-->
+                        <!--未提交-->
+                        <view class="submit" wx:if="{{(downContent.type == 5)}}">
+                            <form bindsubmit="moreFillSub" report-submit='true'>
+                                <input name="answer" value="{{downContent.answer}}" hidden="true" />
+                                <input name="id" value="{{downContent.id}}" hidden="true" />
+                                <input class="answerIpt" name="subAnswer{{optind}}" type="text"  placeholder="请输入答案" wx:for="{{downContent.options}}" wx:for-index="optind" value="{{downContent['order']['down'][optind]}}"/>
+                                <view class="title" wx:if="downContent['order']['downAnswer']">已提交的答案：{{downContent['order']['downAnswer']}}</view>
+                                <button class="s-btn" formType="submit" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}">提交答案</button>
+                            </form>
+                        </view>
+                        <!--多项填空-->
+                        <!--简答-->
+                        <view class="submit" wx:if="{{(downContent.type == 6)}}">
+                            <form bindsubmit="showAnswer" report-submit='true'>
+                                <input name="id" value="{{downContent.id}}" hidden="true" />
+                                <button class="s-btn" data-id="{{downContent.id}}" formType="submit">查看答案</button>
+                            </form>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <!--错题回顾-->
+            <view class="content-box" wx:if="{{model == 1 && timeback}}">
+                <view class="question">
+                    <view class="type">
+                        <view>
+                            <image style="width:120rpx;height:55rpx;" wx:if="{{downContent.type == 1}}" src="/images/danxuan.png"></image>
+                            <image style="width:120rpx;height:55rpx;" wx:if="{{downContent.type == 2}}" src="/images/duoxuan.png"></image>
+                            <image style="width:120rpx;height:55rpx;" wx:if="{{downContent.type == 3}}" src="/images/panduan.png"></image>
+                            <image style="width:120rpx;height:55rpx;" wx:if="{{downContent.type == 4}}" src="/images/tiankong.png"></image>
+                        </view>
+                        <view>
+                            <text class="number">{{indexInd*1+1}}</text>/{{length}}
+                        </view>
+                    </view>
+                    <view class="line"></view>
+                    <view class="content">
+                        <view class="title">{{downContent.title}}</view>
+                        <!--题目中包含图片-->
+                        <view class="answer-ziyuan" bindtap="preview" data-src="{{downContent.media}}">
+                            <image mode="aspectFit" src="{{downContent.media}}" wx:if="{{downContent.media_type==2}}"></image>
+                        </view>
+                        <!--单选,判断-->
+                        <view class="options" wx:if="{{downContent.type == 1 || downContent.type == 3}}">
+                            <view bindtap="selectAnswer" data-answer="{{downContent.answer}}" data-type="{{downContent.type}}" data-id="{{downContent.id}}" data-ind="{{options[ind]}}" wx:for="{{downContent.options}}" wx:for-index="ind" wx:for-item="itemName" wx:key="index">
+                                <!--未选择-->
+                                <view class="option" wx:if="{{downContent['order']['downAnswer']!=options[ind]&&!( downContent['answer']==options[ind]&&downContent['order']['downAnswer'] )}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <!--正确选择-->
+                                <view class="option green" wx:if="{{downContent['answer']==options[ind]&&downContent['order']['downAnswer']}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <!--错误选择-->
+                                <view class="option red" wx:if="{{downContent['order']['downAnswer']==options[ind]&&downContent['answer']!=options[ind]}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                            </view>
+                        </view>
+                        <!--多选-->
+                        <view class="options" wx:if="{{downContent.type == 2}}">
+                            <view bindtap="selectAnswerMore" data-answer="{{downContent.answer}}" data-id="{{downContent.id}}" data-ind="{{options[ind]}}" wx:for="{{downContent.options}}" wx:for-index="ind" wx:for-item="itemName" wx:key="index">
+                                <!--未提交-->
+                                <view class="option {{downContent['order']['down'][options[ind]]&&downContent['order']['subup']=='0'?'selected':''}}" wx:if="{{downContent['order']['subup']=='0'}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <!--已提交-->
+                                <view class="option" wx:if="{{downContent['order']['subup']=='1'&&downContent['order']['down'][options[ind]]==false&&downContent['answerArr'][0]!=options[ind]&&downContent['answerArr'][1]!=options[ind]&&downContent['answerArr'][2]!=options[ind]&&downContent['answerArr'][3]!=options[ind]&&downContent['answerArr'][4]!=options[ind]&&downContent['answerArr'][5]!=options[ind]&&downContent['answerArr'][6]!=options[ind]&&downContent['answerArr'][7]!=options[ind]&&downContent['answerArr'][8]!=options[ind]&&downContent['answerArr'][9]!=options[ind]}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <view class="option green" wx:if="{{downContent['order']['subup']=='1'&&(downContent['answerArr'][0]==options[ind]||downContent['answerArr'][1]==options[ind]||downContent['answerArr'][2]==options[ind]||downContent['answerArr'][3]==options[ind]||downContent['answerArr'][4]==options[ind]||downContent['answerArr'][5]==options[ind]||downContent['answerArr'][6]==options[ind]||downContent['answerArr'][7]==options[ind]||downContent['answerArr'][8]==options[ind]||downContent['answerArr'][9]==options[ind])}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                                <view class="option red" wx:if="{{downContent['order']['subup']=='1'&&downContent['order']['down'][options[ind]]==true&&downContent['answerArr'][0]!=options[ind]&&downContent['answerArr'][1]!=options[ind]&&downContent['answerArr'][2]!=options[ind]&&downContent['answerArr'][3]!=options[ind]&&downContent['answerArr'][4]!=options[ind]&&downContent['answerArr'][5]!=options[ind]&&downContent['answerArr'][6]!=options[ind]&&downContent['answerArr'][7]!=options[ind]&&downContent['answerArr'][8]!=options[ind]&&downContent['answerArr'][9]!=options[ind]}}">
+                                    <text>{{options[ind]}}</text>
+                                    <view wx:if="{{downContent.option_type == 1}}">{{itemName}}</view><!--选项为文字-->
+                                    <view class="option-img" wx:if="{{downContent.option_type == 2}}">
+                                        <image mode="aspectFit" src="{{itemName}}" data-src="{{itemName}}" catchtap="preview"></image>
+                                    </view><!--选项为图片-->
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+                <view class="comments" wx:if="{{downContent.type == 2}}">
+                    <view class="right" wx:if="{{downContent['answer']==downContent['order']['downAnswer']}}"><i-icon size="20" type="success" />答题正确</view>
+                    <view class="wrong" wx:if="{{downContent['order']['downAnswer']!=downContent['answer']}}"><i-icon size="20" type="delete" />答题错误</view>
+                    <view class="answer">
+                        <view class="answer-box">
+                            <view class="a-word r-line">
+                                <view class="b-word">正确答案：</view>
+                                <view class="c-word">{{downContent.answer}}</view>
+                            </view>
+                            <view class="a-word">
+                                <view class="b-word">您选择的答案：</view>
+                                <view class="e-word" wx:if="{{downContent['order']['downAnswer']}}">{{downContent['order']['downAnswer']}}</view>
+                                <view class="e-word" wx:else>暂无</view>
+                            </view>
+                        </view>
+                        <view class="line"></view>
+                        <view>
+                            <view class="difficult">
+                                <view class="b-word d-word">参考解析：</view>
+                                <view style="display: flex;align-items: center;">
+                                    <view class="b-word">难度：</view>
+                                    <van-rate value="{{ downContent.difficulty }}" disabled disabled-color="#ffd21e" gutter="2" size='16' />
+                                </view>
+                            </view>
+                            <view class="d-word" wx:if="{{downContent.comments}}">
+                              <view>{{downContent.comments}}</view>
+                              <image class="comments_img" mode="aspectFit" bindtap="preview" data-src="{{downContent.comments_img}}" wx:if="{{downContent.comments_img}}" src="{{downContent.comments_img}}"></image>
+                            </view>
+                            <view class="d-word" wx:else>暂无</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="comments" wx:if="{{downContent.type == 4 || downContent.type == 5}}">
+                    <view class="right" wx:if="{{downContent['answer']==downContent['order']['downAnswer']}}"><i-icon size="20" type="success" />答题正确</view>
+                    <view class="wrong" wx:if="{{downContent['order']['downAnswer']!=downContent['answer']}}"><i-icon size="20" type="delete" />答题错误</view>
+                    <view class="answer">
+                        <view class="answer-box">
+                            <view class="a-word r-line">
+                                <view class="b-word">正确答案：</view>
+                                <view class="c-word">{{downContent.answer}}</view>
+                            </view>
+                            <view class="a-word">
+                                <view class="b-word">您输入的答案：</view>
+                                <view class="e-word" wx:if="{{downContent['order']['downAnswer']}}">{{downContent['order']['downAnswer']}}</view>
+                                <view class="e-word" wx:else>暂无</view>
+                            </view>
+                        </view>
+                        <view class="line"></view>
+                        <view>
+                            <view class="difficult">
+                                <view class="b-word d-word">参考解析：</view>
+                                <view style="display: flex;align-items: center;">
+                                    <view class="b-word">难度：</view>
+                                    <van-rate value="{{ downContent.difficulty }}" disabled disabled-color="#ffd21e" gutter="2" size='16' />
+                                </view>
+                            </view>
+                            <view class="d-word" wx:if="{{downContent.comments}}">
+                              <view>{{downContent.comments}}</view>
+                              <image class="comments_img" mode="aspectFit" bindtap="preview" data-src="{{downContent.comments_img}}" wx:if="{{downContent.comments_img}}" src="{{downContent.comments_img}}"></image>
+                            </view>
+                            <view class="d-word" wx:else>暂无</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="comments" wx:if="{{downContent.type == 1 || downContent.type == 3}}">
+                    <view class="right" wx:if="{{downContent['answer']==downContent['order']['downAnswer']}}"><i-icon size="20" type="success" />答题正确</view>
+                    <view class="wrong" wx:if="{{downContent['order']['downAnswer']!=downContent['answer']}}"><i-icon size="20" type="delete" />答题错误</view>
+                    <view class="answer">
+                        <view class="answer-box">
+                            <view class="a-word r-line">
+                                <view class="b-word">正确答案：</view>
+                                <view class="c-word">{{downContent.answer}}</view>
+                            </view>
+                            <view class="a-word">
+                                <view class="b-word">您选择的答案：</view>
+                                <view class="e-word" wx:if="{{downContent['order']['downAnswer']}}">{{downContent['order']['downAnswer']}}</view>
+                                <view class="e-word" wx:else>暂无</view>
+                            </view>
+                        </view>
+                        <view class="line"></view>
+                        <view>
+                            <view class="difficult">
+                                <view class="b-word d-word">参考解析：</view>
+                                <view style="display: flex;align-items: center;">
+                                    <view class="b-word">难度：</view>
+                                    <van-rate value="{{ downContent.difficulty }}" disabled disabled-color="#ffd21e" gutter="2" size='16' />
+                                </view>
+                            </view>
+                            <view class="d-word" wx:if="{{downContent.comments}}">
+                              <view>{{downContent.comments}}</view>
+                              <image class="comments_img" mode="aspectFit" bindtap="preview" data-src="{{downContent.comments_img}}" wx:if="{{downContent.comments_img}}" src="{{downContent.comments_img}}"></image>
+                            </view>
+                            <view class="d-word" wx:else>暂无</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </scroll-view>
+    </view>
+    <wxs module="ISCN">
+        function ISContain(arr,id){
+            return arr.indexOf(id) == -1 ? false : true
+        }
+        module.exports = {
+            ISContain:ISContain
+        }
+    </wxs>
+</template>

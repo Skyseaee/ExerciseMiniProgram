@@ -1,0 +1,26 @@
+<!--pages/setting/setting.wxml-->
+<view>
+    <van-cell title="答对自动下一题" label="练习模式" size="large">
+        <van-switch checked="{{ rightAutoNext }}" active-color="#46C6BA" inactive-color="#f3f3f3" bind:change="rightAutoNextChange" />
+    </van-cell>
+    <van-cell title="答完自动下一题" label="考试模式" size="large">
+        <van-switch checked="{{ finishAutoNext }}" active-color="#46C6BA" inactive-color="#f3f3f3" bind:change="finishAutoNextChange" />
+    </van-cell>
+    <van-cell title="答对自动移除错题集" size="large">
+        <van-switch checked="{{ rightRemove }}" active-color="#46C6BA" inactive-color="#f3f3f3" bind:change="rightRemoveChange" />
+    </van-cell>
+    <van-cell title="答题音效" size="large">
+        <van-switch checked="{{ music }}" active-color="#46C6BA" inactive-color="#f3f3f3" bind:change="musicChange" />
+    </van-cell>
+    <!-- <van-cell center size="large" title="作对几次移出错题" label="0代表永不移出错题">
+        <van-stepper min="0" button-size="38px" input-width="38px" disable-input="{{true}}" bind:change="onChange" />
+    </van-cell> -->
+    <van-cell size="large" title="字体大小" title-width="80px">
+        <view class="word-list">
+            <text class="word1 right {{fontSize == '28rpx' ? 'active-color' : ''}}" bindtap="fontSizeChange" data-size="28rpx">A较小</text>
+            <text class="word2 right {{fontSize == '32rpx' ? 'active-color' : ''}}" bindtap="fontSizeChange" data-size="32rpx">A标准</text>
+            <text class="word3 right {{fontSize == '40rpx' ? 'active-color' : ''}}" bindtap="fontSizeChange" data-size="40rpx">A较大</text>
+            <text class="word4 {{fontSize == '46rpx' ? 'active-color' : ''}}" bindtap="fontSizeChange" data-size="46rpx">A特大</text>
+        </view>
+    </van-cell>
+</view>

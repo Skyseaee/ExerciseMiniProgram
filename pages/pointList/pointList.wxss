@@ -1,0 +1,21 @@
+/* pages/pointList/pointList.wxss */
+.point{
+  background-color: #46C6BA;
+  height:90px;
+  text-align:center;
+}
+.title{
+  font-size: 30rpx;
+  color: #fff;
+}
+.number{
+  margin-top: 20px;
+  font-size: 50rpx;
+  font-weight: bold;
+  color: #fff;
+}
+.line{
+  width:100%;
+  height:10px;
+  background:#f3f3f3;
+}
