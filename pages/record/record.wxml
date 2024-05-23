@@ -1,33 +1,52 @@
 <!--pages/record/record.wxml-->
 <view>
-    <view wx:if="{{nodata}}" style='width:100%;text-align:center;margin-top: 80rpx;'>
+    <view class="switches">
+      <view class="infos" bind:tap="switchTabLeft">
+        <view class="{{selectedTab === '答题记录' ? 'selected' : 'unselect'}}">答题记录</view>
+        <view wx:if="{{selectedTab == '答题记录'}}" class="current"></view>
+      </view>
+      <view class="infos" bind:tap="switchTabRight">
+        <view class="{{selectedTab === '测试记录' ? 'selected' : 'unselect'}}">测试记录</view>
+        <view wx:if="{{selectedTab == '测试记录'}}" class="current"></view>
+      </view>
+    </view>
+    <view wx:if="{{!dataList.hasData}}" style='width:100%;text-align:center;margin-top: 80rpx;'>
         <image src="/images/no-record.png" style='width:300rpx;height:300rpx;'></image>
     </view>
-    <view wx:if="{{!nodata}}" class="result-box" wx:for="{{recordList}}" wx:key="record">
-        <view class="rank">
-            <view class="title-box">
-                <view class="title-line"></view>
-                <view class="time-b">
-                    <view class="title">{{item.title}}</view>
-                    <view class="time">时间：{{item.add_time}}</view>
-                </view> 
-            </view>
-            <view class="record" data-id="{{item.id}}" bindtap="getRecordDetail">查看记录</view>
-        </view>
-        <view class="line"></view>
+    <view wx:if="{{dataList.hasData}}" class="result-box" wx:for="{{dataList.data}}" wx:key="record">
+      <view class="rank">
+          <view class="title-box">
+              <view wx:if="{{selectedTab === '测试记录'}}" class="title-line"></view>
+              <view class="time-b">
+                  <view class="title">
+                  <block wx:if="{{selectedTab === '答题记录'}}">
+                    <view wx:if="{{item.is_correct == 1}}" class="info-answer correct">正确</view>
+                    <view wx:else="{{item.is_correct == 1}}" class="info-answer wrong">错误</view>
+                  </block>
+                  <text class="question">{{item.brief}}</text>
+                  </view>
+                  <view class="time">{{item.answer_time}}</view>
+              </view> 
+          </view>
+          <view class="record" data-index="{{index}}" bindtap="getRecordDetail">查看记录</view>
+      </view>
+      <block wx:if="{{isExam}}">
         <view class="table">
             <view class="tr">
                 <view class="th">用时</view>
                 <view class="th">题目数</view>
                 <view class="th">正确数</view>
-                <view class="th">正确率</view>
             </view>
             <view class="tr">
-                <view class="td">{{item.use_time}}</view>
-                <view class="td">{{item.nums}}</view>
-                <view class="td">{{item.greenNum}}</view>
-                <view class="td">{{item.right}}%</view>
+                <view class="td">{{item.spend}}</view>
+                <view class="td">{{item.num}}</view>
+                <view class="td">{{item.score}}</view>
             </view>
         </view>
+      </block>
     </view>
+    <view class="bottom" wx:if="{{dataList.moreData}}" bind:tap="findMoreRecord">
+        加载更多记录
+    </view>
+    <view class="hint" wx:else="{{moreData}}">-- 暂无更多记录 --</view>
 </view>

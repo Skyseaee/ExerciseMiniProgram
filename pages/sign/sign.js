@@ -17,7 +17,7 @@ Page({
   onLoad: function (options) {
     var that = this;
     wx.Apis.api.getSignConfig((code, data) => {
-       console.log(data)
+      console.log(data)
       that.setData({
         signSystemList:data,
         day: that.Rp(data.length)
@@ -135,5 +135,11 @@ Page({
       path: "pages/index/index",
       imageUrl: "/images/share.png"
     };
+  },
+
+  switchSignList: function() {
+    wx.navigateTo({
+      url: '/pages/signList/signList',
+    })
   },
 })

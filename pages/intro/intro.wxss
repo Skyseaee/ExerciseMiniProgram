@@ -1,0 +1,56 @@
+/* pages/intro/intro.wxss */
+
+/* 为text标签添加样式 */
+.content {
+  width: 90%;
+  margin: 40rpx auto;
+  text-align: justify;
+}
+
+.info {
+  margin-bottom: 48rpx;
+  color: #505050;
+  font: 400;
+  line-height: 1.6rem;
+}
+
+.title {
+  margin-bottom: 16rpx;
+  font-weight: 600;
+  color: #505050;
+}
+
+/* 为写在最后的文本添加特殊样式 */
+text:last-child {
+  font-weight: bold;
+  color: #007bff; /* 换成你喜欢的颜色 */
+}
+
+/* 可以为其他特殊的文本块添加样式 */
+
+/* 为链接添加样式 */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* 鼠标悬停时改变链接颜色 */
+a:hover {
+  color: #0056b3;
+}
+
+/* 添加样式来突出显示重要信息 */
+.important {
+  font-weight: bold;
+  color: #ec9955; /* 突出颜色，可以根据需要更改 */
+}
+
+/* 添加样式来调整段落间距 */
+p {
+  margin-bottom: 20px;
+}
+
+.button {
+  width: 80rpx;
+  height: 80rpx;
+}

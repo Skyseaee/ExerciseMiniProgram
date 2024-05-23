@@ -4,10 +4,15 @@ App({
   onLaunch() {
     this.initAPI();
     wx.Apis = Apis;
-
+    try{
+        let main_active_index = wx.getStorageSync('mainActiveIndex');
+        if(main_active_index) this.globalData.mainActiveIndex = main_active_index;
+    } catch(e) {
+        this.globalData.mainActiveIndex = 0;
+    }
+    
     //请求公告
     wx.Apis.api.getConfigValue('notice',(code, data) => {
-      console.log('data' + data)
       wx.setStorageSync('notice', data.value)
     });
 
@@ -41,6 +46,7 @@ App({
                         wx.Apis.setUid(data.openid); //openid
                         wx.Apis.set('openid', data.openid);
                         wx.setStorageSync('userInfo', data);
+                        that.globalData.uid = data.uid
                         wx.hideLoading({
                           success: (res) => {},
                         })
@@ -53,21 +59,25 @@ App({
             }
         });
     }else {
+      let that = this
       Apis.login.index((code, data) => {
         console.log(data);
         Apis.setUid(data.openid); //openid
         wx.setStorageSync('userInfo', data)
+        wx.setStorageSync('uid', data.uid)
+        that.globalData.uid = data.uid
       });
     }
   },
   globalData: {
     userInfo: null,
     mainActiveIndex:0,
-    bgmUrl: 'https://mamba-blog-images.oss-cn-shanghai.aliyuncs.com/5c8a08dc4956424741.mp3'
+    bgmUrl: 'https://mamba-blog-images.oss-cn-shanghai.aliyuncs.com/5c8a08dc4956424741.mp3',
+    uid: 0,
   },
+  // towxml: require('/towxml/index'),
   initAPI() {
     var cloudCaller = function (url,oper,params, callback) {
-      console.log(url)
       var header = {
         'Content-Type': 'application/json'
       };

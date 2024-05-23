@@ -7,5 +7,5 @@
     "van-cell-group": "/dist/cell-group/index",
     "van-icon": "/dist/icon/index"
   },
-  "backgroundColor": "#FFF"
+  "backgroundColor": "#f7f7f7"
 }

@@ -4,33 +4,68 @@
   </view>
   <view bindtap="goBack" class="errorstat">
     <view class="button">返回</view>
+    <view class="info">排行榜将在每日零点刷新</view>
   </view>
 </view>
 <view wx:if="{{rankList.length > 0}}" class="rank-box">
-  <block wx:for="{{rankList}}" wx:for-item="itemChild" wx:for-index="idx">
-    <view class='ls-item'>
-      <view class='ls-l ls-l{{idx+1}}'>
-        <view wx:if="{{idx<=2}}" class='img_'>
-          <image wx:if="{{idx==0}}" src='/images/rank-01.png'></image>
-          <image wx:if="{{idx==1}}" src='/images/rank-02.png'></image>
-          <image wx:if="{{idx==2}}" src='/images/rank-03.png'></image>
+  <view class="switches">
+    <view class="infos">
+      <view class="{{selectedTab === '周排行' ? 'selected' : 'unselect'}}" bind:tap="switchTabMonth">周排行</view>
+      <view wx:if="{{selectedTab == '周排行'}}" class="current"></view>
+    </view>
+    <view class="infos">
+      <view class="{{selectedTab === '总排行' ? 'selected' : 'unselect'}}" bind:tap="switchTabTotal">总排行</view>
+      <view wx:if="{{selectedTab == '总排行'}}" class="current"></view>
+    </view>
+  </view>
+  <!-- <view class='button_container'>
+    <button class="switchLeft {{selectedTab === '周排行' ? 'switch selected' : 'switch'}}" bindtap="switchTab" data-tab="周排行">周排行</button>
+    <button class="switchRight {{selectedTab === '总排行' ? 'switch selected' : 'switch'}}" bindtap="switchTab" data-tab="总排行">总排行</button>
+  </view> -->
+
+  <view class="rank-container">
+      <!-- 领奖台 -->
+      <view class="podium">
+        <view class="second">
+          <image class="avatar a1" src="{{rankList[1].avatarUrl}}"></image>
         </view>
-        <text wx:if="{{idx>2}}">{{idx+1}}</text>
+        <view class="second">
+          <image class="avatar a2" src="{{rankList[0].avatarUrl}}"></image>
+        </view>
+        <view class="second">
+          <image class="avatar a3" src="{{rankList[2].avatarUrl}}"></image>
+        </view>
       </view>
-      <view class='ls-c'>
-        <view class='ls-c-img'>
+    
+  </view>
+
+  <view class="ranking-info">
+    <view class='title'>
+      <view class='ls-c-b'>排名</view>
+      <view class='ls-c-b'>用户</view>
+      <view class='ls-c-b'>昵称</view>
+      <view class='ls-c-b'>刷题数</view>
+      <view class='ls-c-b'>正确率</view>
+    </view>
+
+    <block wx:for="{{rankList}}" wx:for-item="itemChild" wx:for-index="idx" wx:key="index">
+      <view class='ls-item'>
+        <view class='ls-l'>
+          <text>{{idx+1}}</text>
+        </view>
+        <view class='ls-l ls-c-img'>
           <image src="{{itemChild.avatarUrl}}"></image>
         </view>
-        <view class='ls-c-txt'>
-          <view class='fl' style='display:flex;'>
-            <view class='ls-c-t'>{{itemChild.nickName}}</view>
-            <view class='ls-c-b'>获得 <text>{{itemChild.score}}</text> 分</view>
-          </view>
-        </view>
+        <view class='ls-l ls-c-t'>{{itemChild.nickName}}</view>
+        <view class='ls-l ls-c-t'><text>{{itemChild.total_answer}}</text> </view>
+        <view class='ls-l ls-c-t'><text>{{itemChild.correct_rate}}%</text> </view>
       </view>
-    </view>
-  </block>
-  <view class="quit" bindtap="goBack">
-    <image src="/images/quit.png"></image>
+    </block>
+  </view>
+
+
+  <view bindtap="goBack" class="errorstat">
+    <view class="button">返回</view>
+    <view class="info">排行榜将在每日零点刷新</view>
   </view>
 </view>

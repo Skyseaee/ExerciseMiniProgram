@@ -1,5 +1,7 @@
 // pages/my/my.js
 import Toast from '../../dist/toast/toast';
+
+const app = getApp()
 Page({
 
     /**
@@ -136,53 +138,11 @@ Page({
         })
     },
     goAbout() {
-        this.setData({
-            show: true
-        });
+      wx.navigateTo({
+        url: '/pages/intro/intro',
+      })
     },
-    clearStorage() {
-        wx.showModal({
-            content: '清空缓存会清空答题记录缓存，确定要清空吗？',
-            success: function (a) {
-                if (a.confirm) {
-                    wx.clearStorageSync();
-                    //请求公告
-                    wx.Apis.api.getConfigValue('notice', (code, data) => {
-                        wx.setStorageSync('notice', data.value)
-                    });
-
-                    var that = this;
-
-                    var openid = wx.getStorageSync('openid')
-                    if (openid == '' || openid == undefined) {
-                        wx.showLoading({
-                            title: '',
-                        })
-                        wx.login({
-                            success(res) {
-                                if (res.code) {
-                                    console.log(res.code)
-                                    wx.Apis.login.login(res.code, (code, data) => {
-                                        console.log(data);
-                                        wx.Apis.setUid(data.openid); //openid
-                                        wx.Apis.set('openid', data.openid);
-                                        wx.setStorageSync('userInfo', data);
-                                        wx.hideLoading({
-                                            success: (res) => { },
-                                        })
-                                    });
-                                }
-                            }, fail() {
-                                wx.hideLoading({
-                                    success: (res) => { },
-                                })
-                            }
-                        });
-                    }
-                }
-            }
-        })
-    },
+    
     onClose() {
         this.setData({ show: false });
     },
@@ -214,5 +174,80 @@ Page({
           path: "pages/index/index",
           imageUrl: "/images/share.png"
         };
+    },
+
+    goCategory: function() {
+      wx.navigateTo({
+        url: '/pages/categories/categories',
+      })
+    },
+
+    goUnlock: function() {
+      if(!app.globalData.uid) {
+        wx.showToast({
+          title: '请您先登录',
+          icon: 'error'
+        })
+      }
+      wx.showModal({
+        title: '请输入激活码',
+        content: '',
+        editable: true,
+        complete: (res) => {
+          if (res.cancel) {
+            return
+          }
+      
+          if (res.confirm) {
+            console.log(res.content)
+            wx.request({
+              url: 'https://www.skyseaee.cn/routine/auth_api/use_code',
+              header: {
+                "content-type": "application/x-www-form-urlencoded",
+              },
+              data: {
+                "code": res.content,
+                "userid": app.globalData.uid,
+              },
+              success: function(res) {
+                let data = res.data
+                console.log(data)
+                if(data.code == 400){
+                  wx.showToast({
+                    title: '当前激活码无效，如有疑问请联系客服',
+                    icon: 'none'
+                  })
+                } else if(data.code == 200) {
+                  if(data.msg == 'existed') {
+                    wx.showToast({
+                      title: '您已激活激活码对应题库，请勿重复激活',
+                      icon: 'none',
+                      duration: 2000,
+                    })
+                  } else {
+                    wx.showToast({
+                      title: '激活成功',
+                      icon: 'success'
+                    })
+                  }
+                } else {
+                  wx.showToast({
+                    title: '激活失败，如有疑问请联系客服',
+                    icon: 'none'
+                  })
+                }
+              }
+            })
+          }
+        }
+      })
+    },
+
+    onShareAppMessage: function () {
+      return {
+        title: "刷题小助手，考试助手 ！",
+        path: "pages/index/index",
+        imageUrl: "/images/share.png"
+      };
     },
 })

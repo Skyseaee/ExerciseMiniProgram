@@ -4,7 +4,7 @@
 @import '/css/animate.wxss';
 
 .font-color {
-    color: #e1b861 !important;
+    color: #1569E4 !important;
   }
 
 .acea-row {

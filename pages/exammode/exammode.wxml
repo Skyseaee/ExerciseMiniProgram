@@ -1,0 +1,98 @@
+<view class="container" wx:if="{{!showResult}}">
+  <view class="question">
+    <view class="questionInfo">
+      <text>-{{indexes + 1}}/{{questions.length}}-</text>
+      <view class="functions">
+        <image class="favorQuestion" bind:tap="favorQuestion" src="{{favor? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
+        <view class="submit-button" bindtap="submitAnswer" wx:if="{{!allDown}}">
+          <text>全部提交</text>
+        </view>
+        <view wx:else="{{allDown}}" class="submit-button" bindtap="showResult">
+          <text>总结页面</text>
+        </view>
+      </view>
+    </view>
+    <text user-select="true" style="width: 90%;">({{questionType}}){{questions[indexes].question}}</text>
+    <view wx:if="{{questions[indexes].question_img.length != 0}}" style="width: 100%; height: 15vh; overflow: hidden;">
+      <image src="{{questions[indexes].question_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    </view>
+  </view>
+
+  <view class="options">
+    <!-- 假设选项格式为 "a,b,c,d,e"，以逗号分隔 -->
+    <!-- <view>{{questionData[questionIndex].options}}</view> -->
+    <block wx:for="{{options}}" wx:key="index">
+      <view class="{{item.selected? 'optionSelected': 'option'}}" data-index="{{index}}" bindtap="selectOption">
+        <text class="optionText">{{item.text}}</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="comments" wx:if="{{allDown}}">
+    <view class="feeds">
+      <view>
+        <view class="correct answers">正确答案：{{answer}}</view><view class=" answers {{answer === userAnswer ? 'correct' : 'wrong'}}">你的答案：{{userAnswer}}</view>
+      </view>
+      <view class="feedback" bind:tap="showModal"><image src="/images/feedback.png" class="icon" mode=""/>答案反馈</view>
+    </view>
+    <view>本题正确率：{{currentRate}}%</view>
+    <text user-select="true">{{questions[indexes].comments}}</text>
+  </view>
+  <view wx:if="{{showComments && questions[indexes].comment_img.length != 0}}" class="commentsimg">
+    <image src="{{questions[indexes].comment_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+  </view>
+  <view style="height:270rpx; width:200rpx;"></view>
+
+  <view class="control {{!showMenu ? 'short' : 'long'}}">
+    <view class="submit-button menu-btn" wx:if="{{!showMenu}}" bindtap="showMenu">题目列表</view>
+    <view wx:else="{{!showMenu}}" class="menu">
+      <image src="/images/close.png" class="close-btn" mode="" bind:tap="showMenu"/>
+      <scroll-view scroll-y="true" class="info-con">
+        <view class="answer-container">
+          <block wx:for="{{records}}" wx:key="index">
+            <view class="exam-info {{item.isAnswer ? 'answered' : 'unanswered'}} {{item.index === indexes ? 'current' : 'null'}}" bind:tap="switchExam" data-index="{{index}}">{{index+1}}</view>
+            <view wx:if="{{(index + 1) % 5 === 0}}" class="line-break"></view>
+          </block>
+        </view>
+      </scroll-view>
+      <view class="example">
+        <view class="example-icon unanswered">未答</view>
+        <view class="example-icon answered">已答</view>
+        <view class="example-icon current">当前题</view>
+      </view>
+    </view>
+    <view class="switch">
+      <view class="last-icon" bind:tap="lastQuestion"><image class="icon" src="/images/last.png" mode=""/><text>上一题</text></view>
+      <view class="next-icon" bind:tap="nextQuestion"><text>下一题</text><image class="icon" src="/images/next.png" mode=""/></view>
+    </view>
+  </view>
+</view>
+
+<view class="score-info" wx:else="{{!showResult}}">
+  <image class="score-img" src="/images/scores.png" mode=""/>
+  <view class="result">
+    <view style="display: flex;"><image src="/images/score.png" class="res-icon" mode=""/><view class="score">正确率 {{score}}/{{questions.length}}</view></view>
+    <view style="display: flex; margin-left: 80rpx;"><image src="/images/Time.png" class="res-icon" mode=""/><view class="score">{{spendTime}}</view></view>
+  </view>
+  <view style="color: #808080; margin-bottom: 20rpx;">可点击对应题号查看详情</view>
+  <view class="separator"></view>
+  <view class="example conclusion">
+    <view class="example-icon unanswered">未答</view>
+    <view class="example-icon trueAnswer">正确</view>
+    <view class="example-icon wrongAnswer">错误</view>
+  </view>
+  <scroll-view scroll-y="true" class="info-con con">
+      <view class="answer-container">
+        <block wx:for="{{records}}" wx:key="index">
+          <view class="exam-info {{classMode[item.index]}}" bind:tap="switchExam" data-index="{{index}}">{{index+1}}</view>
+          <view wx:if="{{(index + 1) % 5 === 0}}" class="line-break"></view>
+        </block>
+      </view>
+  </scroll-view>
+  <view class="separator"></view>
+  <view class="favor-btn" bind:tap="favorWrongQuestion">收藏错题</view>
+  <view class="favor-btn" bind:tap="favorAll">收藏全部题目</view>
+</view>
+<view style="width: 10%; height: 100rpx;"></view>
+
+<feedbackInput wx:if="{{showModal}}" showModal="{{showModal}}" bindconfirm="handleConfirm" bindcloseModal="handleCloseModal"></feedbackInput>

@@ -1,11 +1,12 @@
 /* pages/pointList/pointList.wxss */
 .point{
-  background-color: #46C6BA;
+  background-color: #1569E4;
   height:90px;
   text-align:center;
 }
 .title{
   font-size: 30rpx;
+  padding-top: 40rpx;
   color: #fff;
 }
 .number{

@@ -1,0 +1,19 @@
+<view class="container">
+      <ec-canvas type="2d" style="width: 95%; height: 460px; box-shadow: 0px 8px 11px 0px rgba(235,233,233,0.5);" id="mychart-height" canvas-id="mychart-height" ec="{{ ec }}"></ec-canvas>
+</view>
+<view class="switch">
+  <view class="infos">
+    <view class="{{duration == 0 ? 'select' : 'unselect'}}" bind:tap="switchMonth">
+    当前月
+    </view>
+    <view wx:if="{{duration == 0}}" class="current"></view>
+  </view>
+  <view class="infos">
+    <view class="{{duration == 2 ? 'select' : 'unselect'}}" bind:tap="switchTotal">总刷题数</view>
+    <view wx:if="{{duration == 2}}" class="current"></view>
+  </view>
+</view>
+<view class="info">
+  <text>总刷题数：{{total}}</text>
+  <text>总正确率：{{currectrate}} %</text>
+</view>

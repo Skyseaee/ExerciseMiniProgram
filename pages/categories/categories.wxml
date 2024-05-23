@@ -1,0 +1,14 @@
+<!--pages/categories/categories.wxml-->
+<view class="info" wx:if="{{categories.length == 0}}"> 当前咱未解锁题库，如有需要可以联系客服解锁 </view>
+<view wx:else="{{categories.length == 0}}">
+  <view class="texts"> 已解锁题库 </view>
+  <view class="items">
+    <view wx:for="{{categories}}" wx:key="index" class="container">
+      <view class="cates" bind:tap="goExamInfo" data-index="{{index}}">
+        <image class="quesiontcover" src="{{item.url}}" mode=""/>
+        <view class="infos">{{item.name}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="info"> -- 暂无更多记录 -- </view>
+</view>

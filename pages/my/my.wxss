@@ -18,12 +18,12 @@ button::after {
 }
 
 .header {
-    padding-top: 150rpx;
+  padding-top: 150rpx;
 }
 
 .btn {
-    background-color: transparent;
-    padding-top: 150rpx;
+  background-color: transparent;
+  padding-top: 150rpx;
 }
 
 .topImage {
@@ -35,7 +35,7 @@ button::after {
 }
 
 .topBG {
-    background-color: #46C6BA;
+    background-color: #fff;
     height: 450rpx;
     position: relative;
     width: 100%;
@@ -46,7 +46,7 @@ button::after {
     width: 130rpx;
     height: 130rpx;
     border-radius: 50%;
-    border: 6rpx #ffffff solid;
+    border: 6rpx #78a6eb solid;
     margin: 0 auto;
     z-index: 3;
     position: relative;
@@ -57,14 +57,62 @@ button::after {
     text-align: center;
     margin-top: 30rpx;
     z-index: 3;
-    color: #ffffff;
+    color: #222;
     position: relative;
 }
 
 .cell-g {
-    margin-top: 10rpx;
+  margin-top: 24rpx;
+  width: 95%;
+  margin: 20rpx auto;
+  box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.5);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  width: 92%;
+  height: 90rpx;
+  padding: 0 29rpx;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+}
+
+.inside {
+  display: flex;
+  align-items: center;
+}
+
+.texts {
+  font-size: 16px;
+  color: #222;
+  font-weight: 500;
+  margin-left: 20rpx;
+}
+
+.icon {
+  height: 23px;
+  width: 23px;
+}
+
+.small-icon {
+  height: 18px;
+  width: 18px;
 }
 
 .bottom {
     padding-bottom: 30rpx;
+}
+
+.bottoms{
+  padding: 12rpx;
+}
+
+.contract {
+  width: 100%;
+  background-color: #fff;
+  padding: 0;
 }

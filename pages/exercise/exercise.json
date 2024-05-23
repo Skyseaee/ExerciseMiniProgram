@@ -1,0 +1,6 @@
+{
+    "usingComponents": {
+      "feedbackInput": "/pages/component/feedbackInput/feedbackInput",
+      "wemark": "/wemark/wemark"
+    }
+}

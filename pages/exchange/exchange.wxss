@@ -31,3 +31,10 @@
   width: 180rpx;
   margin: 10px auto 0;
 }
+
+.nodata {
+  text-align: center;
+  margin: 120rpx auto;
+  font-size: large;
+  color: #505050;
+}

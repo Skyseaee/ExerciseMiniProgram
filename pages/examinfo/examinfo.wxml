@@ -1,0 +1,47 @@
+<!--pages/examinfo.wxml-->
+<view wx:if="{{current_question_bank_type == 0}}">
+    <view class="selectBank">当前尚未选择题库，请在首页选择题库</view>
+</view>
+<view class="questionbank" wx:else="{{current_question_bank_type == 0}}">
+  <view class="up-area">
+    <view class="questioninfo">
+      <image class="quesiontcover" src="{{current_question_bank.pic_url}}"></image>
+        <view class="description">
+            <view class="question">
+              {{current_question_bank.name}}
+              <image bind:tap="clearExam" src="/images/reset.png" class="reset-img" mode=""/>
+            </view>
+            <view class="answerinfo">总题数：{{total_questions_num}}</view>
+            <view class="answer">
+              <view class="answerinfo"> 已刷：{{already_answered}}</view>
+              <view class="answerinfo"> 正确率：{{correct_answer_rate}}%</view>
+            </view>
+        </view>
+    </view>
+    <view class="lines"></view>
+      <view class="icons">
+        <block wx:for="{{info_images}}" wx:key="index">
+          <view class="image-item" hover-class="button-hover">
+            <image src="{{item.src}}" class="infoicon" bind:tap="{{item.func}}"/>
+            <text class="icondescription">{{item.description}}</text>
+          </view>
+        </block>
+      </view>
+  </view>
+
+    <block wx:if="{{!auth}}">
+      <view class="auth-info">
+        <text>尚未购买该题库，可预览部分题目和功能。开通本题库权限请联系客服。</text>
+      </view>
+    </block>
+    <view class="examlist">
+      <block wx:for="{{ total_exams }}" wx:key="index">
+        <view bind:tap="redirectToExam" data-id="{{index}}" class="item">
+            <view class="examTitle">{{ item.exam_title }}</view>
+            <view class="examProcess">答题进度：{{ item.finish_question }} / {{ item.total_question_num }}</view>
+            <progress percent="{{ item.percent }}" strokeWidth="8" active activeColor="#3a448a" borderRadius="16" class="{{item.percent == 50 ? 'progress50' : 'progress90'}}"></progress>
+        </view>
+      </block>
+    </view>
+</view>
+<component-empower bindmyevent="onMyEvent" isLogin="{{isLogin}}"></component-empower>

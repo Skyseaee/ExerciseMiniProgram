@@ -1,0 +1,193 @@
+/* pages/wrongQuestion/wrongQuestion.wxss */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.question {
+  margin: 20rpx;
+  margin-top: 80rpx;
+  color: #505050;
+  font-size: 30rpx;
+  line-height: 50rpx;
+  font-weight: 500;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.questionTexts {
+  width: 90%;
+}
+
+.questionInfo {
+  display: flex;
+  text-align: center;
+  width: 90%;
+  margin: 0 auto;
+  margin-bottom:36rpx;
+  justify-content: space-between;
+}
+
+.icons {
+  width: 90%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 40rpx;
+}
+
+.nextQuestion {
+  display: inline;
+  margin-left: 20rpx;
+  border: 2px solid #aaa;
+  border-radius: 6rpx;
+  padding: 4rpx;
+  border-top-right-radius: 28rpx;
+  border-bottom-right-radius: 28rpx;
+  height: 50rpx;
+  width: 50rpx;
+}
+
+.foreQuestion {
+  display: inline;
+  margin-left: 60rpx;
+  border: 2px solid #aaa;
+  border-radius: 6rpx;
+  border-top-left-radius: 28rpx;
+  border-bottom-left-radius: 28rpx;
+  padding: 4rpx;
+  height: 50rpx;
+  width: 50rpx;
+} 
+
+.favorQuestion {
+  display: inline;
+  margin-left: 320rpx;
+  border: 2px solid #aaa;
+  border-radius: 12rpx;
+  padding: 4rpx;
+  height: 50rpx;
+  width: 50rpx;
+}
+
+.options {
+  margin-bottom: 24rpx;
+  width: 90%;
+  padding: 20rpx;
+}
+
+.option {
+  display: flex;
+  align-items:center;
+  padding: 10rpx;
+  border: 2px solid #aaa;
+  border-radius: 24rpx;
+  margin-bottom: 30rpx;
+  cursor: pointer;
+}
+
+.optionSelected {
+  display: flex;
+  align-items:center;
+  padding: 10rpx;
+  border: 2px solid #3481a0;
+  border-radius: 24rpx;
+  margin-bottom: 30rpx;
+  cursor: pointer;
+}
+
+.optionText {
+  font-size: 30rpx;
+  margin: 14rpx;
+  margin-left: 24rpx;
+}
+
+.submit-button {
+  display: flex;
+  border-radius: 24rpx;
+  width: 90%;
+  height: 100rpx;
+  margin: 12rpx;
+  background-color: #3481a0;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  letter-spacing: 26rpx;
+  cursor: pointer;
+}
+
+.comment {
+  font-size: 1.5rem;
+  margin-bottom: 32rpx;
+  margin-top: 30rpx;
+}
+
+.comments {
+  width: 90%;
+  color: #505050;
+  font-size: 30rpx;
+  line-height: 50rpx;
+  font-weight: 500;
+  padding: 20rpx;
+  padding-bottom: 40rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 0rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+
+.answers {
+  display: inline;
+  margin-right: 40rpx;
+}
+
+.correct {
+  color: #3481a0;
+}
+
+.wrong {
+  color: #c5573c;
+}
+
+.feeds {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+}
+
+.icon {
+  height: 30rpx;
+  width: 30rpx;
+  margin-right: 20rpx;
+}
+
+.feedback {
+  display: flex;
+  align-items: center;
+  background-color: #f0dada;
+  padding: 6rpx 18rpx;
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  letter-spacing: 4rpx;
+}
+
+.commentsimg {
+  width: 100%;
+  height: 35vh;
+}
+
+.separator {  
+  width: 95%; /* 根据需要设置宽度 */  
+  height: 2rpx; /* 分隔线的高度 */  
+  background-color: #ddd; /* 分隔线的颜色 */  
+  margin: auto; /* 分隔线的上下外边距 */  
+  margin-bottom: 20rpx;
+}
+
+.borders {
+  padding: 16rpx;
+  border-radius: 20rpx;
+  margin-bottom: 16rpx;
+}

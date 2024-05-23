@@ -1,0 +1,40 @@
+<view class="container">
+  <view class="question">
+    <view class="questionInfo">
+      <text>{{first_name}} / {{second_name}}</text><text style="margin-left: 24rpx;">{{answer_time}}</text>
+      <image class="favorQuestion" bind:tap="favorQuestion" src="{{favor? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
+    </view>
+    <text user-select="true" class="questions">{{question}}</text>
+    <view wx:if="{{question_img.length != 0}}" style="width: 100%; height: 15vh; overflow: hidden;">
+      <image src="{{question_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    </view>
+  </view>
+
+  <view class="options">
+    <!-- <view>{{questionData[questionIndex].options}}</view> -->
+    <block wx:for="{{options}}" wx:key="index">
+      <view class="{{item.selected? 'optionSelected': 'option'}}" data-index="{{index}}" bindtap="selectOption">
+        <text class="optionText">{{item.text}}</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="comments">
+    <view class="borders">
+      <view class="feeds">
+        <view>
+          <view class="correct answers">正确答案：{{answer}}</view><view class=" answers {{answer === userAnswer ? 'correct' : 'wrong'}}">你的答案：{{userAnswer}}</view>
+        </view>
+        <view class="feedback" bind:tap="showModal"><image src="/images/feedback.png" class="icon" mode=""/>答案反馈</view>
+      </view>
+      <view>本题正确率：{{currentRate}}%</view>
+    </view>
+    <view class="separator"></view>
+    <text user-select="true">{{comments}}</text>
+  </view>
+  <view wx:if="{{comments_img.length != 0}}" class="commentsimg">
+    <image src="{{comments_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+  </view>
+  <feedbackInput wx:if="{{showModal}}" showModal="{{showModal}}" bindconfirm="handleConfirm" bindcloseModal="handleCloseModal"></feedbackInput>
+</view>
+<view style="height:100rpx; width:200rpx;"></view>

@@ -1,0 +1,89 @@
+<view class="container" bind:tap="closeMenu">
+  <view class="question">
+    <view class="questionInfo">
+      <text>-{{currentIndex + 1}}/{{totalData}}-</text>
+      <view class="mode-class">
+        <text>背题</text>
+        <switch class="wx-switch-input" checked="true" bindchange="switchMode" color="#3481a0"/>
+        <text>刷题</text>
+      </view>
+    </view>
+    <view class="questionTexts">
+      <wemark md="{{questionData[indexList[currentIndex]].question}}" link highlight type="wemark"></wemark>
+    </view>
+    <view wx:if="{{questionData[indexList[currentIndex]].question_img.length != 0}}" style="width: 100%; height: 15vh; overflow: hidden;">
+      <image src="{{questionData[indexList[currentIndex]].question_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    </view>
+  </view>
+
+  <view class="options">
+    <!-- 假设选项格式为 "a,b,c,d,e"，以逗号分隔 -->
+    <block wx:for="{{options}}" wx:key="index">
+      <view class="{{item.selected? 'optionSelected': 'option'}}" data-index="{{index}}" bindtap="selectOption">
+        <text class="optionText">{{item.text}}</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="icons">
+    <image class="favorQuestion" bind:tap="favorQuestion" src="{{favor? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
+    <image class="foreQuestion" bind:tap="foreQuestion" src="/images/last.png" mode=""/>
+    <image class="nextQuestion" bind:tap="nextQuestion" src="/images/next.png" mode=""/>
+  </view>
+
+  <view class="submit-button" bindtap="submitAnswer" wx:if="{{!showComments && !mode}}">
+    <text>提交答案</text>
+  </view>
+
+  <view class="comments" wx:if="{{showComments || mode}}">
+    <view class="borders">
+      <view class="feeds">
+        <view>
+          <view class="correct answers">正确答案：{{answer}}</view><view class=" answers {{answer === userAnswer ? 'correct' : 'wrong'}}">你的答案：{{userAnswer}}</view>
+        </view>
+        <view class="feedback" bind:tap="showModal"><image src="/images/feedback.png" class="icon" mode=""/>答案反馈</view>
+      </view>
+      <view>本题正确率：{{currentRate}}%</view>
+    </view>
+    <view class="separator"></view>
+    <view class="borders">
+      <text user-select="true">{{questionData[questionIndex].comments}}</text>
+    </view>
+  </view>
+  <view wx:if="{{(showComments || mode) && questionData[indexList[currentIndex]].comment_img.length != 0}}" class="commentsimg">
+    <image src="{{questionData[indedxList[currentIndex]].comment_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+  </view>
+  
+  <view class="knowledge-points" wx:if="{{showComments || mode}}">
+    <text>本题知识点</text>
+    <view wx:if="point_name.length != 0" class="points">
+      <text class="point-name">{{point_name}}</text>
+    </view>
+    <view class="borders">
+    </view>
+  </view>
+  
+  <view style="height:270rpx; width:200rpx;"></view>
+  <feedbackInput wx:if="{{showModal}}" showModal="{{showModal}}" bindconfirm="handleConfirm" bindcloseModal="handleCloseModal"></feedbackInput>
+</view>
+<view style="width: 10%; height: 40rpx;"></view>
+<view wx:if="{{showTable}}" class="control">
+  <view class="menus">
+    <image src="/images/close.png" class="close-btn" mode="" bind:tap="swicthMenu"/>
+    <scroll-view scroll-y="true" class="info-con">
+      <view class="answer-container">
+        <block wx:for="{{questionData}}" wx:key="index" wx:for-index="key" wx:for-item="value">
+          <view class="exam-info {{value.class}} {{value.index-1 === currentIndex ? 'current' : 'null'}}" bind:tap="switchExam" data-index="{{value.index}}">{{value.index}}</view>
+          <view wx:if="{{(index + 1) % 6 === 0}}" class="line-break"></view>
+        </block>
+      </view>
+    </scroll-view>
+    <view class="example">
+      <view class="example-icon unanswered">未答</view>
+      <view class="example-icon trueAnswer">正确</view>
+      <view class="example-icon wrongAnswer">错误</view>
+      <view class="example-icon current">当前题</view>
+    </view>
+  </view>
+</view>
+<view wx:else="{{showTable}}" class="menu-btn" bind:tap="swicthMenu">答题卡片</view>

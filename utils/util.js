@@ -40,6 +40,23 @@ const getNowDate = () => {
   return year + "-" + month + "-" + day
 }
 
+const getCurrentTime = () => {
+  // 获取当前时间的 Date 对象
+  var currentDate = new Date();
+
+  // 获取年、月、日、小时、分钟、秒
+  var year = currentDate.getFullYear();
+  var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 月份从0开始，需要加1
+  var day = ('0' + currentDate.getDate()).slice(-2);
+  var hours = ('0' + currentDate.getHours()).slice(-2);
+  var minutes = ('0' + currentDate.getMinutes()).slice(-2);
+  var seconds = ('0' + currentDate.getSeconds()).slice(-2);
+
+  // 格式化为字符串
+  var formattedDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+
+  return formattedDate;
+}
 
 const formatNumber = n => {
   n = n.toString()
@@ -82,9 +99,93 @@ const playAudio = (src) =>{
   }
 }
 
+const getRandomItems = (n, num) =>{  
+  let randomNumbers = [];
+  while (randomNumbers.length < n) {
+    const randomNumber = Math.floor(Math.random() * (num + 1));
+    if (!randomNumbers.includes(randomNumber)) {
+      randomNumbers.push(randomNumber);
+    }
+  }
+
+  return randomNumbers;
+}
+
+const generateExamKey = (name) => {
+  return name + '_exam'
+}
+
+const mappingExercise = (type) => {
+  switch(type){
+    case 0: return "单选"
+    case 1: return "多选"
+    case 2: return "判断"
+    default: return "专项题型"
+  }
+}
+
+const feedback = (questionInfo, uid, correct_answer, comment) => {
+  wx.request({
+    url: 'https://www.skyseaee.cn/routine/auth_api/feedback_wrong_answer',
+    header: {
+      "content-type": "application/x-www-form-urlencoded",
+    },
+    data: {
+      uid: uid,
+      exercise_id: questionInfo.exercise_id,
+      first_id: questionInfo.first_id,
+      second_id: questionInfo.second_id,
+      correct_answer: correct_answer,
+      comment: comment,
+    },
+    success: function(res) {
+      wx.showToast({
+        title: '已提交，我们将快速审核',
+        icon: 'none',
+      })
+    }
+  })
+}
+
+const getImageInfo = (imageUrl) => {
+  wx.getImageInfo({
+    src: imageUrl,
+    success: (res) => {
+      const aspectRatio = res.width / res.height; // 图片宽高比
+      const windowHeight = wx.getSystemInfoSync().windowHeight; // 获取窗口高度
+      const imageHeight = windowHeight * 0.8; // 设置图片高度为窗口高度的80%，可根据需求调整
+
+      // 根据宽高比动态计算图片高度
+      this.setData({
+        imageHeight: `${imageHeight * aspectRatio}rpx`,
+      });
+    },
+    fail: (error) => {
+      console.error('获取图片信息失败', error);
+    },
+  });
+}
+
+const convertToLetters = (str) => {
+  let result = '';
+  for (let i = 0; i < str.length; i++) {
+    let charCode = parseInt(str[i]) + 65; // ASCII码中 A 的值是 65
+    let letter = String.fromCharCode(charCode);
+    result += letter;
+  }
+  return result;
+}
+
 module.exports = {
   formatTime,
   getNowDate,
   judgeDate,
-  playAudio
+  playAudio,
+  getCurrentTime,
+  getRandomItems,
+  generateExamKey,
+  mappingExercise,
+  feedback,
+  getImageInfo,
+  convertToLetters
 }

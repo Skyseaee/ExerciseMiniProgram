@@ -1,6 +1,7 @@
 <!--index.wxml-->
 <view class="page">
-  <van-notice-bar left-icon="volume-o" color="#4381E3" background="#EEF9FF" text="{{notice}}" wx:if="{{notice}}"/>
+  <view class="countdowntext">距25年考研初试还剩{{days}}天</view>
+
   <swiper indicator-dots="true" autoplay="false" circular interval="4000" duration="1000" class='swiper'>
     <block wx:for="{{bannerList}}" wx:key="*this">  
       <swiper-item>  
@@ -8,38 +9,35 @@
       </swiper-item>  
     </block>
   </swiper>
-  <view class="category">
-    <swiper indicator-dots="true" interval="4000" duration="1000">
-      <block>
-        <swiper-item>
-          <van-grid  border="{{ false }}">
-            <van-grid-item use-slot wx:for="{{ firstCategory1 }}" data-id="{{item.id}}" bindtap="goCategry">
-              <image class="list-img" mode="aspectFit" src="{{item.pic_url}}" />
-              <view class="list-title">{{item.name}}</view>
-            </van-grid-item>
-          </van-grid>
-        </swiper-item>
-        <swiper-item wx:if="{{firstCategory2.length > 0}}">
-          <van-grid border="{{ false }}">
-            <van-grid-item use-slot wx:for="{{ firstCategory2 }}" data-id="{{item.id}}" bindtap="goCategry">
-              <image class="list-img" mode="aspectFit" src="{{item.pic_url}}" />
-              <view class="list-title">{{item.name}}</view>
-            </van-grid-item>
-          </van-grid>
-        </swiper-item>
-      </block>
-    </swiper>
-  </view>
-  <view class="background">
-    <view class="m-category">我的题库</view>
-    <van-cell wx:if="{{myCategory}}" size="large" center title="{{item.name}}" data-id="{{item.id}}" 
-    data-name="{{item.name}}" data-time="{{item.q_update_time}}" 
-    bindtap="goDetail" is-link label="{{item.date}}" wx:for="{{myCategory}}">
-      <van-icon slot="icon" name="records" color="#46C6BA" size="35px" class="custom-icon" />
-    </van-cell>
-    <view wx:if="{{!myCategory}}" class="no">
-      <image src="/images/no.png" class="no-img"></image>
-      <view class="word">暂无题库，去题库分类查找题库</view>
+  
+  <view class="border">
+    <view class="infobar">
+      <view class="cards" hover-class="button-hover" bind:tap="infos">
+        <image class="persisticon" src="/images/correct_rates.png"></image>
+          <view class="infos">
+            <view class="persistdays">刷题正确率</view>
+            <view class="infos-text">正确率{{correctRate}} %</view>
+          </view>
+      </view>
+      <view class="vertical-line"></view>
+      <view class="cards-right" bind:tap="bonus" hover-class="button-hover right">
+        <image class="persisticon" src="/images/persist_days.png"></image>
+        <view class="infos  rights">
+          <view class="persistdays">积分打卡</view>
+          <view class="infos-text">今日{{persistDays}}</view>
+        </view>
+      </view>
     </view>
   </view>
+
+  <view class="title-text">刷题科目</view>
+
+  <view class="row">
+      <view class="item" wx:for="{{ firstCategory1 }}" wx:key="id" data-id="{{item.id}}" bindtap="goCategry">
+          <view class="rectangle">
+              <image class="covers" src="{{item.pic_url}}" mode=""/>
+          </view>
+      </view>
+  </view>
+
 </view>

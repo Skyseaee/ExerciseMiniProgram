@@ -33,50 +33,61 @@
         "pages/pointList/pointList",
         "pages/pointRule/pointRule",
         "pages/exchange/exchange",
-        "pages/code/code"
+        "pages/code/code",
+        "pages/examinfo/examinfo",
+        "pages/exercise/exercise",
+        "pages/wrongQuestion/wrongQuestion",
+        "pages/favorExam/favorExam",
+        "pages/recordInfo/recordInfo",
+        "pages/intro/intro",
+        "pages/exammode/exammode",
+        "pages/component/feedbackInput/feedbackInput",
+        "pages/categories/categories",
+        "pages/ec-canvas/ec-canvas",
+        "pages/exerciseCharts/exerciseCharts"
     ],
     "window": {
         "backgroundTextStyle": "light",
-        "navigationBarBackgroundColor": "#46C6BA",
-        "navigationBarTitleText": "智慧考题宝",
-        "navigationBarTextStyle": "white"
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "刷题研考帮",
+        "navigationBarTextStyle": "black"
     },
     "tabBar": {
         "borderStyle": "black",
         "backgroundColor": "#ffffff",
         "color": "#8A8A8A",
-        "selectedColor": "#46C6BA",
-        "list": [{
+        "selectedColor": "#1492FC",
+        "list": [
+            {
                 "pagePath": "pages/index/index",
-                "iconPath": "images/first.png",
-                "selectedIconPath": "images/first-selected.png",
+                "iconPath": "images/home_uncovered.png",
+                "selectedIconPath": "images/home_covered.png",
                 "text": "首页"
             },
             {
-                "pagePath": "pages/category/category",
-                "iconPath": "images/category.png",
-                "selectedIconPath": "images/category-selected.png",
-                "text": "分类"
-            },
-            {
-                "pagePath": "pages/article/article",
-                "iconPath": "images/news.png",
-                "selectedIconPath": "images/news-selected.png",
-                "text": "资讯"
+                "pagePath": "pages/examinfo/examinfo",
+                "iconPath": "images/pratice_uncovered.png",
+                "selectedIconPath": "images/pratice_covered.png",
+                "text": "刷题"
             },
             {
                 "pagePath": "pages/my/my",
-                "iconPath": "images/my.png",
-                "selectedIconPath": "images/my-selected.png",
-                "text": "我的"
+                "iconPath": "images/mine_uncovered.png",
+                "selectedIconPath": "images/mine_covered.png",
+                "text": "个人中心"
             }
         ]
     },
     "plugins": {
         "htmltowxml": {
-          "version": "1.4.0",
-          "provider": "wxa51b9c855ae38f3c"
+            "version": "1.4.0",
+            "provider": "wxa51b9c855ae38f3c"
+        },
+        "calendar": {
+            "version": "1.1.3",
+            "provider": "wx92c68dae5a8bb046"
         }
-      },
-    "sitemapLocation": "sitemap.json"
+    },
+    "sitemapLocation": "sitemap.json",
+    "lazyCodeLoading": "requiredComponents"
 }

@@ -2,11 +2,88 @@
 page{
   background-color: #f3f3f3;
 }
+
+.calendars {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url(http://www.skyseaee.cn/uploads/exercise_img/20240519/664a1f5876e57.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-bottom: 30rpx;
+}
+
+.info {
+  display: flex;
+  margin-top: 240rpx;
+  width: 720rpx;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.signd {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: left;
+  margin-left: 24rpx;
+}
+
+.coins {
+  color:  #6A6A6A;
+  font-size: 28rpx;
+  word-spacing: 4rpx;
+  font-weight: 400;
+}
+
+.bottom {
+  margin-bottom: 6rpx;
+}
+
+.bg-color {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-spacing: 4rpx;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  height: 60rpx;
+  width: 180rpx;
+  color: #f3f3f3;
+  background: #1569E4;
+  opacity: 0.9;
+}
+
+.sign-btn {
+  margin-right: 24rpx;
+}
+
+.header {
+  font-size: 36rpx;
+  color: #303030; 
+}
+
+.calendar {
+  width: 684rpx;
+  border-radius: 16rpx;
+  background-color: #FFFFFF;
+  padding-top: 16rpx;
+  box-shadow: 0px 8px 11px 0px rgba(235,233,233,0.5);
+}
+
+.board {
+  background-color: #FFFFFF;
+  color: #1569E4;
+}
+
 .point{
-  background-color: #46C6BA;
-  height:90px;
+  background-color: #3a448a;
+  height:200rpx;
   text-align:center;
 }
+
 .title{
   font-size: 30rpx;
   color: #fff;
@@ -20,28 +97,36 @@ page{
 .action{
   display:flex;
   align-items: center;
+  margin-left: 32rpx;
+  margin-right: 32rpx;
   padding: 20rpx 0;
   background-color: #fff;
 }
+
+.select-icons {
+  height: 80rpx;
+  width: 80rpx;
+}
+
+.select-texts {
+  font-size: 28rpx;
+  color: #202020;
+}
+
 .btn{
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   flex: auto;
 }
-.line{
-  width:100%;
-  height:10px;
-  background:#f3f3f3;
-}
-.task{
-  background-color: #f3f3f3;
-  margin-bottom: 20px;
-}
-.task-title{
-  padding: 15px;
-}
-.task-box{
-  margin: 0 20rpx;
-  background-color: #fff;
-  border-radius: 5px;
+
+.bottom-line {
+  height: 16rpx;
+  background: #E1EDFF;
+  border: 0.2px solid rgba(229,227,227,1);
+  box-shadow: 0px 8px 11px 0px rgba(235,233,233,0.5);
+  margin-left: 32rpx;
+  margin-right: 32rpx;
 }

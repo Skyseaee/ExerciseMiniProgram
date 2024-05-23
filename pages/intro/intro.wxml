@@ -1,0 +1,7 @@
+<!--pages/intro/intro.wxml-->
+<view class="content">
+  <block wx:for="{{intros}}" wx:key="index">
+    <view class="{{item.class}}">{{item.text}}</view>
+  </block>
+</view>
+<view class="button"></view>

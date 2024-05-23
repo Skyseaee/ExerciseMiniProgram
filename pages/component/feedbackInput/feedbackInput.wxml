@@ -1,0 +1,12 @@
+<!--pages/component/feedbackInput/feedbackInput.wxml-->
+<view class="modal-mask"></view>
+<view class="modal">
+  <!-- 输入框1 -->
+  <input placeholder="正确答案（输入选项序号）" bindinput="getInputValue1" />
+  <!-- 输入框2 -->
+  <input placeholder="补充说明" bindinput="getInputValue2" />
+  <view class="buttons">
+    <button bindtap="confirm">确认</button>
+    <button bindtap="closeModal">取消</button>
+  </view>
+</view>

@@ -43,10 +43,7 @@ Page({
 */
   getSignMoneList:function(){
       var that = this;
-      wx.showLoading({
-        title: '加载中',
-        mask:true
-      })
+
       if(that.data.loading) return;
       if(that.data.loadend) return;
       that.setData({loading:true,loadtitle:""});
@@ -64,9 +61,6 @@ Page({
       },function(){
           that.setData({ loading: false, loadtitle:'加载更多'});
       });
-      wx.hideLoading({
-        success: (res) => {},
-      })
   },
   SplitArray: function (list, sp) {
       if (typeof list != 'object') return [];

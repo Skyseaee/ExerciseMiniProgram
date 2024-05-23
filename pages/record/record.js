@@ -1,16 +1,24 @@
-// pages/record/record.js
+// exer_pages/record/record.js
 var question_js = require('../../utils/question.js');
+const util = require('../../utils/util');
+const app = getApp()
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    page:1,
-    limit:10,
+    exer_page:0,
+    exam_page: 0,
     nodata:true,
-    recordList:[],
-    moreData: true,//更多数据
+    exerList:[],
+    examList: [],
+    indexList: null,
+    dataList: {},
+    exer_moreData: true,//更多数据
+    exam_moreData: true,
+    selectedTab: '答题记录',
+    isExam: false,
   },
 
   /**
@@ -18,110 +26,133 @@ Page({
    */
   onLoad: function (options) {
     var userInfo = wx.getStorageSync('userInfo')
+    let indexList = new Set() 
     this.setData({
-      userInfo:userInfo
+      userInfo: userInfo,
+      indexList: indexList,
     })
-    this.getRecord(this.data.page,this.data.limit,userInfo.uid)
+    this.getRecords(false, true)
+    this.getRecords(true, true)
   },
 
-  //请求数据
-  getRecord(page,limit,uid){
-    var that = this;
-    wx.showLoading({
-      title: '加载中',
-      mask:true,
-      icon: 'loading'
-    })
-    wx.Apis.api.getUserRecord(page,limit,uid,(code, data) => {
-      var recordList = that.data.recordList;
-      var page = that.data.page;
-      console.log(data.length)
-      if(data.length){
-        data.forEach(v => {
-          recordList.push(v)
-        });
-        that.setData({
-          recordList:recordList,
-          page:page+1,
-          nodata:false
-        })
-      }else{
-        that.setData({
-          recordList:recordList,
-          moreData:false
-        })
-      }
-      
-      setTimeout(function(){
-        wx.hideLoading({
-          success: (res) => {},
-        })
-      },1000);
-    });
+  getRecords: function(isExam, is_first) {
+    var that = this
+    if(!isExam) {
+      wx.request({
+        url: 'https://www.skyseaee.cn/routine/auth_api/get_records_by_userID',
+        header: {
+          "content-type": "application/x-www-form-urlencoded"
+        },
+        data: {
+          userid: app.globalData.uid,
+          index: that.data.exer_page,
+        },
+        success: function(res) {
+          let records = that.data.exerList
+          
+          if(res.data.count < 20) {
+            that.setData({
+              exer_moreData: false,
+            })
+          }
+  
+          if(Object.keys(res.data.data).length != 0 || that.data.exer_page != 0) {
+            for(let key in res.data.data) {
+              if(that.data.indexList.has(res.data.data[key].exercise_id)) {
+                continue
+              }
+              that.data.indexList.add(res.data.data[key].exercise_id)
+              
+              res.data.data[key]['brief'] = res.data.data[key].question.substring(0, 16)
+              if(res.data.data[key].question.length > 16) {
+                res.data.data[key]['brief'] += "..."
+              } else if(res.data.data[key].question.length == 0) {
+                res.data.data[key]['brief'] = res.data.data[key]['first_name'] + '-' + res.data.data[key]['second_name'] + '题'
+              }
+              res.data.data[key]['correct_rate'] = that.formateRate(res.data.data[key]['correct_rate'])
+              // console.log(res.data.data[key]['answer'])
+              res.data.data[key]['answers'] = util.convertToLetters(res.data.data[key]['answer'].toString())
+              res.data.data[key]['correct_answer'] = util.convertToLetters(res.data.data[key]['correct_answer'].toString())
+              records.push(res.data.data[key])
+            }
+            console.log(records)
+            that.setData({
+              nodata: false,
+              exerList: records,
+              dataList: that.gengerateMap(records, that.data.exer_page, that.data.exer_moreData)
+            })
+            if(Object.keys(res.data.data).length === 0) {
+              wx.showToast({
+                title: '暂无更多记录',
+                icon: 'success',
+                duration: 2000
+              })
+              that.setData({
+                exer_moreData: false,
+              })
+              return
+            }
+          }
+        }
+      })
+    } else {
+      wx.request({
+        url: 'https://www.skyseaee.cn/routine/auth_api/get_exam_records',
+        header: {
+          "content-type": "application/x-www-form-urlencoded"
+        },
+        data: {
+          userid: app.globalData.uid,
+          index: that.data.exam_page,
+        },
+        success: function(res) {
+          let list = res.data.data
+          let count = res.data.count
+          if(count < 20) {
+            if(that.data.examList.length != 0) {
+              wx.showToast({
+                title: '暂无更多记录',
+                icon: 'success',
+                duration: 2000
+              })
+            }
+            that.setData({
+              exam_moreData: false,
+            })
+          }
+          let records = that.data.examList
+          for(let i=0; i<count; i++) {
+            list[i]['brief'] = list[i].first_name + '模拟测试' + i
+            list[i]['answer_time'] = list[i].add_time
+            list[i]['spend'] = that.secondsToHMS(list[i].use_time)
+            list[i]['num'] = list[i].question_id.split(',').length
+            records.push(list[i])
+          }
+          that.setData({
+            examList: records,
+          })
+          if(!is_first) {
+            that.setData({
+              dataList: that.gengerateMap(records, that.data.exam_page, that.data.exam_moreData)
+            })
+          }
+        }
+      })
+    }
   },
 
   getRecordDetail: function(t) {
-    var that = this;
-    wx.showLoading({
-      title: '加载中',
-    })
-    var id = t.currentTarget.dataset.id;
-    wx.Apis.api.getRecordDetail(id,(code, data) => {
-      console.log(data)
-      wx.setStorage({
-        key:'examids'+data.id,
-        data:data.ids
-      })
-      wx.setStorage({
-        key:'examlist'+data.id,
-        data:data.list
-      })
-      wx.setStorage({
-        key:'exam'+data.id,
-        data:data.record
-      })
-      var question = wx.getStorageSync('question_'+data.category)
-      if(!question){
-        //加载题库
-        that.uploadQuestion(data.category,data.id,data.ids);
-      }else{
-        //重新请求题库
-        var question_update_time = wx.getStorageSync('question_update_time_'+data.category)
-        if(question_update_time < data.q_update_time){
-          that.uploadQuestion(data.category,data.id,data.ids);
-        }else{
-          question_js.initAllQuestionFromStorage(data.category);
-          // var questionArr = question_js.getQuestionsByIds(data.ids)
-          // wx.setStorage({
-          //   key:'examall'+data.id,
-          //   data:questionArr
-          // })
-          wx.navigateTo({
-            url: '/pages/exam/exam?id='+data.id+'&timeback=1',
-          })
-        }
-      }
-    })
-  },
-
-  //加载题库
-  uploadQuestion(category,id,ids){
-    var that = this;
-    wx.Apis.api.getQuestionList(category,(code, data) => {
-      wx.setStorageSync('question_id_'+category, data.question_id)
-      wx.setStorageSync('question_'+category, data.question_list)
-      wx.setStorageSync('question_update_time_'+category, data.q_update_time)
-
-      question_js.initAllQuestionFromStorage(category);
-      // var questionArr = question_js.getQuestionsByIds(ids)
-      // wx.setStorage({
-      //   key:'examall'+id,
-      //   data:questionArr
-      // })
+    let index = t.currentTarget.dataset.index;
+    let recordInfo = this.data.dataList.data[index]
+    if(!this.data.isExam) {
       wx.navigateTo({
-        url: '/pages/exam/exam?id='+id+'&timeback=1',
+        url: '/pages/recordInfo/recordInfo?info=' + encodeURIComponent(JSON.stringify(recordInfo)),
       })
-    })
+    } else {
+      wx.navigateTo({
+        url: '/pages/exammode/exammode?class=record&question=' + recordInfo.question_id + "&category=" + recordInfo.first_id + "&records=" + encodeURIComponent(JSON.stringify(recordInfo)),
+      })
+    }
   },
 
   /**
@@ -132,9 +163,7 @@ Page({
   },
 
   onReachBottom: function () {
-    if(this.data.moreData){
-      this.getRecord(this.data.page, this.data.limit,this.data.userInfo.uid);
-    }
+
   },
 
   /**
@@ -146,5 +175,68 @@ Page({
       path: "pages/index/index",
       imageUrl: "/images/share.png"
     };
+  },
+
+  formateRate: function(rate) {
+    let r = rate.toFixed(3) * 100
+    return r.toString().substring(0, 4)
+  },
+
+  findMoreRecord: function() {
+    if(this.data.isExam) {
+      let exam_page = this.data.exam_page
+      if(this.data.exam_moreData) {
+        this.setData({
+          exam_page: exam_page + 1,
+        })
+      }
+      this.getRecords(true, false)
+    } else {
+      let exer_page = this.data.exer_page
+      if(this.data.exer_moreData) {
+        this.setData({
+          exer_page: exer_page + 1,
+        })
+      }
+      this.getRecords(false, false)
+    }
+  },
+
+  switchTabLeft: function () {
+    let switchs = this.data.selectedTab
+    if(switchs !== "答题记录") {
+      let dataList = this.gengerateMap(this.data.exerList, this.data.exer_page, this.data.exer_moreData)
+      this.setData({
+        selectedTab: "答题记录",
+        isExam: false,
+        dataList: dataList,
+      })
+    }
+  },
+
+  switchTabRight: function() {
+    let switchs = this.data.selectedTab
+    if(switchs !== "测试记录") {
+      let dataList = this.gengerateMap(this.data.examList, this.data.exam_page, this.data.exam_moreData)
+      this.setData({
+        selectedTab: "测试记录",
+        isExam: true,
+        dataList: dataList,
+      })
+    }
+  },
+
+  gengerateMap: function(data, page, moreData) {
+    return {'data': data, 'page': page, 'moreData': moreData, 'hasData': data.length !== 0}
+  },
+
+  secondsToHMS: function(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.ceil(seconds % 60);
+    
+    if(minutes == 0 && hours == 0) return `${remainingSeconds}s`;
+    else if(hours == 0) return `${minutes}min ${remainingSeconds}s`;
+    else return `${hours}h ${minutes}min ${remainingSeconds}s`;
   },
 })

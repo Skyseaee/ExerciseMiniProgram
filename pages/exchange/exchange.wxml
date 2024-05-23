@@ -1,9 +1,12 @@
 <!--pages/exchange/exchange.wxml-->
 <view>
-  <view class="exchange">
-    <view><image class="image" src="/images/active.png"></image></view>
-    <view class="title">兑换激活码 {{code_use_days}}天</view>
-    <view class="content">{{exchangeCode}} 积分</view>
-    <view class="btn" bindtap="exchange">兑换</view>
+  <view wx:if="{{exchange}}">
+    <view class="exchange">
+      <view><image class="image" src="/images/active.png"></image></view>
+      <view class="title">兑换激活码 {{code_use_days}}天</view>
+      <view class="content">{{exchangeCode}} 积分</view>
+      <view class="btn" bindtap="exchange">兑换</view>
+    </view>
   </view>
+  <view wx:else="{{exchange}}" class="nodata">-- 暂无更多可兑换产品 敬请期待 --</view>
 </view>
