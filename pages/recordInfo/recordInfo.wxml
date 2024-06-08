@@ -4,7 +4,9 @@
       <text>{{first_name}} / {{second_name}}</text><text style="margin-left: 24rpx;">{{answer_time}}</text>
       <image class="favorQuestion" bind:tap="favorQuestion" src="{{favor? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
     </view>
-    <text user-select="true" class="questions">{{question}}</text>
+    <view class="questions">
+      <wemark md="{{question}}" link highlight type="wemark"></wemark>
+    </view>
     <view wx:if="{{question_img.length != 0}}" style="width: 100%; height: 15vh; overflow: hidden;">
       <image src="{{question_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
     </view>
@@ -30,7 +32,9 @@
       <view>本题正确率：{{currentRate}}%</view>
     </view>
     <view class="separator"></view>
-    <text user-select="true">{{comments}}</text>
+    <view class="borders">
+      <wemark md="{{comments}}" link highlight type="wemark"></wemark>
+    </view>
   </view>
   <view wx:if="{{comments_img.length != 0}}" class="commentsimg">
     <image src="{{comments_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>

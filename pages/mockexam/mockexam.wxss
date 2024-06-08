@@ -1,0 +1,110 @@
+/* pages/mockexam/mockexam.wxss */
+page {
+  background-color: #f8f8f8;
+}
+
+.title {
+  display: flex;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.5);
+}
+
+.cover {
+  margin: 28rpx 32rpx 28rpx 44rpx;
+  height: 120rpx;
+  width: 220rpx;
+}
+
+.name {
+  margin-top: 32rpx;
+  margin-bottom: 10rpx;
+  font-size: 36rpx;
+  color: #444;
+  font-weight: 600;
+}
+
+.nums {
+  font-size: 26rpx;
+  margin-top: 20rpx;
+  letter-spacing: 2rpx;
+  color: #838383;
+}
+
+.exam-list {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  background-color: #fff;
+  margin: 24rpx auto;
+  box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.5);
+  border-radius: 12rpx;
+}
+
+.up-area {
+  display: flex;
+  align-items: center;
+  padding-top: 32rpx;
+  padding-left: 48rpx;
+  padding-bottom: 28rpx;
+}
+
+.big-img {
+  width: 100rpx;
+  height:100rpx;
+}
+
+.exam-name {
+  color: #222;
+  letter-spacing: 0.4px;
+  font-size: 32rpx;
+  margin-left: 20rpx;
+}
+
+.down-area {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+}
+
+.small-icon {
+  height: 32rpx;
+  width: 32rpx;
+}
+
+.vertical-line {
+  width: 2rpx; height: 40rpx; background-color: #ccc;
+}
+
+.txts {
+  margin-left: 10rpx;
+  font-size: 14px;
+  color: #1569E4;
+  letter-spacing: 1rpx;
+  text-align: center;
+}
+
+.nodata {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nodata-img {
+  margin-top: 100rpx ;
+  height: 300rpx;
+}
+
+.nodata-txt {
+  font-size: 36rpx;
+  color: #808080;
+  margin-top: 50rpx;
+  letter-spacing: 4rpx;
+}

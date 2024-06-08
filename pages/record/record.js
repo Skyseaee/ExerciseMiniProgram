@@ -55,7 +55,9 @@ Page({
               exer_moreData: false,
             })
           }
-  
+          
+          
+
           if(Object.keys(res.data.data).length != 0 || that.data.exer_page != 0) {
             for(let key in res.data.data) {
               if(that.data.indexList.has(res.data.data[key].exercise_id)) {

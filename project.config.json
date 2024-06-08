@@ -43,7 +43,8 @@
         "packNpmManually": false,
         "packNpmRelationList": [],
         "minifyWXSS": true,
-        "condition": false
+        "condition": false,
+        "ignoreUploadUnusedFiles": false
     },
     "compileType": "miniprogram",
     "libVersion": "2.25.3",

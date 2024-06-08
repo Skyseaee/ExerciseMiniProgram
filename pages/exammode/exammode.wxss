@@ -1,3 +1,7 @@
+page {
+  background-color: #f9fafa;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -7,8 +11,6 @@
 }
 
 .question {
-  margin: 20rpx;
-  margin-top: 80rpx;
   color: #505050;
   font-size: 30rpx;
   line-height: 50rpx;
@@ -21,11 +23,19 @@
 
 .questionInfo {
   display: flex;
-  text-align: center;
-  width: 90%;
-  margin: 0 auto;
+  align-items: center;
+  background-color: #fff;
+  width: 100%;
+  height: 100rpx;
   margin-bottom:36rpx;
   justify-content: space-between;
+  box-shadow: 0px 8rpx 8rpx 0px rgba(1,0,70,0.05);
+}
+
+.process {
+  display: flex;
+  align-items: center;
+  margin-left: 20rpx;
 }
 
 .nextQuestion {
@@ -50,11 +60,10 @@
 
 .favorQuestion {
   display: inline;
-  border: 2px solid #aaa;
   border-radius: 12rpx;
   padding: 4rpx;
-  height: 40rpx;
-  width: 40rpx;
+  height: 72rpx;
+  width: 72rpx;
 }
 
 .functions {
@@ -72,21 +81,25 @@
   align-items:center;
   padding: 10rpx;
   color: #505050;
-  border: 2px solid #aaa;
-  border-radius: 24rpx;
-  margin-bottom: 30rpx;
+  margin-bottom: 50rpx;
   cursor: pointer;
+  background-color: #fff;
+  box-shadow: 0px 8rpx 16rpx 0px rgba(219,220,233,0.8);
+  border-radius: 8rpx;
 }
 
 .optionSelected {
   display: flex;
   align-items:center;
   padding: 10rpx;
-  color: #3481a0;
-  border: 2px solid #3481a0;
+  color: #1569E4;
+  border: 2rpx solid #1569E4;
+  background-color: #fff;
   border-radius: 24rpx;
   margin-bottom: 30rpx;
   cursor: pointer;
+  box-shadow: 0px 8rpx 16rpx 0px rgba(219,220,233,0.8);
+  border-radius: 8rpx;
 }
 
 .optionText {
@@ -103,13 +116,14 @@
 
 .submit-button {
   display: flex;
-  border-radius: 30rpx;
-  height: 60rpx;
-  width: 140rpx;
-  border: 3rpx solid #3481a0;
-  color: #3481a0;
-  margin-left: 32rpx;
-  font-size: medium;
+  border-radius: 20rpx;
+  margin-right: 20rpx;
+  font-size: 26rpx;
+  height: 54rpx;
+  width: 120rpx;
+  border: 3rpx solid #1569E4;
+  color: #1569E4;
+  margin-left: 24rpx;
   align-items: center;
   justify-content: center;
   letter-spacing: 2rpx;
@@ -157,21 +171,21 @@
 
 .icon {
   display: inline;
-  height: 36rpx;
-  width: 36rpx;
+  height: 72rpx;
+  width: 72rpx;
 }
 
 .control {
   position: fixed;
   display: flex;
-  width: 82%;
+  width: 50%;
   height: 200rpx;
   background-color: #fff;
   box-shadow: 0px 8rpx 8rpx rgba(0, 0, 0, 0.3); /* 添加上边的阴影效果 */
   border-radius: 24rpx;
   padding-top: 20rpx;
-  padding-left: 40rpx;
-  padding-right: 40rpx;
+  padding-left: 20rpx;
+  padding-right: 20rpx;
   font-size: large;
   color: #505050;
   bottom: 120rpx;
@@ -184,6 +198,7 @@
 
 .long {
   height: 720rpx;
+  width: 640rpx;
 }
 
 .last-icon, .next-icon 
@@ -195,7 +210,9 @@
 .menu-btn {
   position: fixed;
   z-index: 3;
-  bottom: 138rpx;
+  bottom: 128rpx;
+  height: 90rpx;
+  width: 90rpx;
 }
 
 .menu {
@@ -214,14 +231,20 @@
   padding-left: 30rpx;
 }
 
+.info-area {
+  display: flex;
+  justify-content: space-between;
+  
+}
+
 .answered {
-  background-color: #2196f3;
-  color: white;
+  border: #1569E4 4rpx solid;
+  color: #1569E4;
 }
 
 .unanswered {
-  background-color: grey;
-  color: white;
+  color: #808080;
+  border: solid 2rpx #808080;
 }
 
 .line-break {
@@ -230,24 +253,23 @@
 }
 
 .info-con {
-  height: 680rpx;
+  height: 480rpx;
 }
 
 .exam-info {
-  width: 100rpx;
-  height: 100rpx;
-  line-height: 100rpx;
+  width: 64rpx;
+  height: 64rpx;
+  line-height: 64rpx;
   text-align: center;
   border-radius: 50%;
   margin-bottom: 20rpx;
-  margin-right: 20rpx;
-  font-size: 36rpx;
+  font-size: 28rpx;
 }
 
 .switch {
   position: fixed;
   display: flex;
-  width: 82%;
+  width: 46%;
   height: 100rpx;
   align-items: center;
   font-size: large;
@@ -258,22 +280,18 @@
 
 .close-btn {
   align-self: flex-end;
-  height: 100rpx;
+  height: 80rpx;
   width: 80rpx;
   margin-right: 20rpx;
 }
 
 .current {
-  background-color: rgb(228, 191, 110);
+  background-color: rgb(250, 215, 119) !important;
+  border: 4rpx solid rgb(250, 215, 119);
 }
 
 .null {
 
-}
-
-.score-img {
-  width: 120rpx;
-  height: 120rpx;
 }
 
 .score-info {
@@ -294,12 +312,18 @@
 }
 
 .emptyAnswer {
-  background-color: #636363;
-  color: white;
+  color: #808080;
+  border: solid 2rpx #808080;
+}
+
+.small-icon {
+  height: 32rpx;
+  width: 32rpx;
+  margin-right: 12rpx;
 }
 
 .wrongAnswer {
-  background-color: #f05e54;
+  background-color: #f77a71;
   color: white;
 }
 
@@ -345,9 +369,8 @@
 }
 
 .icon {
-  height: 30rpx;
-  width: 30rpx;
-  margin-right: 20rpx;
+  height: 60rpx;
+  width: 60rpx;
 }
 
 .feedback {
@@ -375,12 +398,13 @@
 
 .example-icon {
   display: flex;
+  font-size: 26rpx;
   justify-content: center;
   align-items: center;
   margin-right: 18rpx;
   width: 18%;
-  height: 56rpx;
-  border-radius: 20rpx;
+  height: 44rpx;
+  border-radius: 12rpx;
 }
 
 .conclusion {
@@ -399,4 +423,20 @@
 
 .con {
   height: 540rpx;
+}
+
+progress {
+  width: 340rpx;
+  margin-right: 20rpx;
+  border-radius: 40rpx; /* 设置进度条的圆角 */
+  height: 40rpx; /* 设置进度条的高度 */
+}
+
+.progress50 .wx-progress-inner-bar {
+  border-radius: 16rpx !important;
+  background: linear-gradient(to right, #f3f3f3, #6dd5fa) !important;
+}
+.progress90 .wx-progress-inner-bar {
+  border-radius: 16rpx !important;
+  background: linear-gradient(to right, #f3f3f3, #6dd5fa, #2980b9) !important;  
 }

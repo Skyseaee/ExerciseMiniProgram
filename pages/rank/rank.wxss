@@ -3,10 +3,6 @@ page {
 }
 
 .no-record{
-  text-align:center;
-  margin-top:20px;
-}
-.no-record{
   width:250rpx;
   height:250rpx;
 }
@@ -119,7 +115,7 @@ page {
 .ls-item .ls-l{
   width: 76rpx;
   height: 76rpx;
-  line-height: 92rpx;
+  line-height: 76rpx;
   text-align: center;
   font-size: 30rpx;
   color: #505050;
@@ -180,7 +176,7 @@ page {
   background-position: bottom center; /* 将图片定位到底部居中 */
   background-size: 100% auto; /* 宽度设置为100%，高度自动调整 */
   background-repeat: no-repeat;
-  width: 712rpx;
+  width: 720rpx;
   height: 360rpx;
   margin: 0rpx auto;
   display: flex;

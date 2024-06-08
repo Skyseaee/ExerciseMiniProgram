@@ -44,7 +44,9 @@
         "pages/component/feedbackInput/feedbackInput",
         "pages/categories/categories",
         "pages/ec-canvas/ec-canvas",
-        "pages/exerciseCharts/exerciseCharts"
+        "pages/exerciseCharts/exerciseCharts",
+        "pages/mockexam/mockexam",
+        "pages/mockRank/mockRank"
     ],
     "window": {
         "backgroundTextStyle": "light",

@@ -217,12 +217,16 @@ Page({
         })
         return
       }
-      let question = util.getRandomItems(5, this.data.total_questions_num - 1).join()
-      let cate = this.data.current_question_bank_type
-      console.log(this.data.current_question_bank_type)
+
       wx.navigateTo({
-        url: '/pages/exammode/exammode?class=mock&question=' + question + "&category=" + cate,
+        url: '/pages/mockexam/mockexam?firstCategory=' + encodeURIComponent(JSON.stringify(this.data.current_question_bank)),
       })
+      // let question = util.getRandomItems(5, this.data.total_questions_num - 1).join()
+      // let cate = this.data.current_question_bank_type
+      // console.log(this.data.current_question_bank_type)
+      // wx.navigateTo({
+      //   url: '/pages/exammode/exammode?class=mock&question=' + question + "&category=" + cate,
+      // })
     },
 
     wrongAnswer: function() {

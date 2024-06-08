@@ -4,21 +4,9 @@
   </view>
   <view bindtap="goBack" class="errorstat">
     <view class="button">返回</view>
-    <view class="info">排行榜将在每日零点刷新</view>
   </view>
 </view>
 <view wx:if="{{rankList.length > 0}}" class="rank-box">
-  <view class="switches">
-    <view class="infos">
-      <view class="{{selectedTab === '周排行' ? 'selected' : 'unselect'}}" bind:tap="switchTabMonth">周排行</view>
-      <view wx:if="{{selectedTab == '周排行'}}" class="current"></view>
-    </view>
-    <view class="infos">
-      <view class="{{selectedTab === '总排行' ? 'selected' : 'unselect'}}" bind:tap="switchTabTotal">总排行</view>
-      <view wx:if="{{selectedTab == '总排行'}}" class="current"></view>
-    </view>
-  </view>
-
   <view class="rank-container">
       <!-- 领奖台 -->
       <view class="podium">
@@ -40,8 +28,8 @@
       <view class='ls-c-b'>排名</view>
       <view class='ls-c-b'>用户</view>
       <view class='ls-c-b'>昵称</view>
-      <view class='ls-c-b'>刷题数</view>
-      <view class='ls-c-b'>正确率</view>
+      <view class='ls-c-b'>得分</view>
+      <view class='ls-c-b'>用时</view>
     </view>
 
     <block wx:for="{{rankList}}" wx:for-item="itemChild" wx:for-index="idx" wx:key="index">
@@ -53,15 +41,31 @@
           <image src="{{itemChild.avatarUrl}}"></image>
         </view>
         <view class='ls-l ls-c-t'>{{itemChild.nickName}}</view>
-        <view class='ls-l ls-c-t'><text>{{itemChild.total_answer}}</text> </view>
-        <view class='ls-l ls-c-t'><text>{{itemChild.correct_rate}}%</text> </view>
+        <view class='ls-l ls-c-t'><text>{{itemChild.score}}</text> </view>
+        <view class='ls-l ls-c-t'><text>{{itemChild.real_time}}</text> </view>
       </view>
     </block>
   </view>
 
+  <view class="self-info">
+    <view class="vertical">
+      <text style="margin-bottom: 8rpx; color: #aaa;">个人排名</text>
+      {{myRank}}
+    </view>
+    <view class="vertical">
+      <image class="samll-avatar" src="{{avatar}}"></image>
+    </view>
+    <view class="vertical">
+      <text style="margin-bottom: 8rpx; color: #aaa;">个人得分</text>
+      <view>{{myscore}}</view>
+    </view>
+    <view class="vertical">
+      <text style="margin-bottom: 8rpx; color: #aaa;">个人用时</text>
+      <view>{{useTime}}</view>
+    </view>
+  </view>
 
   <view bindtap="goBack" class="errorstat">
     <view class="button">返回</view>
-    <view class="info">排行榜将在每日零点刷新</view>
   </view>
 </view>

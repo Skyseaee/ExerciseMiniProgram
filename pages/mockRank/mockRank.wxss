@@ -1,0 +1,164 @@
+/* pages/mockRank/mockRank.wxss */
+page {
+  background-color: #f3f3f3;
+}
+
+.no-record{
+  width:250rpx;
+  height:250rpx;
+}
+
+.errorstat {
+  width: 100%;
+  height: 50rpx;
+  margin-top: 80rpx;
+}
+
+.errorstat text {
+  color: #999999;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+}
+
+.button {
+  background: #3498db;
+  color: #fff;
+  width: 400rpx;
+  line-height: 36px;
+  border-radius: 36rpx;
+  text-align: center;
+  margin: 24px auto;
+  padding: 8rpx;
+}
+
+.rank-box .title {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: space-around;
+  font-size: 14px;
+  color: #909090;
+  text-align: center;
+  font-weight: 400;
+}
+
+.rank-container {
+  background-image: url(http://www.skyseaee.cn/uploads/exercise_img/20240522/664dc096b84eb.png);
+  width: 100%;
+  padding-top: 120rpx;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.podium {
+  background-image: url(http://www.skyseaee.cn/uploads/exercise_img/20240521/664c6eb817071.png);
+  background-position: bottom center; /* 将图片定位到底部居中 */
+  background-size: 100% auto; /* 宽度设置为100%，高度自动调整 */
+  background-repeat: no-repeat;
+  width: 720rpx;
+  height: 360rpx;
+  margin: 0rpx auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: #fff solid 4rpx;
+}
+
+.a1 {
+  margin-left: 60px;
+  margin-top: 60rpx;
+}
+
+.a2 {
+  margin-top: 0px;
+}
+
+.a3 {
+  margin-right: 54px;
+  margin-top: 100rpx;
+}
+
+.second {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 140rpx;
+  margin: 0 10rpx;
+}
+
+.ranking-info {
+  display: flex;
+  flex-direction: column;
+  width: 356px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-bottom-left-radius: 16rpx;
+  border-bottom-right-radius: 16rpx;
+  box-shadow: 0px 8px 11px 0px rgba(235,233,233,0.5);
+}
+
+.ls-item{
+  height: 110rpx;
+  margin: 16rpx 0;
+  padding: 16rpx 0;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+}
+
+.ls-item .ls-l{
+  width: 76rpx;
+  height: 76rpx;
+  line-height: 76rpx;
+  text-align: center;
+  font-size: 24rpx;
+  overflow: hidden;
+  white-space: nowrap; /* 确保文本不会换行 */
+  text-overflow: ellipsis; /* 在行尾显示省略号 */
+  color: #505050;
+}
+
+.ls-item .ls-c-img{
+  display: flex;
+  justify-content: center;
+}
+
+.ls-item .ls-c-img image{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.self-info {
+  position: fixed;
+  bottom: 0rpx;
+  width: 100%;
+  display: flex;
+  height: 120rpx;
+  background-color: rgb(253, 253, 253);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  color: #1d5a83;
+  border-top: 2rpx solid #1569E4;
+}
+
+.vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.samll-avatar {
+  height: 64rpx;
+  width: 64rpx;
+  border-radius: 50%;
+}

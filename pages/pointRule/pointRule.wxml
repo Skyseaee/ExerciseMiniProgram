@@ -1,11 +1,18 @@
 <!--pages/pointRule/pointRule.wxml-->
 <view class="page">
- <view class="title">一、刷题小助手积分的作用</view>
+ <view class="title">
+    <view class="point"></view>
+    刷题小助手积分的作用
+  </view>
  <view class="content">1、刷题小助手积分可用于抵扣题库激活。</view>
  <view class="content">2、积分兑换后，无法撤销。</view>
- <view class="title">二、如何获取积分</view>
+ <view class="title">
+  <view class="point"></view>
+  如何获取积分</view>
  <view class="content">可每天在任务列表页，查看任务清单，做任务获取积分。每日刷题也会获得一定的积分。</view>
- <view class="title">三、注意事项</view>
+ <view class="title">
+  <view class="point"></view>
+  注意事项</view>
  <view class="content">1、如用户存在违规恶意刷积分的行为，刷题小助手有权取消获得的积分，已获得积分将被扣回。</view>
  <view class="content">2、为了持续改善用户体验，将不定期更新积分任务，积分规则也可能更新。一切解释权归刷题小助手所有。</view>
 </view>

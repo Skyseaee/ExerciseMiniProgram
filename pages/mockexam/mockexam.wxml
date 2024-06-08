@@ -1,0 +1,32 @@
+<!--pages/mockexam/mockexam.wxml-->
+<view class="title">
+  <image class="cover" src="{{category_info.pic_url}}" mode=""/>
+  <view class="info">
+    <view class="name">{{category_info.name}}</view>
+    <view class="nums">总测试数：{{mock_exam.length}}</view>
+  </view>
+</view>
+
+<view wx:if="{{nodata}}" class="nodata">
+  <image src="/images/no-record.png" class="nodata-img" mode=""/>
+  <view class="nodata-txt">暂无模拟测试...</view>
+</view>
+<view wx:else="{{nodata}}">
+  <view wx:for="{{mock_exam}}" class="exam-list" wx:key="index">
+    <view class="up-area"  bind:tap="gotoExam" data-index="{{index}}">
+      <image src="http://www.skyseaee.cn/uploads/exercise_img/20240607/6661e2d26a1b0.png" class="big-img" mode=""/>
+      <view class="exam-name">{{item.exam_name}}</view>
+    </view>
+    <view class="down-area">
+      <view class="buttons" bind:tap="clearRecord" data-index="{{index}}">
+        <image src="/images/icon_danyuanbaogao@3x.png" class="small-icon" mode=""/>
+        <view class="txts">重置记录</view>
+      </view>
+      <view class="vertical-line"></view>
+      <view class="buttons" bind:tap="showRank" data-index="{{index}}">
+        <image src="/images/icon_cuotiben@3x.png" class="small-icon" mode=""/>
+        <view class="txts">排行榜单</view>
+      </view>
+    </view>
+  </view>
+</view>

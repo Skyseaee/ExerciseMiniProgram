@@ -10,15 +10,16 @@ Page({
      * 页面的初始数据
      */
     data: {
+      is_first: 0,
       questions: [],
       records: [],
-      questionType: '',
       indexes: 0, // 当前题目索引
       spendTime: 0,
       startTime: null,
       allDown: false,
       currentRate: 0,
       options: [],
+      exam_id: 0, 
       selectedOptions: [], // 用户选择的选项
       allOptions: [], // 控制所有选项的样式
       showComments: false, // 是否显示题解
@@ -41,7 +42,8 @@ Page({
       let date = new Date()
       let startTime = date.getTime()
       this.setData({
-        startTime
+        startTime,
+        exam_id: options.id
       })
       
       let record = []
@@ -63,41 +65,66 @@ Page({
           first_id: options.category,
           question: options.question,
           mode: options.class,
+          exam_id: options.id,
         },
         success: function(res) {
           let data = res.data.data
-          if(record.length == 0) {
-            for(let i=0; i<res.data.count; i++) {
-              record.push({"index": i, "isAnswer": false, "userAnswer": '', 'first_id': data[i].first_id, 'second_id': data[i].second_id, 'exercise_id': data[i].id, "correctAnswer": data[i].answer})
-              data[i].user_answer = ''
+          if(data.score == -1 && options.class == 'mock') {
+            for(let i=0; i<data.question.length; i++) {
+              record.push({"index": i, "isAnswer": false, "userAnswer": '', 'first_id': data.question[i].first_id, 'second_id': data.question[i].second_id, 'exercise_id': data.question[i].id, "correctAnswer": data.question[i].answer})
+              data.question[i].user_answer = ''
             }
+          } else if(options.class == 'mock'){
+            record = JSON.parse(data.record)
+            let classMode = that.generateStyleMap(data.question, record)
+            console.log(record)
+            that.setData({
+              allDown: true,
+              showComments: true,
+              answer: utils.convertToLetters(record[0].correctAnswer.toString()),
+              userAnswer: utils.convertToLetters(record[0].userAnswer.toString()),
+              spendTime: that.secondsToHMS(data.use_time),
+              score: data.score,
+              currentRate: that.formateRate(data.question[0].correct_rate),
+              classMode,
+            })
+            wx.disableAlertBeforeUnload()
           }
           let selectedOptions = record[0].userAnswer.toString().split('').map(Number)
           that.setData({
-            first_id:  options.category,
-            questions: data,
-            questionType: utils.mappingExercise(data[0].exercise_type),
-            options: data[0].options.split('~+~').map((item, i) => {
+            is_first: data.is_first,
+            first_id: options.category,
+            questions: data.question,
+            options: data.question[0].options.split('~+~').map((item, i) => {
               return {
                 text: utils.convertToLetters(i.toString()) + '. ' + item,
                 selected: selectedOptions.includes(i),
               }
             }),
             records: record,
-            favor: data[0].favor,
+            favor: data.question[0].favor,
           })
+          // console.log(that.data.is_first) 
+
+          if(data.score != -1) {
+            that.setData({
+              record: data.record,
+              score: data.score,
+              use_time: data.use_time,
+            })
+          }
           
           if(options.class == 'record') {
-            let classMode = that.generateStyleMap(data, record)
+            let classMode = that.generateStyleMap(data.question, record)
             that.setData({
               allDown: true,
               showComments: true,
-              answer: utils.convertToLetters(data[0].answer.toString()),
+              answer: utils.convertToLetters(data.question[0].answer.toString()),
               userAnswer: utils.convertToLetters(record[0].userAnswer.toString()),
               spendTime: that.secondsToHMS(info.use_time),
               score: info.score,
               classMode,
-              currentRate: that.formateRate(data[0].correct_rate),
+              currentRate: that.formateRate(data.question[0].correct_rate),
             })
             
             wx.disableAlertBeforeUnload()
@@ -172,29 +199,30 @@ Page({
       const index = e.currentTarget.dataset.index;
       let selectedOptions = this.data.selectedOptions;
   
-      // 根据题型判断是否为多选题，单选题直接替换选项，多选题追加或删除选项
-      const optionType = this.data.questions[this.data.indexes].exercise_type;
-      if (optionType === 0 || optionType === 2) {
-        selectedOptions = []
-        selectedOptions.push(index)
-      } else if (optionType === 1) {
-        const isSelected = selectedOptions.includes(index);
-        if (isSelected) {
-          selectedOptions.splice(selectedOptions.indexOf(index), 1);
-        } else {
-          selectedOptions.push(index);
-        }
-      }
+      selectedOptions = []
+      selectedOptions.push(index)
+      
       const allOptions = this.data.options.map((item, i) => {
         return {
           text: item.text,
           selected: selectedOptions.includes(i),
         }
       })
-  
+      
+      let record = this.data.records
+      let questions = this.data.questions
+      if(selectedOptions.length > 0) {
+        record[this.data.indexes].isAnswer = true
+        record[this.data.indexes]['userAnswer'] = selectedOptions.join('')
+        questions[this.data.indexes]['isAnswer'] = 'answered'
+      }
+
+
       this.setData({
         selectedOptions: selectedOptions,
         options: allOptions,
+        record,
+        questions,
       });
     },
 
@@ -234,7 +262,6 @@ Page({
           }
         })
         let record = this.data.records
-        
         if(this.data.selectedOptions.length > 0 && this.data.selectedOptions[0] !== "") {
           record[this.data.indexes].isAnswer = true
           record[this.data.indexes]['userAnswer'] = this.data.selectedOptions.join('')
@@ -319,11 +346,13 @@ Page({
       let that = this
       let record = this.data.records
       let isDown = false
-      if(this.data.selectedOptions.length > 0 && this.data.selectedOptions[0] !== "") {
-        record[this.data.indexes].isAnswer = true
-        record[this.data.indexes]['userAnswer'] = this.data.selectedOptions.join('')
-        isDown = true
+      for(let i=0; i<this.data.questions.length; i++) {
+        if(record[i].isAnswer) {
+          isDown = true
+          break
+        }
       }
+
       if(!isDown) {
         wx.showToast({
           title: '无答题记录，无法提交',
@@ -387,8 +416,11 @@ Page({
         'use_time': internal,
         'category_id': this.data.first_id,
         'question_id': question_id.join(','),
-        'record': this.data.records
+        'record': this.data.records,
+        'exam_id': this.data.exam_id,
+        'is_first': this.data.is_first,
       })
+      console.log(params)
       wx.request({
         url: 'https://www.skyseaee.cn/routine/auth_api/save_exam_records',
         header: {
@@ -488,7 +520,7 @@ Page({
 
   favorsExam: function(favors, second_ids, indexs) {
     let that = this
-    console.log(favors, second_ids, indexs)
+    
     wx.request({
       url: 'https://www.skyseaee.cn/routine/auth_api/insert_favor_exercises',
       header: {
@@ -559,5 +591,5 @@ Page({
     this.setData({  
       showModal: true  
     });  
-  }
+  },
 })

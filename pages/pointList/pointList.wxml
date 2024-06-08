@@ -7,6 +7,11 @@
 <view wx:if="{{nodata}}" style='width:100%;text-align:center;margin-top: 80rpx;'>
         <image src="/images/no-record.png" style='width:300rpx;height:300rpx;'></image>
 </view>
-<view wx:for="{{integralList}}" wx:if="{{!nodata}}" >
-  <van-cell title="{{item.title}}" value="{{item.number}}" label="{{item.add_time}}"/>
+<view wx:for="{{integralList}}" wx:if="{{!nodata}}" class="outer">
+  <view class="infos">
+    <view class="names">{{item.title}}</view>
+    <view class="times">{{item.add_time}}</view>
+  </view>
+  <view class="nums">{{item.number}}</view>
+  <!-- <van-cell title="{{item.title}}" value="{{item.number}}" label="{{item.add_time}}"/> -->
 </view>

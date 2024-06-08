@@ -149,8 +149,8 @@ Page({
             totalData: res.data.count,
             questionIndex: indexList[index],
             currentRate: that.formateRate(res.data.data[indexList[index]].correct_rate),
-            answer: res.data.data[indexList[index]].answer.toString().split('').map(Number).map(m => m+1).join(' , '),
-            userAnswer: res.data.data[indexList[index]].user_answer.toString().split('').map(Number).map(m => m+1).join(' , '),
+            answer: util.convertToLetters(res.data.data[indexList[index]].answer.toString()),
+            userAnswer: util.convertToLetters(res.data.data[indexList[index]].user_answer.toString()),
             favor: res.data.data[indexList[index]].favor,
             point_name: res.data.data[indexList[index]].point_name,
           })

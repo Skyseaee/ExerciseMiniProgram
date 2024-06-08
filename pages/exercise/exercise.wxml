@@ -1,10 +1,14 @@
-<view class="container" bind:tap="closeMenu">
-  <view class="question">
+<view class="container">
+  <view class="question" bind:tap="closeMenu">
     <view class="questionInfo">
-      <text>-{{currentIndex + 1}}/{{totalData}}-</text>
+      <view class="process">
+        <progress percent="{{(currentIndex + 1) * 100 /totalData}}" strokeWidth="8" active activeColor="#3a448a" borderRadius="16" class="{{item.percent == 50 ? 'progress50' : 'progress90'}}"></progress>
+        <text>{{currentIndex + 1}}/{{totalData}}</text>
+      </view>
+
       <view class="mode-class">
         <text>背题</text>
-        <switch class="wx-switch-input" checked="true" bindchange="switchMode" color="#3481a0"/>
+        <switch class="wx-switch-input" checked="true" bindchange="switchMode" color="#1569E4"/>
         <text>刷题</text>
       </view>
     </view>
@@ -16,7 +20,7 @@
     </view>
   </view>
 
-  <view class="options">
+  <view class="options" bind:tap="closeMenu">
     <!-- 假设选项格式为 "a,b,c,d,e"，以逗号分隔 -->
     <block wx:for="{{options}}" wx:key="index">
       <view class="{{item.selected? 'optionSelected': 'option'}}" data-index="{{index}}" bindtap="selectOption">
@@ -27,6 +31,7 @@
 
   <view class="icons">
     <image class="favorQuestion" bind:tap="favorQuestion" src="{{favor? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
+    <image src="/images/icon_listed@3x.png" mode="" bind:tap="swicthMenu" class="listQuestion"/>
     <image class="foreQuestion" bind:tap="foreQuestion" src="/images/last.png" mode=""/>
     <image class="nextQuestion" bind:tap="nextQuestion" src="/images/next.png" mode=""/>
   </view>
@@ -47,7 +52,7 @@
     </view>
     <view class="separator"></view>
     <view class="borders">
-      <text user-select="true">{{questionData[questionIndex].comments}}</text>
+      <wemark md="{{questionData[questionIndex].comments}}" link highlight type="wemark"></wemark>
     </view>
   </view>
   <view wx:if="{{(showComments || mode) && questionData[indexList[currentIndex]].comment_img.length != 0}}" class="commentsimg">
@@ -56,7 +61,7 @@
   
   <view class="knowledge-points" wx:if="{{showComments || mode}}">
     <text>本题知识点</text>
-    <view wx:if="point_name.length != 0" class="points">
+    <view wx:if="{{point_name.length != 0}}" class="points">
       <text class="point-name">{{point_name}}</text>
     </view>
     <view class="borders">
@@ -86,4 +91,4 @@
     </view>
   </view>
 </view>
-<view wx:else="{{showTable}}" class="menu-btn" bind:tap="swicthMenu">答题卡片</view>
+<!-- <view wx:else="{{showTable}}" class="menu-btn" bind:tap="swicthMenu">答题卡片</view> -->
