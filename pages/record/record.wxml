@@ -14,7 +14,7 @@
         <image src="/images/no-record.png" style='width:300rpx;height:300rpx;'></image>
     </view>
     <view wx:if="{{dataList.hasData}}" class="result-box" wx:for="{{dataList.data}}" wx:key="record">
-      <view class="rank">
+      <view class="rank" data-index="{{index}}" bindtap="getRecordDetail">
           <view class="title-box">
               <view wx:if="{{selectedTab === '测试记录'}}" class="title-line"></view>
               <view class="time-b">
@@ -28,19 +28,19 @@
                   <view class="time">{{item.answer_time}}</view>
               </view> 
           </view>
-          <view class="record" data-index="{{index}}" bindtap="getRecordDetail">查看记录</view>
+          <view class="record">查看记录</view>
       </view>
       <block wx:if="{{isExam}}">
         <view class="table">
             <view class="tr">
                 <view class="th">用时</view>
                 <view class="th">题目数</view>
-                <view class="th">正确数</view>
+                <view class="th">得分</view>
             </view>
             <view class="tr">
                 <view class="td">{{item.spend}}</view>
                 <view class="td">{{item.num}}</view>
-                <view class="td">{{item.score}}</view>
+                <view class="td">{{item.score * 2.5}}</view>
             </view>
         </view>
       </block>
@@ -49,4 +49,5 @@
         加载更多记录
     </view>
     <view class="hint" wx:else="{{moreData}}">-- 暂无更多记录 --</view>
+    <view style="height: 40rpx; width: 40rpx;"></view>
 </view>

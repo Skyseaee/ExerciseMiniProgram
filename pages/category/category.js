@@ -103,7 +103,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: "智慧考题宝，考试助手 ！",
+      title: "研题帮，考试助手 ！",
       path: "pages/index/index",
       imageUrl: "/images/share.png"
     };

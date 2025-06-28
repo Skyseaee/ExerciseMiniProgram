@@ -45,6 +45,13 @@
           </view>
           <image src="/images/goto.png" class="small-icon" mode=""/>
         </view>
+        <view class="item" bind:tap="goBank">
+          <view class="inside">
+            <image src="/images/change.png" class="icon" mode=""/>
+            <text class="texts">兑换码</text>
+          </view>
+          <image src="/images/goto.png" class="small-icon" mode=""/>
+        </view>
         <view class="item" bind:tap="goCategory">
           <view class="inside">
             <image src="/images/inited.png" class="icon" mode=""/>
@@ -61,6 +68,13 @@
           </button>
           <image src="/images/goto.png" class="small-icon" mode=""/>
         </view>
+        <view class="item" bind:tap="goMove">
+          <view class="inside">
+            <image src="/images/move.png" class="icon" mode=""/>
+            <text class="texts">题目审核</text>
+          </view>
+          <image src="/images/goto.png" class="small-icon" mode=""/>
+        </view>
         <view class="item" bind:tap="goAbout">
           <view class="inside">
             <image src="/images/aboutus.png" class="icon" mode=""/>
@@ -70,5 +84,4 @@
         </view>
     </view>
 </view>
-<van-toast id="van-toast" />
 <component-empower bindmyevent="onMyEvent" isLogin="{{isLogin}}"></component-empower>

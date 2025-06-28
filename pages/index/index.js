@@ -15,7 +15,18 @@ Page({
     let value = app.globalData.uid
     if(!value) {
       value = wx.getStorageSync('uid')
+      app.globalData.uid = value
     }
+
+    if(!value || value == 0) {
+      let userInfo = wx.getStorageSync('userInfo')
+      if(userInfo != undefined) {
+        app.globalData.uid = userInfo['uid']
+        value = userInfo['uid']
+      }
+    }
+
+
     if(value) {
       wx.request({
         url: 'https://www.skyseaee.cn/routine/auth_api/get_user_and_insert_if_notexist',
@@ -64,7 +75,7 @@ Page({
     });
 
     // 计算考研天数
-    const targetDate = new Date('2024-12-21');
+    const targetDate = new Date('2025-12-21');
     let today = new Date();
     let timeDifference = targetDate.getTime() - today.getTime();
     that.setData({days: Math.ceil(timeDifference / (1000 * 60 * 60 * 24))});
@@ -78,6 +89,14 @@ Page({
     }
   },
   goCategry(t){
+    if (app.globalData.uid == 0) {
+      wx.showToast({
+        title: '尚未登录, 请前往个人中心登录',
+        icon: 'none'
+      })
+      return
+    }
+
     var id = t.currentTarget.dataset.id;
     app.globalData.mainActiveIndex = id;
     wx.setStorageSync('mainActiveIndex', id)
@@ -92,23 +111,23 @@ Page({
   },
   onShareAppMessage: function () {
     return {
-      title: "刷题小助手，考试助手 ！",
+      title: "研题帮，考试助手 ！",
       path: "pages/index/index",
       imageUrl: "/images/share.png"
     };
   },
 
   formateRate: function(rate) {
+    if(!rate) return 100
     let r = rate.toFixed(3) * 100
     return r.toString().substring(0, 4)
   },
 
   bonus: function() {
-    console.log(app.globalData)
-    if (app.globalData.uid == 'undefined') {
+    if (app.globalData.uid == 0) {
       wx.showToast({
-        title: '尚未登录',
-        icon: 'error'
+        title: '尚未登录, 请前往个人中心登录',
+        icon: 'none'
       })
       return
     }
@@ -118,10 +137,10 @@ Page({
   },
 
   infos: function() {
-    if (app.globalData.uid == 'undefined') {
+    if (app.globalData.uid == 0) {
       wx.showToast({
-        title: '尚未登录',
-        icon: 'error'
+        title: '尚未登录, 请前往个人中心登录',
+        icon: 'none'
       })
       return
     }

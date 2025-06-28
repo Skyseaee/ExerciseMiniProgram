@@ -81,6 +81,12 @@ Page({
     onShareAppMessage() {
 
     },
+    
+    goActive: function(e) {
+      wx.navigateTo({
+        url: '/pages/unlockBank/unlockBank',
+      })
+    },
 
     goExamInfo: function(e) {
       const index = e.currentTarget.dataset.index;

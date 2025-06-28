@@ -1,0 +1,19 @@
+<!--pages/unlockBank/unlockBank.wxml-->
+<view class="bg">
+  <view class="title">
+    <view>题库解锁 分享领抵扣</view>
+    <image class="icon" src="/images/reset.png" mode="" bind:tap="refreshInfo"/>
+  </view>
+</view>
+
+<view class="container">
+  <view wx:for="{{categories}}" wx:key="index" class="cate-list" bind:tap="goToLock" data-index="{{index}}">
+    <image src="{{item.pic_url}}" class="cover" mode=""/>
+    <view class="name">{{item.name}}</view>
+    <view class="bottom">
+      <view class="price">{{item.price}} 元</view>
+      <view class="lock" wx:if="{{!item.exist}}">前往解锁</view>
+      <view class="unlock" wx:else="{{!item.exist}}">已解锁</view>
+    </view>
+  </view>
+</view>

@@ -8,7 +8,7 @@
 
 .question {
   margin: 20rpx;
-  margin-top: 80rpx;
+  margin-top: 40rpx;
   color: #505050;
   font-size: 30rpx;
   line-height: 50rpx;
@@ -48,19 +48,23 @@
   border-radius: 12rpx;
   margin-bottom: 30rpx;
   cursor: pointer;
-  box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.8);
+  box-shadow: 0px 2px 6px 0px rgba(219,220,233,0.8);
 }
 
-.optionSelected {
-  display: flex;
-  align-items:center;
-  padding: 10rpx;
-  border: 2rpx solid #1569E4;
-  color: #1569E4;
-  border-radius: 12rpx;
-  margin-bottom: 30rpx;
-  cursor: pointer;
-  box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.6);
+.optionUnselected {
+  color: #333;
+}
+
+.optionCorrect {
+  border: 2rpx solid #71cca6;
+  background-color: #71cca6;
+  color: #fff;
+}
+
+.optionWrong{
+  border: 2rpx solid #F4777F;
+  background-color: #F4777F;
+  color: #fff;
 }
 
 .favorQuestion {
@@ -146,4 +150,36 @@
   padding: 16rpx;
   border-radius: 20rpx;
   margin-bottom: 16rpx;
+}
+
+.knowledge-points {
+  margin-top: 30rpx;
+  width: 90%;
+  color: #505050;
+  font-size: 28rpx;
+  line-height: 50rpx;
+  font-weight: 500;
+  padding: 20rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 0rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+
+.points {
+  display: flex;
+  margin-top: 12rpx;
+}
+
+.point-name {
+  border: 2rpx solid #1569E4;
+  color: #1569E4;
+  background:rgba(195,220,255,0.20);
+  padding: 4rpx 12rpx 4rpx 12rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+}
+
+wemark view {
+  margin-top: 0rpx !important;
+  margin-bottom: 10rpx !important;
+  font-size: 30rpx;
 }

@@ -1,0 +1,94 @@
+/* pages/examine/examine.wxss *//* pages/categories/categories.wxss */
+.quesiontcover {
+  width: 300rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  object-fit: cover;
+  border: solid 8rpx #fff;
+  box-shadow: 0 0 16rpx rgba(39, 36, 51, 0.3);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  margin: 0 auto;
+  margin-top: 30rpx;
+  width: 96%;
+  justify-content: center;
+  box-shadow: 0 2rpx 10rpx rgba(39, 36, 51, 0.3);
+}
+
+.cates {
+  display: flex;
+  width: 95%;
+  justify-content: space-around;
+  align-items: center;
+  color: #202020;
+  padding-top: 10rpx;
+  padding-bottom: 16rpx;
+}
+
+.infos {
+  margin-top: 20rpx;
+  font-size: 30rpx;
+}
+
+.texts {
+  color: #202020;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 60rpx;
+  display: flex;
+  margin-left: 48rpx;
+}
+
+.import {
+  color: #1569E4;
+}
+
+.left-area{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.right-area {
+  display: flex;
+  height: 260rpx;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300rpx;
+  height: 60rpx;
+  font-size: 28rpx;
+  border-radius: 8rpx;
+  color: #333;
+  letter-spacing: 4rpx;
+  background-color: #FFE8D6;
+}
+
+.stages:active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300rpx;
+  height: 60rpx;
+  font-size: 28rpx;
+  border-radius: 8rpx;
+  color: #fff;
+  letter-spacing: 4rpx;
+  background-color: #FF7F50;
+}

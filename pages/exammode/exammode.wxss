@@ -84,7 +84,7 @@ page {
   margin-bottom: 50rpx;
   cursor: pointer;
   background-color: #fff;
-  box-shadow: 0px 8rpx 16rpx 0px rgba(219,220,233,0.8);
+  box-shadow: 0px 2rpx 8rpx 0px rgba(219,220,233,0.8);
   border-radius: 8rpx;
 }
 
@@ -98,7 +98,7 @@ page {
   border-radius: 24rpx;
   margin-bottom: 30rpx;
   cursor: pointer;
-  box-shadow: 0px 8rpx 16rpx 0px rgba(219,220,233,0.8);
+  box-shadow: 0px 2rpx 8rpx 0px rgba(219,220,233,0.8);
   border-radius: 8rpx;
 }
 
@@ -137,12 +137,15 @@ page {
 }
 
 .comments {
-  margin-top: 40rpx;
-  color: #505050;
-  font-size: 30rpx;
-  line-height: 1.6rem;
-  font-weight: 400;
   width: 90%;
+  color: #505050;
+  font-size: 28rpx;
+  line-height: 50rpx;
+  font-weight: 500;
+  padding: 20rpx;
+  padding-bottom: 40rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 0rpx 8rpx rgba(0, 0, 0, 0.3);
 }
 
 .next-button {
@@ -439,4 +442,57 @@ progress {
 .progress90 .wx-progress-inner-bar {
   border-radius: 16rpx !important;
   background: linear-gradient(to right, #f3f3f3, #6dd5fa, #2980b9) !important;  
+}
+
+.knowledge-points {
+  margin-top: 30rpx;
+  width: 90%;
+  color: #505050;
+  font-size: 28rpx;
+  line-height: 50rpx;
+  font-weight: 500;
+  padding: 20rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 0rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+
+.points {
+  display: flex;
+  margin-top: 12rpx;
+}
+
+.point-name {
+  border: 2rpx solid #1569E4;
+  color: #1569E4;
+  background:rgba(195,220,255,0.20);
+  padding: 4rpx 12rpx 4rpx 12rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+}
+
+.separator {  
+  width: 100%; /* 根据需要设置宽度 */  
+  height: 2rpx; /* 分隔线的高度 */  
+  background-color: #ddd; /* 分隔线的颜色 */  
+  margin: 16rpx auto; /* 分隔线的上下外边距 */ 
+}
+
+.scores {
+  font-size: 42rpx;
+  letter-spacing: 4rpx;
+  margin-bottom: 12rpx;
+  color: #1569E4;
+}
+
+.ctn-area {
+  display: flex;
+  width: 90%;
+  justify-content: space-between;
+  margin-top: 30rpx;
+}
+
+wemark view {
+  margin-top: 0rpx !important;
+  margin-bottom: 10rpx !important;
+  font-size: 30rpx;
 }

@@ -5,8 +5,6 @@
   margin: auto;
   margin-top: 120rpx;
   font-size: 30rpx;
-  display: flex;
-  justify-content: center;
 }
 
 .quesiontcover {
@@ -72,4 +70,8 @@
   margin-top: 60rpx;
   display: flex;
   margin-left: 48rpx;
+}
+
+.import {
+  color: #1569E4;
 }

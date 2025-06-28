@@ -69,22 +69,20 @@
 .icons{
   width: 700rpx;
   margin: 0 auto;
-  margin-top: 32rpx;
-  padding-bottom: 20rpx;
+  margin-top: 24rpx;
+  padding-bottom: 28rpx;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 
 .image-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
 }
 
 .button-hover {
   display: flex;
-  flex-direction: column;
   align-items: center;
   background-color: #ccc;
 }
@@ -92,16 +90,16 @@
 .infoicon {
     width: 96rpx;
     height: 96rpx;
-    margin: 0 16rpx 0 16rpx;
     object-fit: cover;
     border-radius: 5%;
 }
 
 .icondescription {
-    margin-top: 16rpx;
-    font-size: 26rpx;
-    text-align: center;
-    color: #211B54;
+  margin-left: 36rpx;
+  font-size: 30rpx;
+  letter-spacing: 2rpx;
+  text-align: center;
+  color: #211B54;
 }
 
 .answersinfo {
@@ -176,4 +174,33 @@
   width: 40rpx;
   height: 40rpx;
   margin-right: 20rpx;
+}
+
+.class-tap {
+  display: flex;
+  margin: 60rpx auto;
+  width: 90%;
+  height: 200rpx;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8rpx;
+  box-shadow: 0 0rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.class-icon {
+  margin-left: 80rpx;
+  width: 130rpx;
+  height: 120rpx;
+}
+
+.class-info {
+  margin-right: 140rpx;
+  font-size: 36rpx;
+  letter-spacing: 8rpx;
+  font-weight: 600;
+  color: #4a71aa;
+}
+
+.top {
+  margin-top: 80rpx;
 }

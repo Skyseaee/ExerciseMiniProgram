@@ -21,13 +21,17 @@ Page({
     noData: false,
     favor: false,
     showModal: false,
+    stage: 'none',
+    origin_time: '',
+    questionImageHeight: 0,
+    commentImageHeight: 0,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    this.setData({firstID: options.firstID})
+    this.setData({firstID: options.firstID, stage: options.stage})
     this.getQuestionData(this.data.firstID);
   },
 
@@ -90,6 +94,7 @@ Page({
       data: {
         user_id: app.globalData.uid,
         first_id: id,
+        stage: this.data.stage,
       },
       success: function(res) {
         if(res.data.count == 0) {
@@ -215,6 +220,7 @@ Page({
         first_id: that.data.firstID,
         second_id: that.data.questionData[that.data.questionIndex].second_id,
         exercise_id: that.data.questionIndex,
+        exercise_type: that.data.questionData[that.data.questionIndex].exercise_type,
       },
       success: function(res) {
         let questionList = that.data.questionData
@@ -274,5 +280,19 @@ Page({
     this.setData({  
       showModal: true  
     });  
-  }  
+  },
+
+  onQuestionImageLoad(event) {
+    const { width, height } = event.detail;
+    this.setData({
+      questionImageHeight: Math.ceil(height*0.8)
+    });
+  },
+
+  onCommentImageLoad(event) {
+    const { width, height } = event.detail;
+    this.setData({
+      commentImageHeight: Math.ceil(height*0.8)
+    });
+  }
 })

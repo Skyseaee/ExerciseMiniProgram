@@ -12,9 +12,10 @@ Page({
       catagoryID: 0,
       questionData: {}, // 接口返回的题目数据
       totalData: 1,
+      stage: 'basic',
       questionIndex: 1, // 当前题目ID
       currentIndex: 0, //当前题目索引
-      selectedOptions: [], // 用户选择的选项
+      selectedOptions: '', // 用户选择的选项
       allOptions: [], // 控制所有选项的样式
       showComments: false, // 是否显示题解
       showNextButton: false, // 是否显示下一题按钮
@@ -31,13 +32,23 @@ Page({
       auth: false,
       mode: false,
       showTable: false,
+      origin_time: '',
+      questionImageHeight: 0,
+      commentImageHeight: 0,
+      feedback: '',
+      feedback_list: [],
+      favor_state: 0,
+      favors: 0,
+      disfavors: 0,
+      tags: [],
+      examinetype: -1,
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad(options) {  
-      this.setData({catagoryID: options.id, firstID: options.firstID, auth: options.auth})
+      this.setData({catagoryID: options.id, firstID: options.firstID, auth: options.auth, stage: options.stage, examinetype: options.examinetype})
       this.getQuestionData(this.data.catagoryID);
     },
 
@@ -101,16 +112,20 @@ Page({
           uid:app.globalData.uid,
           second_id: id,
           auth: that.data.auth,
+          stage: this.data.stage,
+          examinetype: this.data.examinetype,
         },
         success: function(res) {
           let index = -1
           let i = 0
           let indexList = []
           let exerciseRecord = []
-          console.log(res.data.data)
+          let feedback_list = []
+          // console.log(res.data.data)
           for(let key in res.data.data) {
             indexList.push(key)
             res.data.data[key]['index'] = i+1
+            feedback_list.push('暂无')
             if(res.data.data[key].user_answer.length == 0) {
               if(index == -1)
                 index = i
@@ -124,7 +139,7 @@ Page({
             }
             i++
           }
-          
+          that.setData({feedback_list})
           // 所有题目已刷过
           if(index == -1) {
             index = 0
@@ -133,8 +148,9 @@ Page({
               showNextButton: true,
             })
           }
-          let selectedOptions = res.data.data[indexList[index]].user_answer.toString().split("").map(Number)
-
+          that.requestComment(index, indexList[index])
+          let selectedOptions = res.data.data[indexList[index]].user_answer
+          let tags = res.data.data[indexList[index]].tags.split(',')
           that.setData({
             questionData: res.data.data,
             currentIndex: index,
@@ -143,7 +159,7 @@ Page({
             options: res.data.data[indexList[index]].options.split('~+~').map((item, i) => {
               return {
                 text: util.convertToLetters(i.toString()) + '. ' + item,
-                selected: selectedOptions.includes(i),
+                selected: util.mappingOptions(i, res.data.data[indexList[index]].answer, selectedOptions != undefined ? selectedOptions : -1),
               }
             }),
             totalData: res.data.count,
@@ -152,7 +168,12 @@ Page({
             answer: util.convertToLetters(res.data.data[indexList[index]].answer.toString()),
             userAnswer: util.convertToLetters(res.data.data[indexList[index]].user_answer.toString()),
             favor: res.data.data[indexList[index]].favor,
+            favor_state: res.data.data[indexList[index]].state,
             point_name: res.data.data[indexList[index]].point_name,
+            origin_time: res.data.data[indexList[index]].origin_time,
+            favors: res.data.data[indexList[index]].favors,
+            disfavors: res.data.data[indexList[index]].disfavors,
+            tags,
           })
         },
         fail: function(res) {
@@ -171,27 +192,16 @@ Page({
 
 
     selectOption: function (e) {
-      if(this.data.showComments) return;
+      if(this.data.showComments || this.data.mode || this.data.showTable) return;
       const index = e.currentTarget.dataset.index;
-      const selectedOptions = this.data.selectedOptions;
-  
+      let selectedOptions = this.data.selectedOptions;
+      let that = this
       // 根据题型判断是否为多选题，单选题直接替换选项，多选题追加或删除选项
-      const optionType = this.data.questionData[this.data.questionIndex].option_type;
-      if (optionType === 0 || optionType === 2) {
-        selectedOptions[0] = index;
-      } else if (optionType === 1) {
-        const isSelected = selectedOptions.includes(index);
-        if (isSelected) {
-          selectedOptions.splice(selectedOptions.indexOf(index), 1);
-        } else {
-          selectedOptions.push(index);
-        }
-      }
-
+      selectedOptions = index
       const allOptions = this.data.options.map((item, i) => {
         return {
           text: item.text,
-          selected: selectedOptions.includes(i),
+          selected: util.mappingOptions(i, that.data.questionData[that.data.questionIndex].answer, selectedOptions),
         }
       })
   
@@ -199,6 +209,8 @@ Page({
         selectedOptions: selectedOptions,
         options: allOptions,
       });
+
+      this.submitAnswer()
     },
 
     submitAnswer: function () {
@@ -206,7 +218,7 @@ Page({
       let key = this.data.questionData[this.data.questionIndex].answer
       let that = this
       let is_correct = 0
-      let user_answer = this.data.selectedOptions.join('')
+      let user_answer = this.data.selectedOptions
       let questionData = this.data.questionData
 
       if(key == user_answer) {
@@ -222,7 +234,7 @@ Page({
       } else {
         questionData[this.data.questionIndex]['class'] = 'wrongAnswer'
       }
-
+      let exercise_type = questionData[this.data.questionIndex].exercise_type
       let exerciseRecord = this.data.exerciseRecord
       let tempRecord = exerciseRecord.slice()
       exerciseRecord.push(this.data.currentIndex)
@@ -246,7 +258,15 @@ Page({
           first_id: that.data.firstID,
           exercise_id: that.data.questionIndex,
           answer_time: util.getCurrentTime(),
-          answer: this.data.selectedOptions.join(''),
+          answer: this.data.selectedOptions,
+          exercise_type: exercise_type,
+        },
+        success: function(res) {
+          // 示例：显示题解和下一题按钮
+          that.setData({
+            showComments: true,
+            showNextButton: true
+          });
         },
         fail: function(res) {
           that.setData({
@@ -259,12 +279,6 @@ Page({
           })
         }
       })
-
-      // 示例：显示题解和下一题按钮
-      this.setData({
-        showComments: true,
-        showNextButton: true
-      });
     },
 
     nextQuestion: function () {
@@ -286,15 +300,22 @@ Page({
         });
         return
       }
-
+      let that = this
       if (currentIndex < this.data.totalData) {
         // 还有下一题，重置状态
+        if(this.data.feedback_list[currentIndex] == '暂无') {
+          this.requestComment(currentIndex, this.data.indexList[currentIndex])
+        } else {
+          let feedback = this.data.feedback_list[currentIndex]
+          this.setData({feedback,})
+        }
         const nextIndex = this.data.indexList[currentIndex]
-        let selectedOptions = this.data.questionData[nextIndex].user_answer.toString().split('').map(Number)
+        let selectedOptions = this.data.questionData[nextIndex].user_answer
+        let tags = this.data.questionData[nextIndex].tags.split(',')
         let options = this.data.questionData[nextIndex].options.split('~+~').map((item, i) => {
           return {
             text: util.convertToLetters(i.toString()) + '. ' + item,
-            selected: selectedOptions.includes(i),
+            selected: util.mappingOptions(i, that.data.questionData[nextIndex].answer, selectedOptions != undefined ? selectedOptions : -1)
           }
         })
         if(this.data.questionData[nextIndex].user_answer.length == 0) {
@@ -312,14 +333,19 @@ Page({
         this.setData({
           questionIndex: nextIndex,
           currentIndex: currentIndex,
-          selectedOptions: [],
+          selectedOptions: '',
           options: options,
           answer: util.convertToLetters(this.data.questionData[nextIndex].answer.toString()),
           userAnswer: util.convertToLetters(this.data.questionData[nextIndex].user_answer.toString()),
           currentRate: this.formateRate(this.data.questionData[nextIndex].correct_rate),
           favor: this.data.questionData[nextIndex].favor,
+          favor_state: this.data.questionData[nextIndex].state,
+          favors:  this.data.questionData[nextIndex].favors,
+          disfavors:  this.data.questionData[nextIndex].disfavors,
           showModal: false,
           point_name: this.data.questionData[nextIndex].point_name,
+          origin_time: this.data.questionData[nextIndex].origin_time,
+          tags,
         });
       } else {
         // 没有下一题，可以显示完成页面或其他逻辑
@@ -330,11 +356,21 @@ Page({
             duration: 2000
           });
         } else {
-          wx.showToast({
-            title: '查看后续题目请开通权限',
-            icon: 'none',
-            duration: 2000
-          });
+          wx.showModal({
+            title: '暂无权限查看后续题目',
+            content: '是否前往开通权限',
+            complete: (res) => {
+              if (res.cancel) {
+                return
+              }
+          
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: '/pages/unlockBank/unlockBank',
+                })
+              }
+            }
+          })
         }
       }
     },
@@ -347,6 +383,7 @@ Page({
     favorQuestion: function() {
       let that = this
       let favor = this.data.favor
+      let exercise_type = this.data.questionData[this.data.questionIndex].exercise_type
       favor = !favor
       wx.request({
         url: 'https://www.skyseaee.cn/routine/auth_api/insert_favor_exercise',
@@ -358,6 +395,7 @@ Page({
           first_id: that.data.firstID,
           second_id: that.data.catagoryID,
           exercise_id: that.data.questionIndex,
+          exercise_type: exercise_type,
         },
         success: function(res) {
           let questionList = that.data.questionData
@@ -386,22 +424,21 @@ Page({
 
     handleConfirm(e) {  
       // 处理确认事件，e.detail 中包含了从组件传递过来的值  
-      if(e.detail.value1.length == 0) {
+      if(e.detail.value1 == '请选择') {
         wx.showToast({
-          title: '正确答案不能为空',
+          title: '反馈类型不能为空',
           icon: 'none'
         })
         return
-      } else if(e.detail.value1 == this.data.answer) {
-        wx.showToast({
-          title: '无法提交相同的答案',
-          icon: 'none'
-        })
-        return
-      }
-      util.feedback(this.data.questionData[this.data.questionIndex], app.globalData.uid, e.detail.value1, e.detail.value2)
+      } 
+      util.feedback(this.data.questionIndex, this.data.questionData[this.data.questionIndex], app.globalData.uid, e.detail.value1, e.detail.value2)
+      let feedbacks = this.data.feedback_list
+      let fb = e.detail.value1 + ' - ' + e.detail.value2
+      feedbacks[this.data.currentIndex] = fb
       this.setData({
-        showModal: false  
+        showModal: false,
+        feedback_list: feedbacks,
+        feedback: fb,
       })
     },  
 
@@ -410,7 +447,32 @@ Page({
       this.setData({  
         showModal: false  
       });  
-    },  
+    }, 
+
+    requestComment(index, exercise_id) {
+      let that = this
+      wx.request({
+        url: 'https://www.skyseaee.cn/routine/auth_api/get_feedback_exercise',
+        header: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        data: {
+          uid: app.globalData.uid,
+          exercise_id: exercise_id,
+        },
+        success: function(res) {
+          let feedbacks = that.data.feedback_list
+          let feedback = ''
+          if(res.data.count == 0) {
+            feedbacks[index] = ''
+          } else {
+            feedback = res.data.data[0]['correct_answer'] + ' - ' + res.data.data[0]['comment']
+            feedbacks[index] = feedback
+          }
+          that.setData({feedback_list: feedbacks, feedback: feedback,})
+        }
+      })
+    },
     
     showModal() {  
       // 显示模态框的方法  
@@ -442,6 +504,134 @@ Page({
     closeMenu() {
       this.setData({
         showTable: false,
+      })
+    },
+
+    onQuestionImageLoad(event) {
+      const { width, height } = event.detail;
+      this.setData({
+        questionImageHeight: Math.ceil(height*0.8)
+      });
+    },
+
+    onCommentImageLoad(event) {
+      const { width, height } = event.detail;
+      this.setData({
+        commentImageHeight: Math.ceil(height*0.8)
+      });
+    },
+
+    likeQuestion() {
+      let state = this.favor_state
+      let that = this
+
+      if(state == 0) {
+        that.setData({
+          favor_state: 1,
+        })
+      } else {
+        that.setData({
+          favor_state: 1
+        })
+      }
+    },
+
+    likeQuestion() {
+      let state = this.data.favor_state
+      let that = this
+      let exercise_type = this.data.questionData[this.data.questionIndex].exercise_type
+      let favors = this.data.questionData[this.data.questionIndex].favors
+      let disfavors = this.data.questionData[this.data.questionIndex].disfavors
+      if(state == 0 || state == 2) {
+        if(state == 2) disfavors--
+        state = 1
+        favors++
+      } else {
+        state = 0
+        favors--
+      }
+      wx.request({
+        url: 'https://www.skyseaee.cn/routine/auth_api/insert_favor_state',
+        header: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        data: {
+          uid: app.globalData.uid,
+          first_id: that.data.firstID,
+          second_id: that.data.catagoryID,
+          exercise_id: that.data.questionIndex,
+          exercise_type: exercise_type,
+          favor_or_not: state,
+        },
+        success: function(res) {
+          let questionList = that.data.questionData
+          questionList[that.data.questionIndex].state = state
+          questionList[that.data.questionIndex].favors = favors
+          questionList[that.data.questionIndex].disfavors = disfavors
+
+          that.setData({
+            favor_state: state,
+            favors: favors,
+            disfavors: disfavors,
+            questionList: questionList
+          })
+        },
+        fail: function(res) {
+          wx.showToast({
+            title: '评分失败',
+            icon: 'fail',
+            duration: 1000
+          });
+        }
+      })
+    },
+
+    dislikeQuestion() {
+      let state = this.data.favor_state
+      let that = this
+      let exercise_type = this.data.questionData[this.data.questionIndex].exercise_type
+      let disfavors = this.data.questionData[this.data.questionIndex].disfavors
+      let favors = this.data.questionData[this.data.questionIndex].favors
+      if(state == 0 || state == 1) {
+        if(state == 1) favors--
+        state = 2
+        disfavors++
+      } else {
+        state = 0
+        disfavors--
+      }
+      // console.log(state, favors)
+      wx.request({
+        url: 'https://www.skyseaee.cn/routine/auth_api/insert_favor_state',
+        header: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        data: {
+          uid: app.globalData.uid,
+          first_id: that.data.firstID,
+          second_id: that.data.catagoryID,
+          exercise_id: that.data.questionIndex,
+          exercise_type: exercise_type,
+          favor_or_not: state,
+        },
+        success: function(res) {
+          let questionList = that.data.questionData
+          questionList[that.data.questionIndex].disfavors = disfavors
+          questionList[that.data.questionIndex].favors = favors
+          that.setData({
+            favor_state: state,
+            disfavors: disfavors,
+            favors: favors,
+            questionList: questionList
+          })
+        },
+        fail: function(res) {
+          wx.showToast({
+            title: '评分失败',
+            icon: 'fail',
+            duration: 1000
+          });
+        }
       })
     }
 })

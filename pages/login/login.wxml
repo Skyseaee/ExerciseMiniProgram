@@ -1,5 +1,5 @@
 <!--pages/login/login.wxml-->
-<button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+<button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="chooseAvatar">
   <image class="avatar" src="{{avatarUrl}}"></image>
   <view class="notice">点击上传头像</view>
 </button> 
@@ -7,6 +7,6 @@
 
 
 <view style="width: 90%;margin:auto;">
-  <van-button round type="info" color="#46C6BA" size="large" bind:click="saveUserInfo">提交</van-button>
+  <button class="sub-button" bind:tap="saveUserInfo">提交</button>
 </view>
 

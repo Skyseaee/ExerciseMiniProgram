@@ -1,6 +1,6 @@
 <!--index.wxml-->
 <view class="page">
-  <view class="countdowntext">距25年考研初试还剩{{days}}天</view>
+  <view class="countdowntext">距26年考研初试还剩{{days}}天</view>
 
   <swiper indicator-dots="true" autoplay="false" circular interval="4000" duration="1000" class='swiper'>
     <block wx:for="{{bannerList}}" wx:key="*this">  

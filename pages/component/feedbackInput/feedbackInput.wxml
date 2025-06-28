@@ -2,9 +2,14 @@
 <view class="modal-mask"></view>
 <view class="modal">
   <!-- 输入框1 -->
-  <input placeholder="正确答案（输入选项序号）" bindinput="getInputValue1" />
+  <picker mode="selector" range="{{options}}" bindchange="bindPickerChange">
+    <view class="picker">
+      问题类型: {{selectedOption}}
+    </view>
+  </picker>
+  <!-- <picker placeholder="错误类型（答案/题目/选项/解析/其他）" bindinput="getInputValue1" /> -->
   <!-- 输入框2 -->
-  <input placeholder="补充说明" bindinput="getInputValue2" />
+  <input placeholder="具体说明" bindinput="getInputValue2" />
   <view class="buttons">
     <button bindtap="confirm">确认</button>
     <button bindtap="closeModal">取消</button>

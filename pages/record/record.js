@@ -56,8 +56,6 @@ Page({
             })
           }
           
-          
-
           if(Object.keys(res.data.data).length != 0 || that.data.exer_page != 0) {
             for(let key in res.data.data) {
               if(that.data.indexList.has(res.data.data[key].exercise_id)) {
@@ -65,12 +63,11 @@ Page({
               }
               that.data.indexList.add(res.data.data[key].exercise_id)
               
-              res.data.data[key]['brief'] = res.data.data[key].question.substring(0, 16)
+              res.data.data[key]['brief'] = res.data.data[key].question.substring(0, 16).replace(/\r?\n/g, ' ')
               if(res.data.data[key].question.length > 16) {
                 res.data.data[key]['brief'] += "..."
-              } else if(res.data.data[key].question.length == 0) {
-                res.data.data[key]['brief'] = res.data.data[key]['first_name'] + '-' + res.data.data[key]['second_name'] + '题'
               }
+              
               res.data.data[key]['correct_rate'] = that.formateRate(res.data.data[key]['correct_rate'])
               // console.log(res.data.data[key]['answer'])
               res.data.data[key]['answers'] = util.convertToLetters(res.data.data[key]['answer'].toString())
@@ -124,7 +121,7 @@ Page({
           }
           let records = that.data.examList
           for(let i=0; i<count; i++) {
-            list[i]['brief'] = list[i].first_name + '模拟测试' + i
+            list[i]['brief'] = list[i].exam_name
             list[i]['answer_time'] = list[i].add_time
             list[i]['spend'] = that.secondsToHMS(list[i].use_time)
             list[i]['num'] = list[i].question_id.split(',').length
@@ -173,7 +170,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: "智慧考题宝，考试助手 ！",
+      title: "研题帮，考试助手 ！",
       path: "pages/index/index",
       imageUrl: "/images/share.png"
     };

@@ -41,7 +41,7 @@
           <image src="{{itemChild.avatarUrl}}"></image>
         </view>
         <view class='ls-l ls-c-t'>{{itemChild.nickName}}</view>
-        <view class='ls-l ls-c-t'><text>{{itemChild.score}}</text> </view>
+        <view class='ls-l ls-c-t'><text>{{itemChild.score * 2.5}}</text> </view>
         <view class='ls-l ls-c-t'><text>{{itemChild.real_time}}</text> </view>
       </view>
     </block>
@@ -49,18 +49,18 @@
 
   <view class="self-info">
     <view class="vertical">
-      <text style="margin-bottom: 8rpx; color: #aaa;">个人排名</text>
+      <text style="margin-bottom: 8rpx; color: #aaa; font-size: 28rpx;">个人排名</text>
       {{myRank}}
     </view>
     <view class="vertical">
       <image class="samll-avatar" src="{{avatar}}"></image>
     </view>
     <view class="vertical">
-      <text style="margin-bottom: 8rpx; color: #aaa;">个人得分</text>
-      <view>{{myscore}}</view>
+      <text style="margin-bottom: 8rpx; color: #aaa; font-size: 28rpx;">个人得分</text>
+      <view>{{myscore * 2.5}}</view>
     </view>
     <view class="vertical">
-      <text style="margin-bottom: 8rpx; color: #aaa;">个人用时</text>
+      <text style="margin-bottom: 8rpx; color: #aaa; font-size: 28rpx;">个人用时</text>
       <view>{{useTime}}</view>
     </view>
   </view>

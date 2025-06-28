@@ -15,14 +15,9 @@ Page({
         current_question_bank: null,  // 当前题库的具体信息
         total_exams: [],
         total_questions_num: 0,
-        already_answered: 0,
-        correct_answer_rate: 100,
         check_days: 0,
         info_images: [
             { src: '/images/tests.png', id: 0, description: '模拟考试', func: 'genTest'},
-            { src: '/images/wrong_answers.png', id: 1, description: '错题集', func: 'wrongAnswer' },
-            { src: '/images/favor.png', id: 2, description: '我的收藏', func: 'myFavor' },
-            { src: '/images/random_test.png', id: 3, description: '随机练习', func: 'randomTest' },
             { src: '/images/ranking.png', id: 4, description: '刷题排行', func: 'ranking' },
         ],
         auth: 'false',
@@ -32,26 +27,26 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad(options) {
-        var that = this;
-        var openid = wx.getStorageSync('openid')
-        if (openid == '' || openid == undefined) {
-            wx.login({
-                success(res) {
-                    if (res.code) {
-                        console.log(res.code)
-                        wx.Apis.login.login(res.code, (code, data) => {
-                            console.log(data);
-                            wx.Apis.setUid(data.openid); //openid
-                            wx.Apis.set('openid', data.openid);
-                            wx.setStorageSync('userInfo', data);
-                            that.setData({
-                                userInfo: data
-                            })
-                        });
-                    }
-                }
-            });
-        }
+      var that = this;
+      var openid = wx.getStorageSync('openid')
+      if (openid == '' || openid == undefined) {
+          wx.login({
+              success(res) {
+                  if (res.code) {
+                      console.log(res.code)
+                      wx.Apis.login.login(res.code, (code, data) => {
+                          console.log(data);
+                          wx.Apis.setUid(data.openid); //openid
+                          wx.Apis.set('openid', data.openid);
+                          wx.setStorageSync('userInfo', data);
+                          that.setData({
+                              userInfo: data
+                          })
+                      });
+                  }
+              }
+          });
+      }
 
     },
 
@@ -87,7 +82,7 @@ Page({
                 current_question_bank_type: mainActiveIndex,
             })
 
-            this.updateTotalExam()
+            // this.updateTotalExam()
         }
     },
 
@@ -160,21 +155,14 @@ Page({
           }
 
           let temp_total_questions = 0
-          let already_answered = 0
-          let correct_answered = 0
           for(let i=0; i<total_exams.length; i++) {
             temp_total_questions += total_exams[i]["total_question_num"]
-            already_answered += total_exams[i]["finish_question"]
-            correct_answered += total_exams[i]["correct_answer"]
-            total_exams[i].correct_rate = total_exams[i]["correct_answer"] / total_exams[i]["finish_question"]
           }
           
           that.setData({
             auth: res.data.data.auth,
             total_exams: total_exams,
             total_questions_num: temp_total_questions,
-            already_answered: already_answered,
-            correct_answer_rate: already_answered != 0 ? (correct_answered * 100 / already_answered).toFixed(1) : 100,
           })
           // console.log(total_exams)
         },
@@ -210,14 +198,6 @@ Page({
         return
       }
 
-      if(this.data.total_questions_num < 4) {
-        wx.showToast({
-          title: '本科目暂时不支持该功能',
-          icon: 'none'
-        })
-        return
-      }
-
       wx.navigateTo({
         url: '/pages/mockexam/mockexam?firstCategory=' + encodeURIComponent(JSON.stringify(this.data.current_question_bank)),
       })
@@ -230,21 +210,18 @@ Page({
     },
 
     wrongAnswer: function() {
-      console.log('wrong answer')
       wx.navigateTo({
-        url: '/pages/wrongQuestion/wrongQuestion?firstID=' + this.data.current_question_bank_type,
+        url: '/pages/wrongQuestion/wrongQuestion?firstID=' + this.data.current_question_bank_type
       })
     },
 
     myFavor: function() {
-      console.log('my favor')
       wx.navigateTo({
         url: '/pages/favorExam/favorExam?firstID=' + this.data.current_question_bank_type,
       })
     },
 
     randomTest: function() {
-      console.log('random test')
       wx.showToast({
         title: '暂不支持',
         icon: 'success',
@@ -257,37 +234,28 @@ Page({
         url: '/pages/rank/rank',
       })
     },
-
-    clearExam: function() {
-      wx.showModal({
-        title: '',
-        content: '请确认是否清空当前题库所有刷题记录',
-        complete: (res) => {
-          if (res.cancel) {
-            
-          }
-      
-          if (res.confirm) {
-            wx.request({
-              url: 'https://www.skyseaee.cn/routine/auth_api/clear_exam_by_firstID',
-              method: "POST",
-              header:{
-                "content-type": "application/x-www-form-urlencoded",
-                'personal': 'skyseaee',
-              },
-              data: {
-                userid: app.globalData.uid,
-                first_id: this.data.current_question_bank_type,
-              },
-              success: function(res) {
-                wx.showToast({
-                  title: '已清空',
-                  icon: "success"
-                })
-              }
-            })
-          }
-        }
+    
+    goToBasic: function() {
+      wx.navigateTo({
+        url: '/pages/examclass/examclass?stage=' + 'basic',
       })
-    }
+    },
+
+    goToImprove: function() {
+      wx.navigateTo({
+        url: '/pages/examclass/examclass?stage=' + 'improve',
+      })
+    },
+
+    goToFinal: function() {
+      wx.navigateTo({
+        url: '/pages/examclass/examclass?stage=' + 'final',
+      })
+    },
+
+    goToSimulate: function() {
+      wx.navigateTo({
+        url: '/pages/examclass/examclass?stage=' + 'simulate',
+      })
+    },
 })

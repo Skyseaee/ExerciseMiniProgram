@@ -20,8 +20,13 @@ Page({
       comments: '',
       comments_img: '',
       answer_time: '',
+      exercise_type: -1,
       favor: false,
-      showModal: false
+      showModal: false,
+      point_name: '',
+      origin_time: '',
+      questionImageHeight: 0,
+      commentImageHeight: 0,
     },
 
     /**
@@ -31,7 +36,8 @@ Page({
       let data = decodeURIComponent(options.info)
       let info = JSON.parse(data)
       console.log(info)
-      let selectedOptions = info.answer.toString().split("").map(Number)
+      let selectedOptions = Number(info.answer.toString())
+      let index = this.convertOption(info.correct_answer)
       this.setData({
         exam: info,
         first_name: info.first_name,
@@ -47,10 +53,13 @@ Page({
         options: info.options.split('~+~').map((item, i) => {
           return {
             text: util.convertToLetters(i.toString()) + '. ' + item,
-            selected: selectedOptions.includes(i),
+            selected: util.mappingOptions(i, index, selectedOptions),
           }
         }),
         favor: info.favor,
+        point_name: info.point_name,
+        origin_time: info.origin_time,
+        exercise_type: info.exercise_type,
       })
       console.log(this.data.comments_img.length)
     },
@@ -123,6 +132,7 @@ Page({
           first_id: that.data.exam.first_id,
           second_id: that.data.exam.second_id,
           exercise_id: that.data.exam.exercise_id,
+          exercise_type: that.data.exercise_type,
         },
         success: function(res) {
           that.setData({
@@ -170,7 +180,11 @@ Page({
       this.setData({
         showModal: false  
       })
-    },  
+    }, 
+
+    convertOption(char) {
+      return char.toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0)
+    },
 
     handleCloseModal() {  
       // 处理关闭模态框的事件  
@@ -184,5 +198,19 @@ Page({
       this.setData({  
         showModal: true  
       });  
-    }  
+    },
+
+    onQuestionImageLoad(event) {
+      const { width, height } = event.detail;
+      this.setData({
+        questionImageHeight: Math.ceil(height*0.8)
+      });
+    },
+
+    onCommentImageLoad(event) {
+      const { width, height } = event.detail;
+      this.setData({
+        commentImageHeight: Math.ceil(height*0.8)
+      });
+    }
 })

@@ -9,24 +9,19 @@
         <view class="description">
             <view class="question">
               {{current_question_bank.name}}
-              <image bind:tap="clearExam" src="/images/reset.png" class="reset-img" mode=""/>
             </view>
-            <view class="answerinfo">总题数：{{total_questions_num}}</view>
-            <view class="answer">
-              <view class="answerinfo"> 已刷：{{already_answered}}</view>
-              <view class="answerinfo"> 正确率：{{correct_answer_rate}}%</view>
-            </view>
+            <!-- <view class="answerinfo">总题数：{{total_questions_num}}</view> -->
         </view>
     </view>
     <view class="lines"></view>
-      <view class="icons">
-        <block wx:for="{{info_images}}" wx:key="index">
-          <view class="image-item" hover-class="button-hover">
-            <image src="{{item.src}}" class="infoicon" bind:tap="{{item.func}}"/>
-            <text class="icondescription">{{item.description}}</text>
-          </view>
-        </block>
-      </view>
+    <view class="icons">
+      <block wx:for="{{info_images}}" wx:key="index">
+        <view class="image-item" hover-class="button-hover" bind:tap="{{item.func}}">
+          <image src="{{item.src}}" class="infoicon"/>
+          <text class="icondescription">{{item.description}}</text>
+        </view>
+      </block>
+    </view>
   </view>
 
     <block wx:if="{{!auth}}">
@@ -34,14 +29,22 @@
         <text>尚未购买该题库，可预览部分题目和功能。开通本题库权限请联系客服。</text>
       </view>
     </block>
-    <view class="examlist">
-      <block wx:for="{{ total_exams }}" wx:key="index">
-        <view bind:tap="redirectToExam" data-id="{{index}}" class="item">
-            <view class="examTitle">{{ item.exam_title }}</view>
-            <view class="examProcess">答题进度：{{ item.finish_question }} / {{ item.total_question_num }}</view>
-            <progress percent="{{ item.percent }}" strokeWidth="8" active activeColor="#3a448a" borderRadius="16" class="{{item.percent == 50 ? 'progress50' : 'progress90'}}"></progress>
-        </view>
-      </block>
+    <view class="class-tap top" bind:tap="goToBasic">
+      <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a13987ca680.png" class="class-icon" mode=""/>
+      <text class="class-info base">基础阶段</text>
     </view>
+    <view class="class-tap" bind:tap="goToImprove">
+      <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a1399a7bb81.png" class="class-icon" mode=""/>
+      <text class="class-info improve">强化阶段</text>
+    </view>
+    <!-- <view class="class-tap" bind:tap="goToFinal">
+      <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a139aad71d6.png" class="class-icon" mode=""/>
+      <text class="class-info">冲刺阶段</text>
+    </view> -->
+    <view class="class-tap" bind:tap="goToSimulate">
+      <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a139bbbe7b0.png" class="class-icon" mode=""/>
+      <text class="class-info">真题速刷</text>
+    </view>
+    <view style="width: 20rpx; height: 20rpx;"></view>
 </view>
 <component-empower bindmyevent="onMyEvent" isLogin="{{isLogin}}"></component-empower>

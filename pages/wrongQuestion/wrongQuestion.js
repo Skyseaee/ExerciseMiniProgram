@@ -22,13 +22,20 @@ Page({
       noData: false,
       favor: false,
       showModal: false,
+      mode: true,
+      stage: 'none',
+      show_answer: false,
+      already_answer: [],
+      origin_time: '',
+      questionImageHeight: 0,
+      commentImageHeight: 0,
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad(options) {
-      this.setData({firstID: options.firstID})
+      this.setData({firstID: options.firstID, stage: options.stage})
       this.getQuestionData(this.data.firstID);
     },
 
@@ -91,6 +98,7 @@ Page({
         data: {
           userid: app.globalData.uid,
           first_id: id,
+          stage: this.data.stage,
         },
         success: function(res) {
           if(res.data.count == 0) {
@@ -149,6 +157,87 @@ Page({
       })
     },
 
+    selectOption: function (e) {
+      if(this.data.mode || this.data.show_answer) return;
+      const index = e.currentTarget.dataset.index;
+      const selectedOptions = this.data.selectedOptions;
+  
+      selectedOptions[0] = index
+
+      const allOptions = this.data.options.map((item, i) => {
+        return {
+          text: item.text,
+          selected: selectedOptions.includes(i),
+        }
+      })
+
+      this.addToSet(this.data.questionIndex)
+      this.setData({
+        selectedOptions: selectedOptions,
+        options: allOptions,
+      });
+      
+      this.submitAnswer()
+    },
+
+    submitAnswer: function () {
+      // 提交答案的逻辑，比对用户选择和正确答案
+      let key = this.data.questionData[this.data.questionIndex].correct_answer
+      let that = this
+      let is_correct = 0
+      let user_answer = this.data.selectedOptions.join('')
+      let questionData = this.data.questionData
+
+      if(key == user_answer) {
+        is_correct = 1
+      }
+
+      questionData[this.data.questionIndex].answer_time = util.getCurrentTime()
+      questionData[this.data.questionIndex].answer = user_answer
+      questionData[this.data.questionIndex].is_correct = is_correct
+
+      let exercise_type = questionData[this.data.questionIndex].exercise_type
+
+      this.setData({
+        questionData: questionData,
+        answer: util.convertToLetters(key.toString()),
+        userAnswer:  util.convertToLetters(user_answer.toString()),
+        currentRate: that.formateRate(questionData[this.data.questionIndex].correct_rate),
+      })
+
+      wx.request({
+        url: 'https://www.skyseaee.cn/routine/auth_api/upload_exam_record',
+        header: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        data: {
+          userid: app.globalData.uid,
+          is_correct: is_correct,
+          second_id: that.data.questionData[that.data.questionIndex].second_id,
+          first_id: that.data.firstID,
+          exercise_id: that.data.questionIndex,
+          answer_time: util.getCurrentTime(),
+          answer: this.data.selectedOptions.join(''),
+          exercise_type: exercise_type,
+        },
+        success: function(res) {
+          // 示例：显示题解和下一题按钮
+          that.setData({
+            show_answer: true,
+          });
+        },
+        fail: function(res) {
+          that.setData({
+            exerciseRecord: tempRecord
+          })
+          wx.showToast({
+            title: '答题上传失败',
+            icon: 'failed',
+            duration: 2000
+          })
+        }
+      })
+    },
 
     nextQuestion: function () {
       this.findQuestion(this.data.currentIndex + 1)
@@ -173,13 +262,29 @@ Page({
       if (currentIndex < this.data.totalData) {
         // 还有下一题，重置状态
         const nextIndex = this.data.indexList[currentIndex]
-        let selectedOptions = this.data.questionData[nextIndex].answer.toString().split('').map(Number)
-        let options = this.data.questionData[nextIndex].options.split('~+~').map((item, i) => {
-          return {
-            text: util.convertToLetters(i.toString()) + '. ' + item,
-            selected: selectedOptions.includes(i),
+        let selectedOptions = this.data.questionData[nextIndex].correct_answer.toString().split('').map(Number)
+        let options = []
+        let show_answer = true
+        if(this.data.mode) {
+          options = this.data.questionData[nextIndex].options.split('~+~').map((item, i) => {
+            return {
+              text: util.convertToLetters(i.toString()) + '. ' + item,
+              selected: selectedOptions.includes(i),
+            }
+          })
+        } else {
+          selectedOptions = this.data.questionData[nextIndex].answer.toString().split('').map(Number)
+          if(!this.isInSet(nextIndex)) {
+            show_answer = false
+            selectedOptions = []
           }
-        })
+          options = this.data.questionData[nextIndex].options.split('~+~').map((item, i) => {
+            return {
+              text: util.convertToLetters(i.toString()) + '. ' + item,
+              selected: selectedOptions.includes(i),
+            }
+          })
+        }
 
         this.setData({
           questionIndex: nextIndex,
@@ -190,6 +295,7 @@ Page({
           userAnswer: util.convertToLetters(this.data.questionData[nextIndex].answer.toString()),
           currentRate: this.formateRate(this.data.questionData[nextIndex].correct_rate),
           favor:  this.data.questionData[nextIndex].favor,
+          show_answer,
         });
       } else {
         // 没有下一题，可以显示完成页面或其他逻辑
@@ -206,6 +312,36 @@ Page({
       return r.toString().substring(0, 4)
     },
 
+    switchMode() {
+      let mode = this.data.mode
+      this.setData({
+        mode: !mode,
+      })
+
+      if(this.data.mode) {
+        let selectedOptions = this.data.questionData[this.data.questionIndex].correct_answer.toString().split('').map(Number)
+        let options = this.data.options.map((item, i) => {
+          return {
+            text: item.text,
+            selected: selectedOptions.includes(i),
+          }
+        })
+        this.setData({
+          options,
+        })
+      } else {
+        let options = this.data.options.map((item, i) => {
+          return {
+            text: item.text,
+            selected: false,
+          }
+        })
+        this.setData({
+          options,
+        })
+      }
+    },
+
     favorQuestion: function() {
       let that = this
       let favor = this.data.favor
@@ -220,6 +356,7 @@ Page({
           first_id: that.data.firstID,
           second_id: that.data.questionData[that.data.questionIndex].second_id,
           exercise_id: that.data.questionIndex,
+          exercise_type: that.data.questionData[that.data.questionIndex].exercise_type,
         },
         success: function(res) {
           let questionList = that.data.questionData
@@ -281,5 +418,32 @@ Page({
       this.setData({  
         showModal: true  
       });  
-    }  
+    },
+
+    addToSet: function (value) {
+      let mySet = new Set(this.data.already_answer);
+      mySet.add(value);
+      this.setData({
+        already_answer: Array.from(mySet)
+      });
+    },
+
+    isInSet: function (value) {
+      let mySet = new Set(this.data.already_answer);
+      return mySet.has(value);
+    },
+
+    onQuestionImageLoad(event) {
+      const { width, height } = event.detail;
+      this.setData({
+        questionImageHeight: Math.ceil(height*0.8)
+      });
+    },
+
+    onCommentImageLoad(event) {
+      const { width, height } = event.detail;
+      this.setData({
+        commentImageHeight: Math.ceil(height*0.8)
+      });
+    }
 })

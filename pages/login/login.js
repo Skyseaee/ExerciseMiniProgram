@@ -1,4 +1,5 @@
 const defaultAvatarUrl = '/images/header.jpg'
+const app = getApp()
 var Apis = require('../../utils/apis.js');
 
 Page({
@@ -6,6 +7,7 @@ Page({
     avatarUrl: defaultAvatarUrl,
     nickName: '',
     check_template_id:'',
+    phone: '',
   },
   onLoad: function (options) {
     var that = this;
@@ -38,14 +40,13 @@ Page({
       phone: e.detail.value
     })
   },
-  onChooseAvatar(e) {
+  chooseAvatar(e) {
     var that = this;
     const { avatarUrl } = e.detail 
     var params = {};
     params.openId = wx.getStorageSync('openid');
     params.timeStamp = new Date().getTime();
     params.sign = wx.Apis.getSign(params);
-    console.log(e.detail)
     wx.showLoading({
       title: '上传中',
     })
@@ -73,37 +74,57 @@ Page({
           })
         }
       },
-      fail(){
+      fail(e){
         wx.hideLoading({
           success: (res) => {},
         });
         wx.showToast({
-          icon:'error',
+          icon:'none',
           title: '上传失败',
+        })
+
+        wx.request({
+          url: wx.Apis.getHost() + 'auth_api/gather_feedback',
+          method: "POST",
+          header:{
+            "content-type": "application/x-www-form-urlencoded",
+          },
+          data: {
+            info: JSON.stringify(e),
+          },
         })
       }
     });
   },
   saveUserInfo() {
-    if(this.data.avatarUrl == defaultAvatarUrl || this.data.nickName == ''){
+    if(this.data.nickName == ''){
       wx.showToast({
         'icon': 'loading',
         title: '请完善信息',
       })
       return false;
     }
+    let that = this
+    if(this.data.avatarUrl == defaultAvatarUrl) {
+      wx.showModal({
+        title: '暂未识别到头像，将使用默认头像',
+        content: '',
+        complete: (res) => {
+          if (res.cancel) {
+            return false
+          }
+      
+          if (res.confirm) {
+            this.setData({avatarUrl:'http://www.skyseaee.cn/uploads/exercise_img/20240814/66bccd6293f48.png'})
+          }
+        }
+      })
+    }
 
     if(this.data.isWrite == 'true'){
-      if(this.data.realname == ''){
-        wx.showToast({
-          'icon': 'loading',
-          title: '请完善信息',
+        this.setData ({
+          phone: '45612234566',
         })
-        return false;
-      }
-      if (!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(this.data.phone))) {
-        this.data.phone = 45612234566;
-      } 
     }
 
     var userInfo = {
@@ -167,9 +188,12 @@ Page({
     
   },
   submitUserInfo(userInfo) {
+    console.log('submit')
     wx.Apis.login.save(userInfo, (code, data) => {
       if (code == 200) {
+        console.log('submit success')
           wx.setStorageSync('userInfo', data);
+          app.globalData.uid = data.uid
           setTimeout(function () {
               wx.hideLoading({});
               wx.showToast({
@@ -195,7 +219,7 @@ Page({
   },
   onShareAppMessage: function () {
     return {
-      title: "智慧考题宝，考试助手 ！",
+      title: "研题帮，考试助手 ！",
       path: "pages/index/index",
       imageUrl: "/images/share.png"
     };

@@ -30,7 +30,7 @@
 }  
 
 .modal input {  
-  width: 80%;  
+  width: 420rpx;
   height: 60rpx;
   margin-bottom: 30rpx;  
   padding: 10rpx;  
@@ -58,4 +58,15 @@
   font-size: 26rpx;
   letter-spacing: 12rpx;
   font-weight: 500;  
+}
+
+.picker {
+  width: 434rpx;
+  height: 80rpx;
+  line-height: 40rpx;
+  text-align: center;
+  color: #888;
+  border: 2rpx solid #ccc;
+  border-radius: 10rpx;
+  margin-bottom: 20rpx;
 }

@@ -94,7 +94,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: "刷题小助手，考试助手 ！",
+      title: "研题帮，考试助手 ！",
       path: "pages/index/index",
       imageUrl: "/images/share.png"
     };

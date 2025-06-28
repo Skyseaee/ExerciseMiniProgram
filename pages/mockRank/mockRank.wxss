@@ -53,12 +53,12 @@ page {
 }
 
 .podium {
-  background-image: url(http://www.skyseaee.cn/uploads/exercise_img/20240521/664c6eb817071.png);
+  background-image: url(http://www.skyseaee.cn/uploads/exercise_img/20240617/666fff4d260d0.png);
   background-position: bottom center; /* 将图片定位到底部居中 */
   background-size: 100% auto; /* 宽度设置为100%，高度自动调整 */
   background-repeat: no-repeat;
-  width: 720rpx;
-  height: 360rpx;
+  width: 640rpx;
+  height: 320rpx;
   margin: 0rpx auto;
   display: flex;
   justify-content: space-between;
@@ -96,7 +96,8 @@ page {
 .ranking-info {
   display: flex;
   flex-direction: column;
-  width: 356px;
+  width: 640rpx;
+  padding-top: 8rpx;
   margin: 0 auto;
   background-color: #fff;
   border-bottom-left-radius: 16rpx;
@@ -148,7 +149,6 @@ page {
   align-items: center;
   justify-content: space-around;
   color: #1d5a83;
-  border-top: 2rpx solid #1569E4;
 }
 
 .vertical {
@@ -158,7 +158,7 @@ page {
 }
 
 .samll-avatar {
-  height: 64rpx;
-  width: 64rpx;
+  height: 72rpx;
+  width: 72rpx;
   border-radius: 50%;
 }

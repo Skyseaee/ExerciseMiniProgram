@@ -10,7 +10,7 @@ Page({
 
     duration: 0, // 0 - month, 1 - year
     total: 0, 
-    currectrate: 100, 
+    currectrate: '100', 
     label: [],
     data: [],
     labels: [],
@@ -32,11 +32,14 @@ Page({
         console.log(data.data)
         let dict = that.countExercisesPerMonth(data.data)
         let labels = that.generateLables(dict)
+        let correctRate = that.calCorrectRate(data.data)
+        console.log(correctRate)
         that.setData({
           total: data.count,
           label: labels[0],
           data: dict[0],
           datas: dict,
+          currectrate: correctRate,
           labels
         })
         // console.log(labels[0], dict[0])
@@ -270,5 +273,15 @@ Page({
     let dict = {1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九', 10: '十',
     11: '十一', 12: '十二', 13: '十三', 14: '十四', 15: '十五', 16: '十六', 17: '十七', 18: '十八', 19: '十九', 20: '二十', 21: '二十一', 22: '二十二', 23: '二十三', 24: '二十四', 25: '二十五', 26: '二十六', 27: '二十七', 28: '二十八', 29: '二十九', 30: '三十', 31: '三十一'}
     return dict[index+1]
-  }
+  },
+
+  calCorrectRate(data) {
+    let correct = 0
+    let total = data.length
+    for(let i=0; i<data.length; i++) {
+      if(data[i].is_correct == 1) correct++
+    }
+    // console.log(correct, total,  (correct * 100 / total).toFixed(2))
+    return (correct * 100 / total).toFixed(2)
+  },
 });

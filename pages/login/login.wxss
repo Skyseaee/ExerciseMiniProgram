@@ -5,7 +5,7 @@ button::after{
 button {
   background-color: #fff;
 }
-  
+
 .avatar{
   width: 80px;
   height: 80px;
@@ -32,4 +32,17 @@ button {
   background: #eee;
   border-radius: 5px;
   padding-left: 15px;
+}
+
+.sub-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100rpx;
+  border-radius: 50rpx;
+  width: 480rpx;
+  margin-top: 80rpx;
+  background-color: #1569E4;
+  color: #eee;
+  letter-spacing: 12rpx;
 }

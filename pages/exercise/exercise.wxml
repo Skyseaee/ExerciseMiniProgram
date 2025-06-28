@@ -2,7 +2,7 @@
   <view class="question" bind:tap="closeMenu">
     <view class="questionInfo">
       <view class="process">
-        <progress percent="{{(currentIndex + 1) * 100 /totalData}}" strokeWidth="8" active activeColor="#3a448a" borderRadius="16" class="{{item.percent == 50 ? 'progress50' : 'progress90'}}"></progress>
+        <progress percent="{{(currentIndex + 1) * 100 /totalData}}" strokeWidth="8" active activeColor="#3a448a" borderRadius="16" class="{{item.percent == 50 ? 'progress50' : 'progress90'}}" active-mode="forwards"></progress>
         <text>{{currentIndex + 1}}/{{totalData}}</text>
       </view>
 
@@ -12,32 +12,50 @@
         <text>刷题</text>
       </view>
     </view>
+    <view class="tags" wx:if="{{tags.length > 0 && tags[0].length > 0}}">
+      <block wx:for="{{tags}}" wx:key="index">
+        <view wx:if="{{item.length > 0}}" class="box-bound">
+          {{item}}推荐
+        </view>
+      </block>
+    </view>
     <view class="questionTexts">
       <wemark md="{{questionData[indexList[currentIndex]].question}}" link highlight type="wemark"></wemark>
     </view>
-    <view wx:if="{{questionData[indexList[currentIndex]].question_img.length != 0}}" style="width: 100%; height: 15vh; overflow: hidden;">
-      <image src="{{questionData[indexList[currentIndex]].question_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    <view wx:if="{{questionData[indexList[currentIndex]].question_img.length != 0}}" style="width: 80%; height: {{questionImageHeight}}rpx; overflow: hidden;">
+      <image src="{{questionData[indexList[currentIndex]].question_img}}" bindload="onQuestionImageLoad" mode="aspectFit" style="width: 100%; height: 100%;"/>
     </view>
   </view>
 
   <view class="options" bind:tap="closeMenu">
     <!-- 假设选项格式为 "a,b,c,d,e"，以逗号分隔 -->
     <block wx:for="{{options}}" wx:key="index">
-      <view class="{{item.selected? 'optionSelected': 'option'}}" data-index="{{index}}" bindtap="selectOption">
-        <text class="optionText">{{item.text}}</text>
+      <view wx:if="{{showComments || mode}}" class="option {{item.selected}}" data-index="{{index}}" bindtap="selectOption">
+        <wemark md="{{item.text}}" link highlight type="wemark"></wemark>
+        <!-- <text class="optionText">{{item.text}}</text> -->
+      </view>
+      <view class="option" data-index="{{index}}" bindtap="selectOption" wx:else="{{showComments || mode}}">
+        <wemark md="{{item.text}}" link highlight type="wemark"></wemark>
+        <!-- <text class="optionText">{{item.text}}</text> -->
       </view>
     </block>
   </view>
 
   <view class="icons">
-    <image class="favorQuestion" bind:tap="favorQuestion" src="{{favor? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
-    <image src="/images/icon_listed@3x.png" mode="" bind:tap="swicthMenu" class="listQuestion"/>
-    <image class="foreQuestion" bind:tap="foreQuestion" src="/images/last.png" mode=""/>
-    <image class="nextQuestion" bind:tap="nextQuestion" src="/images/next.png" mode=""/>
-  </view>
-
-  <view class="submit-button" bindtap="submitAnswer" wx:if="{{!showComments && !mode}}">
-    <text>提交答案</text>
+    <view class="like">
+      <image wx:if="{{favor_state == 0 || favor_state == 2}}" class="sm-icon" src="/images/dianzan.png" mode="" bind:tap="likeQuestion"/>
+      <image wx:if="{{favor_state == 1}}" class="sm-icon" src="/images/dianzaned.png" mode="" bind:tap="likeQuestion"/>
+      {{favors}}
+      <image wx:if="{{favor_state == 0 || favor_state == 1}}" class="sm-icon" src="/images/diancai.png" mode="" bind:tap="dislikeQuestion"/>
+      <image wx:if="{{favor_state == 2}}" class="sm-icon" src="/images/diancaied.png" mode="" bind:tap="dislikeQuestion"/>
+      {{disfavors}}
+    </view>
+    <view class="right-icon">
+      <image class="favorQuestion" bind:tap="favorQuestion" src="{{favor? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
+      <image src="/images/icon_listed@3x.png" mode="" bind:tap="swicthMenu" class="listQuestion"/>
+      <image class="foreQuestion" bind:tap="foreQuestion" src="/images/last.png" mode=""/>
+      <image class="nextQuestion" bind:tap="nextQuestion" src="/images/next.png" mode=""/>
+    </view>
   </view>
 
   <view class="comments" wx:if="{{showComments || mode}}">
@@ -46,7 +64,7 @@
         <view>
           <view class="correct answers">正确答案：{{answer}}</view><view class=" answers {{answer === userAnswer ? 'correct' : 'wrong'}}">你的答案：{{userAnswer}}</view>
         </view>
-        <view class="feedback" bind:tap="showModal"><image src="/images/feedback.png" class="icon" mode=""/>答案反馈</view>
+        <view class="feedback" bind:tap="showModal"><image src="/images/feedback.png" class="icon" mode=""/>题目反馈</view>
       </view>
       <view>本题正确率：{{currentRate}}%</view>
     </view>
@@ -56,13 +74,28 @@
     </view>
   </view>
   <view wx:if="{{(showComments || mode) && questionData[indexList[currentIndex]].comment_img.length != 0}}" class="commentsimg">
-    <image src="{{questionData[indedxList[currentIndex]].comment_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    <image bindload="onCommentImageLoad" src="{{questionData[indedxList[currentIndex]].comment_img}}" mode="aspectFit" style="width: 80%; height: {{commentImageHeight}}rpx;"/>
   </view>
   
   <view class="knowledge-points" wx:if="{{showComments || mode}}">
-    <text>本题知识点</text>
+    <view class="title">相关信息</view>
     <view wx:if="{{point_name.length != 0}}" class="points">
       <text class="point-name">{{point_name}}</text>
+    </view>
+    <view wx:if="{{origin_time.length != 0}}" class="points">
+      <text class="point-name">{{origin_time}}</text>
+    </view>
+    <view class="borders">
+    </view>
+  </view>
+
+  <view class="knowledge-points" wx:if="{{showComments || mode}}">
+    <view class="title">我的反馈</view>
+    <view wx:if="{{feedback.length != 0}}" class="feed-area">
+      <text class="feedback-name">{{feedback}}</text>
+    </view>
+    <view wx:else="{{feedback.length != 0}}" class="feed-area">
+      <text class="feedback-name">暂无反馈</text>
     </view>
     <view class="borders">
     </view>

@@ -11,44 +11,118 @@ Page({
         isLogin: false,
         canIUseGetUserProfile: false,
         show: false,
-        actions: [
-            {
-                name: '复制开发者微信号',
-            },
-            {
-                name: '复制开发者QQ号',
-            },
-        ]
+        encode: '',
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        // if (wx.getUserProfile) {
-        //     this.setData({
-        //         canIUseGetUserProfile: true
-        //     })
-        // }
+        let encode = 'encode'
+        // console.log(options)
+        if(options &&　encode in options) {
+          this.setData({
+            encode: options.encode
+          })
+        }
+
         var that = this;
         var openid = wx.getStorageSync('openid')
         if (openid == '' || openid == undefined) {
             wx.login({
                 success(res) {
                     if (res.code) {
-                        console.log(res.code)
                         wx.Apis.login.login(res.code, (code, data) => {
                             console.log(data);
                             wx.Apis.setUid(data.openid); //openid
                             wx.Apis.set('openid', data.openid);
                             wx.setStorageSync('userInfo', data);
+                            wx.setStorageSync('uid', data.uid)
+                            app.globalData.uid = data.uid
                             that.setData({
-                                userInfo: data
+                              userInfo: data
                             })
+
+                            let encode = that.data.encode
+                            if(encode == '') {
+                              that.onLoad()
+                              return
+                            }
+                            let en = encode.split('_')
+                            if(en[1] == data.uid + '') {
+                              wx.showToast({
+                                title: '无法给自己助力',
+                                icon:'error'
+                              })
+                              return
+                            }
+                            wx.request({
+                              url: 'https://www.skyseaee.cn/routine/auth_api/setLockRecord',
+                              header: {
+                                "content-type": "application/x-www-form-urlencoded"
+                              },
+                              data: {
+                                friend_id: data.uid,
+                                uid: en[1],
+                                first_id: en[0],
+                              },
+                              success: function(res) {
+                                if(res.data.data) {
+                                  wx.showToast({
+                                    title: '助力成功',
+                                    icon: 'success'
+                                  })
+                                } else {
+                                  wx.showToast({
+                                    title: '已助力，无法重复助力',
+                                  })
+                                }
+                              }
+                            })
+
+                            that.onLoad()
                         });
                     }
+
+
                 }
             });
+        } else {
+          app.globalData.uid = wx.getStorageSync('uid')
+          let encode = that.data.encode
+          if(encode == '') return
+          let en = encode.split('_')
+          if(en[1] == app.globalData.uid + '') {
+            wx.showToast({
+              title: '无法给自己助力',
+              icon:'error'
+            })
+            return
+          }
+          wx.request({
+            url: 'https://www.skyseaee.cn/routine/auth_api/setLockRecord',
+            header: {
+              "content-type": "application/x-www-form-urlencoded"
+            },
+            data: {
+              friend_id: app.globalData.uid,
+              uid: en[1],
+              first_id: en[0],
+            },
+            success: function(res) {
+              if(res.data.data) {
+                wx.showToast({
+                  title: '助力成功',
+                  icon: 'success'
+                })
+              } else {
+                wx.showToast({
+                  title: '已助力，无法重复助力',
+                  icon: 'none',
+                })
+              }
+            }
+          })
         }
     },
 
@@ -170,25 +244,37 @@ Page({
      */
     onShareAppMessage: function () {
         return {
-          title: "智慧考题宝，考试助手 ！",
+          title: "研题帮，考试助手 ！",
           path: "pages/index/index",
           imageUrl: "/images/share.png"
         };
     },
 
     goCategory: function() {
+      if (this.data.userInfo.nickName == undefined || this.data.userInfo.nickName == '') {
+        this.login()
+        return false;
+      }
+
       wx.navigateTo({
         url: '/pages/categories/categories',
       })
     },
 
-    goUnlock: function() {
+    goBank: function() {
+      if (this.data.userInfo.nickName == undefined || this.data.userInfo.nickName == '') {
+        this.login()
+        return false;
+      }
+
       if(!app.globalData.uid) {
         wx.showToast({
           title: '请您先登录',
           icon: 'error'
         })
+        return
       }
+
       wx.showModal({
         title: '请输入激活码',
         content: '',
@@ -199,7 +285,6 @@ Page({
           }
       
           if (res.confirm) {
-            console.log(res.content)
             wx.request({
               url: 'https://www.skyseaee.cn/routine/auth_api/use_code',
               header: {
@@ -243,11 +328,144 @@ Page({
       })
     },
 
+    goUnlock: function() {
+      if (this.data.userInfo.nickName == undefined || this.data.userInfo.nickName == '') {
+        this.login()
+        return false;
+      }
+
+      if(!app.globalData.uid) {
+        wx.showToast({
+          title: '请您先登录',
+          icon: 'error'
+        })
+        return
+      }
+
+      wx.navigateTo({
+        url: '/pages/unlockBank/unlockBank',
+      })
+    },
+
     onShareAppMessage: function () {
       return {
-        title: "刷题小助手，考试助手 ！",
+        title: "研题帮，考试助手 ！",
         path: "pages/index/index",
         imageUrl: "/images/share.png"
       };
+    },
+
+    goMove: function() {
+      if (this.data.userInfo.nickName == undefined || this.data.userInfo.nickName == '') {
+        this.login()
+        return false;
+      }
+
+      if(!app.globalData.uid) {
+        wx.showToast({
+          title: '请您先登录',
+          icon: 'error'
+        })
+        return
+      }
+
+      wx.request({
+        url: 'https://www.skyseaee.cn/routine/auth_api/is_teacher',
+        header: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        data: {
+          "uid": app.globalData.uid,
+        },
+        success: function(res) {
+          console.log(res.data)
+          if(res.data.data == 1) {
+            wx.navigateTo({
+              url: '/pages/examine/examine',
+            })
+          } else {
+            wx.showModal({
+              title: '请输入权限码',
+              content: '',
+              editable: true,
+              complete: (res) => {
+                if(res.cancel) {
+                  return
+                }
+
+                if(res.confirm) {
+                  wx.request({
+                    url: 'https://www.skyseaee.cn/routine/auth_api/register_teacher',
+                    header: {
+                      "content-type": "application/x-www-form-urlencoded",
+                    },
+                    data: {
+                      "code": res.content,
+                      "uid": app.globalData.uid,
+                    },
+                    success: function(res) {
+                      if(res.data.data == 200) {
+                        wx.showToast({
+                          title: '已获得权限，请刷新',
+                          icon: 'none'
+                        })
+                      } else {
+                        wx.showToast({
+                          title: '权限码错误',
+                          icon: 'error'
+                        })
+                      }
+                    },
+                  })
+                }
+              }
+            })
+          }
+        }
+      })
+
+      // wx.showModal({
+      //   title: '请输入迁移码「 积分和打卡记录无法迁移 」)',
+      //   content: '',
+      //   editable: true,
+      //   complete: (res) => {
+      //     if (res.cancel) {
+      //       return
+      //     }
+      
+      //     if (res.confirm) {
+      //       wx.request({
+      //         url: 'https://www.skyseaee.cn/routine/auth_api/move_by_code',
+      //         header: {
+      //           "content-type": "application/x-www-form-urlencoded",
+      //         },
+      //         data: {
+      //           "code": res.content,
+      //           "uid": app.globalData.uid,
+      //         },
+      //         success: function(res) {
+      //           console.log(res)
+      //           if(res.data.code == 200) {
+      //             wx.showToast({
+      //               title: '迁移已完成',
+      //               icon: 'success'
+      //             })
+      //           } else if(res.data.code == 400) {
+      //             wx.showToast({
+      //               title: '迁移码错误',
+      //               icon: 'error'
+      //             })
+      //           }
+      //         },
+      //         fail: function(res) {
+      //           wx.showToast({
+      //             title: '迁移失败，请联系客服',
+      //             icon: 'none'
+      //           })
+      //         }
+      //       })
+      //     }
+      //   }
+      // })
     },
 })

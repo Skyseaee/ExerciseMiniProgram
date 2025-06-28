@@ -1,14 +1,5 @@
 {
     "description": "项目配置文件，详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
-    "packOptions": {
-        "ignore": [
-            {
-                "value": ".eslintrc.js",
-                "type": "file"
-            }
-        ],
-        "include": []
-    },
     "setting": {
         "urlCheck": false,
         "es6": true,
@@ -22,14 +13,12 @@
         "autoAudits": false,
         "showShadowRootInWxmlPanel": true,
         "scopeDataCheck": false,
-        "uglifyFileName": true,
+        "uglifyFileName": false,
         "checkInvalidKey": true,
         "checkSiteMap": true,
         "uploadWithSourceMap": true,
         "compileHotReLoad": true,
         "useMultiFrameRuntime": true,
-        "useApiHook": true,
-        "useApiHostProcess": true,
         "babelSetting": {
             "ignore": [],
             "disablePlugins": [],
@@ -47,9 +36,6 @@
         "ignoreUploadUnusedFiles": false
     },
     "compileType": "miniprogram",
-    "libVersion": "2.25.3",
-    "appid": "wx8b9b2aa35f1ecd88",
-    "projectname": "apps",
     "editorSetting": {
         "tabIndent": "insertSpaces",
         "tabSize": 4
@@ -73,5 +59,15 @@
         "miniprogram": {
             "list": []
         }
-    }
+    },
+    "packOptions": {
+        "ignore": [
+            {
+                "value": ".eslintrc.js",
+                "type": "file"
+            }
+        ],
+        "include": []
+    },
+    "appid": "wx520b3753c7293d7a"
 }

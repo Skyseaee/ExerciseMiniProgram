@@ -6,6 +6,7 @@ Page({
      */
     data: {
       intros: [],
+      mds:"",
     },
 
     /**
@@ -18,9 +19,11 @@ Page({
         success: function(res) {
           // 按照value从小到大的顺序进行排序
           res.data.data.sort((a, b) => a.value - b.value);
+          let len = res.data.data.length
           that.setData({
-            intros: res.data.data
-          })          
+            intros: res.data.data.slice(0,len-1),
+            mds: res.data.data[len-1]['text'],
+          }) 
         }
       })
     },
@@ -72,5 +75,9 @@ Page({
      */
     onShareAppMessage() {
 
+    },
+
+    redictFirst() {
+      
     }
 })

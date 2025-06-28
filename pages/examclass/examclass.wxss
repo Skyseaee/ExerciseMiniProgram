@@ -1,0 +1,178 @@
+/* pages/examinfo.wxss */
+.selectBank{
+  text-align: center;
+  margin: 200rpx 100rpx 10rpx 100rpx;
+  line-height: 2;
+  color: #333;
+  font-size: 24px; /* 设置字体大小为24像素，可以根据需要调整 */
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.up-area {
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 28rpx;
+  padding-bottom: 12rpx;
+  box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.5);
+}
+
+.questioninfo{
+  display: flex;
+  align-items: center;
+  margin: 30rpx 24rpx 20rpx 32rpx;
+}
+
+.quesiontcover {
+width: 200rpx;
+height: 120rpx;
+border-radius: 12rpx;
+margin-right: 30rpx; /* 根据需要调整间距 */
+object-fit: cover;
+}
+
+.question {
+display: flex;
+width: 420rpx;
+justify-content: space-between;
+font-size: 36rpx;
+letter-spacing: 2rpx;
+margin-bottom: 12rpx;
+color: #333;
+font-weight: 700;
+}
+
+.reset-img {
+height: 36rpx;
+width: 32rpx;
+}
+
+.answerinfo {
+  font-size: 28rpx;
+  color: #838383;
+  letter-spacing: 2rpx;
+  margin-right: 24rpx;
+  font-weight: 500;
+}
+
+.answer {
+display: flex;
+align-items: center;
+}
+
+.infos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #505050;
+}
+
+.icons{
+  width: 700rpx;
+  margin: 0 auto;
+  margin-top: 24rpx;
+  padding-bottom: 16rpx;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.image-item {
+display: flex;
+align-items: center;
+}
+
+.button-hover {
+display: flex;
+align-items: center;
+background-color: #ccc;
+}
+
+.infoicon {
+  width: 96rpx;
+  height: 96rpx;
+  object-fit: cover;
+  border-radius: 5%;
+}
+
+.icondescription {
+  margin-left: 40rpx;
+  font-size: 32rpx;
+  text-align: center;
+  color: #4b4957;
+}
+
+.answersinfo {
+display: flex;
+font-size: 28rpx;
+color: #505050;
+margin-top: 12rpx;
+}
+
+.examlist {
+margin: 48rpx 0rpx 0 0rpx;
+}
+
+.item {
+padding-bottom: 30rpx;
+padding-left: 30rpx;
+padding-right: 30rpx;
+border-bottom: solid 2rpx  rgba(241,241,241,1);
+}
+
+.examTitle {
+margin-bottom: 16rpx;
+margin-top: 24rpx;
+font-size: 16px;
+font-weight: 700;
+color: #333;
+}
+
+.examProcess {
+  margin-top: 32rpx;
+  margin-bottom: 20rpx;
+  font-size: 26rpx;
+  color: #505050;
+}
+
+.divider {
+height: 1rpx; /* 分界线的高度，可以根据需求调整 */
+background-color: #ccc; /* 分界线的颜色，可以根据需求调整 */
+margin-top: 8rpx; /* 分界线与上方内容的间距，可以根据需求调整 */
+margin-bottom: 8rpx; /* 分界线与下方内容的间距，可以根据需求调整 */
+}
+
+.progress {
+border-radius: 40rpx; /* 设置进度条的圆角 */
+height: 40rpx; /* 设置进度条的高度 */
+}
+
+.progress50 .wx-progress-inner-bar {
+border-radius: 16rpx !important;
+background: linear-gradient(to right, #f3f3f3, #6dd5fa) !important;
+}
+.progress90 .wx-progress-inner-bar {
+border-radius: 16rpx !important;
+background: linear-gradient(to right, #f3f3f3, #6dd5fa, #2980b9) !important;  
+}
+
+.auth-info {
+width: 90%;
+color: #505050;
+margin: auto;
+margin-top: 30rpx;
+padding: 20rpx;
+background-color: rgb(219, 233, 250);
+}
+
+.lines {
+margin: 0 auto;
+border-top: 2rpx dashed rgb(227, 227, 227); /* 设置为虚线并指定颜色和宽度 */
+width: 340px; /* 设置虚线的长度 */
+}
+
+.small-icon {
+width: 40rpx;
+height: 40rpx;
+margin-right: 20rpx;
+}

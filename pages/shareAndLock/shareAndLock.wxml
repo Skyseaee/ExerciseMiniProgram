@@ -1,0 +1,35 @@
+<!--pages/shareAndLock/shareAndLock.wxml-->
+<view class="bg">
+  <view class="title">邀请助力 解锁题库</view>
+  <view class="small-title">点击下方题库状态栏或专属链接进行分享</view>
+  <view class="share-btn" bind:tap="generateLink">生成专属链接</view>
+  <button class="infos" open-type="share" bindcontact="handleContact">
+    <image src="{{pic_url}}" class="cover" mode=""/>
+    <view class="right-info">
+      <view class="names"> 
+        {{name}}
+        <image src="/images/shares.png" class="icon" mode=""/>
+      </view>
+      <text class="price">{{price}} 元</text>
+      <view class="curr-dis">折扣后：{{curr_price}} 元</view>
+    </view>
+  </button>
+</view>
+
+<view class="record">
+  <view class="title-record" bind:tap="showInfo">
+    助力记录
+    <image src="/images/aboutus.png" class="icon" mode=""/>
+  </view>
+  <view wx:if="{{records.length==0}}" class="disc">
+    暂无助力记录
+  </view>
+  <view wx:else="{{records.length==0}}">
+    <view wx:for="{{records}}" wx:key="index" class="lists">
+      <image class="avatar" src="{{item.avatarUrl}}" mode=""/>
+      <view class="nickname">{{item.nickName}}</view>
+    </view>
+  </view>
+</view>
+<view class="disc">快邀请更多好友助力吧</view>
+<button class="lock-but" bind:tap="payoff">立即解锁</button>

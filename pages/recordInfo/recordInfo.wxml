@@ -7,16 +7,17 @@
     <view class="questions">
       <wemark md="{{question}}" link highlight type="wemark"></wemark>
     </view>
-    <view wx:if="{{question_img.length != 0}}" style="width: 100%; height: 15vh; overflow: hidden;">
-      <image src="{{question_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    <view wx:if="{{question_img.length != 0}}" style="width: 80%; height: {{questionImageHeight}}rpx; overflow: hidden;">
+      <image src="{{question_img}}" bindload="onQuestionImageLoad" mode="aspectFit" style="width: 100%; height: 100%;"/>
     </view>
   </view>
 
   <view class="options">
     <!-- <view>{{questionData[questionIndex].options}}</view> -->
     <block wx:for="{{options}}" wx:key="index">
-      <view class="{{item.selected? 'optionSelected': 'option'}}" data-index="{{index}}" bindtap="selectOption">
-        <text class="optionText">{{item.text}}</text>
+      <view class="option {{item.selected}}" data-index="{{index}}">
+        <wemark md="{{item.text}}" link highlight type="wemark"></wemark>
+        <!-- <text class="optionText">{{item.text}}</text> -->
       </view>
     </block>
   </view>
@@ -37,7 +38,15 @@
     </view>
   </view>
   <view wx:if="{{comments_img.length != 0}}" class="commentsimg">
-    <image src="{{comments_img}}" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    <image bindload="onCommentImageLoad" src="{{comments_img}}" mode="aspectFit" style="width: 100%; height: {{commentImageHeight}}rpx;"/>
+  </view>
+  <view class="knowledge-points">
+    <text>本题知识点</text>
+    <view wx:if="{{point_name.length != 0}}" class="points">
+      <text class="point-name">{{point_name}}</text>
+    </view>
+    <view class="borders">
+    </view>
   </view>
   <feedbackInput wx:if="{{showModal}}" showModal="{{showModal}}" bindconfirm="handleConfirm" bindcloseModal="handleCloseModal"></feedbackInput>
 </view>

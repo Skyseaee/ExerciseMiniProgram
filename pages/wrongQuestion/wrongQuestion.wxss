@@ -23,6 +23,29 @@
   width: 90%;
 }
 
+.mode-class {
+  display: flex;
+}
+
+.wx-switch-input {
+  width: 78rpx !important;
+  height: 40rpx !important;
+  margin-left: 4rpx;
+  margin-right: 12rpx;
+}
+
+/*白色样式（false的样式）*/
+.wx-switch-input::before{
+  width: 78rpx !important;
+  height: 40rpx !important;
+}
+/* 中间的小圆球 */
+/*绿色样式（true的样式）*/
+.wx-switch-input::after{
+  width: 38rpx !important;
+  height: 35rpx !important;
+}
+
 .questionInfo {
   display: flex;
   text-align: center;
@@ -73,19 +96,31 @@
   border-radius: 12rpx;
   margin-bottom: 30rpx;
   cursor: pointer;
-  box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.8);
+  box-shadow: 0px 2rpx 8rpx 0px rgba(219,220,233,0.8);
 }
 
 .optionSelected {
   display: flex;
   align-items:center;
   padding: 10rpx;
-  border: 2rpx solid #0FB371;
-  color: #0FB371;
+  color: #fff;
+  background-color: #71cca6;
   border-radius: 12rpx;
   margin-bottom: 30rpx;
   cursor: pointer;
-  box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.6);
+  box-shadow: 0px 2rpx 8rpx 0px rgba(219,220,233,0.6);
+}
+
+.option-Selected {
+  display: flex;
+  align-items:center;
+  padding: 10rpx;
+  border: 2rpx solid #1569E4;
+  color: #1569E4;
+  border-radius: 12rpx;
+  margin-bottom: 30rpx;
+  cursor: pointer;
+  box-shadow: 0px 2rpx 8rpx 0px rgba(219,220,233,0.6);
 }
 
 .optionText {
@@ -174,7 +209,7 @@
 }
 
 progress {
-  width: 560rpx;
+  width: 360rpx;
   margin-right: 20rpx;
   border-radius: 40rpx; /* 设置进度条的圆角 */
   height: 40rpx; /* 设置进度条的高度 */
@@ -187,4 +222,36 @@ progress {
 .progress90 .wx-progress-inner-bar {
   border-radius: 16rpx !important;
   background: linear-gradient(to right, #f3f3f3, #6dd5fa, #2980b9) !important;  
+}
+
+.knowledge-points {
+  margin-top: 30rpx;
+  width: 90%;
+  color: #505050;
+  font-size: 28rpx;
+  line-height: 50rpx;
+  font-weight: 500;
+  padding: 20rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 0rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+
+.points {
+  display: flex;
+  margin-top: 12rpx;
+}
+
+.point-name {
+  border: 2rpx solid #1569E4;
+  color: #1569E4;
+  background:rgba(195,220,255,0.20);
+  padding: 4rpx 12rpx 4rpx 12rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+}
+
+wemark view {
+  margin-top: 0rpx !important;
+  margin-bottom: 0rpx !important;
+  font-size: 30rpx;
 }

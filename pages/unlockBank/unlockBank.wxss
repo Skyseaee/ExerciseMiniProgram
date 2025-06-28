@@ -1,0 +1,108 @@
+/* pages/unlockBank/unlockBank.wxss */
+page {
+  background-color: rgb(241, 241, 241);
+}
+
+.bg {
+  background-image: url('http://www.skyseaee.cn/uploads/exercise_img/20240611/6667d4e86a104.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 260rpx;
+  background-size: contain;
+}
+
+.title {
+  display: flex;
+  font-size: 38rpx;
+  padding-top: 140rpx;
+  padding-left: 40rpx;
+  color: rgb(70, 84, 122);
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 60rpx;
+  justify-content: center;
+}
+
+.cate-list {
+  width: 45%;
+  float: left;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20rpx;
+  background-color: #fff;
+  margin-left: 20rpx;
+  align-items: flex-start;
+  border-radius: 16rpx;
+}
+
+.cover {
+  width: 100%;
+  height: 192rpx; /* 根据需要调整高度 */
+  border-top-left-radius: 16rpx;
+  border-top-right-radius: 16rpx;
+}
+
+.name {
+  margin-left: 40rpx;
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #555;
+  letter-spacing: 2rpx;
+  font-weight: 600;
+}
+
+.bottom {
+  display: flex;
+  margin-left: 40rpx;
+  margin-top: 12rpx;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.price {
+  font-size: 26rpx;
+  color: #747474;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.lock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48rpx;
+  width: 140rpx;
+  background-image: linear-gradient(270deg, #FC6531 1%, #FFA55F 100%);
+  border-radius: 24rpx;
+  font-size: 28rpx;
+  margin-left: 60rpx;
+  color: #fff;
+  letter-spacing: 4rpx;
+}
+
+.unlock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48rpx;
+  width: 140rpx;
+  background-image: linear-gradient(270deg, #ffa081 1%, #fdc397 100%);
+  border-radius: 24rpx;
+  font-size: 28rpx;
+  margin-left: 60rpx;
+  color: #fff;
+  letter-spacing: 4rpx;
+}
+
+.icon {
+  width: 36rpx;
+  height: 40rpx;
+  margin-left: 30rpx;
+}

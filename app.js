@@ -41,7 +41,11 @@ App({
             success(res) {
                 if (res.code) {
                     console.log(res.code)
-                    wx.Apis.login.login(res.code, (code, data) => {
+                    // wx.Apis.logins(res.data)
+                    // wx.hideLoading({
+                    //   success: (res) => {},
+                    // })
+                    wx.Apis.logins(res.code, (code, data) => {
                         console.log(data);
                         wx.Apis.setUid(data.openid); //openid
                         wx.Apis.set('openid', data.openid);

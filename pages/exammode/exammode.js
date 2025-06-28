@@ -32,6 +32,8 @@ Page({
       score: 0,
       classMode: [],
       showModal: false,
+      questionImageHeight: 0,
+      commentImageHeight: 0,
     },
 
     /**
@@ -213,6 +215,7 @@ Page({
       let questions = this.data.questions
       if(selectedOptions.length > 0) {
         record[this.data.indexes].isAnswer = true
+        record[this.data.indexes].exercise_type = questions[this.data.indexes].exercise_type
         record[this.data.indexes]['userAnswer'] = selectedOptions.join('')
         questions[this.data.indexes]['isAnswer'] = 'answered'
       }
@@ -315,6 +318,7 @@ Page({
           first_id: that.data.first_id,
           second_id: that.data.questions[that.data.indexes].second_id,
           exercise_id: that.data.questions[that.data.indexes].id,
+          exercise_type: that.data.questions[that.data.indexes].exercise_type,
         },
         success: function(res) {
           let questionList = that.data.questions
@@ -592,4 +596,18 @@ Page({
       showModal: true  
     });  
   },
+
+  onQuestionImageLoad(event) {
+    const { width, height } = event.detail;
+    this.setData({
+      questionImageHeight: Math.ceil(height*0.8)
+    });
+  },
+
+  onCommentImageLoad(event) {
+    const { width, height } = event.detail;
+    this.setData({
+      commentImageHeight: Math.ceil(height*0.8)
+    });
+  }
 })
