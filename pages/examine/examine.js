@@ -9,7 +9,7 @@ Page({
      */
     data: {
       first_cate: [],
-      options: ['基础阶段', '强化阶段', '冲刺阶段', '模拟阶段'],
+      options: ['基础难度', '中等难度', '混合难度'],
       selectedOption: '请选择',
       target: '',
       show: false,

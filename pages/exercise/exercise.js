@@ -9,10 +9,12 @@ Page({
      */
     data: {
       firstID: 0,
+      mainIndex: -1,
       catagoryID: 0,
       questionData: {}, // 接口返回的题目数据
       totalData: 1,
       stage: 'basic',
+      option_type: 0,
       questionIndex: 1, // 当前题目ID
       currentIndex: 0, //当前题目索引
       selectedOptions: '', // 用户选择的选项
@@ -29,27 +31,30 @@ Page({
       userAnswer: "",
       favor: false,
       showModal: false,
-      auth: false,
       mode: false,
       showTable: false,
       origin_time: '',
       questionImageHeight: 0,
       commentImageHeight: 0,
-      feedback: '',
-      feedback_list: [],
       favor_state: 0,
       favors: 0,
       disfavors: 0,
       tags: [],
-      examinetype: -1,
+      url: '',
+      second_id: 0,
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad(options) {  
-      this.setData({catagoryID: options.id, firstID: options.firstID, auth: options.auth, stage: options.stage, examinetype: options.examinetype})
-      this.getQuestionData(this.data.catagoryID);
+    onLoad(options) { 
+      let mainIndex = wx.getStorageSync('mainActiveIndex') 
+      if(options.firstID != undefined) {
+        this.setData({firstID: options.firstID, stage: options.stage, mainIndex: mainIndex, url: 'https://www.skyseaee.cn/routine/auth_api/get_exercise_by_first_category'})
+      } else {
+        this.setData({second_id: options.secondID, stage: options.stage, mainIndex: mainIndex, url: 'https://www.skyseaee.cn/routine/auth_api/get_exercise_by_second_category'})
+      }
+      this.getQuestionData();
     },
 
     /**
@@ -101,31 +106,47 @@ Page({
 
     },
 
-    getQuestionData: function(id) {
+    switchOption(option_type, options, selectedOptions, answer, mode) {
+      if (option_type == 1) {
+        return ['A', 'B', 'C', 'D'].map((item, i) => {
+          return {
+            text: item,
+            selected: util.mappingOptions(i, answer, selectedOptions != undefined ? selectedOptions : -1, mode),
+          }
+        });
+      } else {
+        return options.split('~+~').map((item, i) => {
+          return {
+            text: util.convertToLetters(i.toString()) + '. ' + item,
+            selected: util.mappingOptions(i, answer, selectedOptions != undefined ? selectedOptions : -1),
+          }
+        })
+      }
+    },
+
+    getQuestionData: function() {
       let that = this
       wx.request({
-        url: 'https://www.skyseaee.cn/routine/auth_api/get_exercise_by_second_category',
+        url: this.data.url,
         header: {
           "content-type": "application/x-www-form-urlencoded",
         },
         data: {
           uid:app.globalData.uid,
-          second_id: id,
-          auth: that.data.auth,
+          first_id: this.data.firstID,
+          // mainIndex: this.data.mainIndex,
           stage: this.data.stage,
-          examinetype: this.data.examinetype,
+          second_id: this.data.second_id,
         },
         success: function(res) {
           let index = -1
           let i = 0
           let indexList = []
           let exerciseRecord = []
-          let feedback_list = []
           // console.log(res.data.data)
           for(let key in res.data.data) {
             indexList.push(key)
             res.data.data[key]['index'] = i+1
-            feedback_list.push('暂无')
             if(res.data.data[key].user_answer.length == 0) {
               if(index == -1)
                 index = i
@@ -139,7 +160,6 @@ Page({
             }
             i++
           }
-          that.setData({feedback_list})
           // 所有题目已刷过
           if(index == -1) {
             index = 0
@@ -148,7 +168,7 @@ Page({
               showNextButton: true,
             })
           }
-          that.requestComment(index, indexList[index])
+          // that.requestComment(index, indexList[index])
           let selectedOptions = res.data.data[indexList[index]].user_answer
           let tags = res.data.data[indexList[index]].tags.split(',')
           that.setData({
@@ -156,17 +176,13 @@ Page({
             currentIndex: index,
             exerciseRecord: exerciseRecord,
             indexList: indexList,
-            options: res.data.data[indexList[index]].options.split('~+~').map((item, i) => {
-              return {
-                text: util.convertToLetters(i.toString()) + '. ' + item,
-                selected: util.mappingOptions(i, res.data.data[indexList[index]].answer, selectedOptions != undefined ? selectedOptions : -1),
-              }
-            }),
+            options: that.switchOption(res.data.data[indexList[index]].option_type, res.data.data[indexList[index]].options, selectedOptions, Number(res.data.data[indexList[index]].answer)),
             totalData: res.data.count,
             questionIndex: indexList[index],
             currentRate: that.formateRate(res.data.data[indexList[index]].correct_rate),
             answer: util.convertToLetters(res.data.data[indexList[index]].answer.toString()),
             userAnswer: util.convertToLetters(res.data.data[indexList[index]].user_answer.toString()),
+            option_type: res.data.data[indexList[index]].option_type,
             favor: res.data.data[indexList[index]].favor,
             favor_state: res.data.data[indexList[index]].state,
             point_name: res.data.data[indexList[index]].point_name,
@@ -198,12 +214,13 @@ Page({
       let that = this
       // 根据题型判断是否为多选题，单选题直接替换选项，多选题追加或删除选项
       selectedOptions = index
-      const allOptions = this.data.options.map((item, i) => {
-        return {
-          text: item.text,
-          selected: util.mappingOptions(i, that.data.questionData[that.data.questionIndex].answer, selectedOptions),
-        }
-      })
+      const allOptions = this.switchOption(this.data.option_type, that.data.questionData[that.data.questionIndex].options, selectedOptions, Number(that.data.questionData[that.data.questionIndex].answer))
+      // const allOptions = this.data.options.map((item, i) => {
+      //   return {
+      //     text: item.text,
+      //     selected: util.mappingOptions(i, that.data.questionData[that.data.questionIndex].answer, selectedOptions),
+      //   }
+      // })
   
       this.setData({
         selectedOptions: selectedOptions,
@@ -254,8 +271,8 @@ Page({
         data: {
           userid: app.globalData.uid,
           is_correct: is_correct,
-          second_id: that.data.catagoryID,
-          first_id: that.data.firstID,
+          second_id: questionData[this.data.questionIndex].second_id,
+          first_id: that.data.mainIndex,
           exercise_id: that.data.questionIndex,
           answer_time: util.getCurrentTime(),
           answer: this.data.selectedOptions,
@@ -303,21 +320,16 @@ Page({
       let that = this
       if (currentIndex < this.data.totalData) {
         // 还有下一题，重置状态
-        if(this.data.feedback_list[currentIndex] == '暂无') {
-          this.requestComment(currentIndex, this.data.indexList[currentIndex])
-        } else {
-          let feedback = this.data.feedback_list[currentIndex]
-          this.setData({feedback,})
-        }
+
         const nextIndex = this.data.indexList[currentIndex]
         let selectedOptions = this.data.questionData[nextIndex].user_answer
         let tags = this.data.questionData[nextIndex].tags.split(',')
-        let options = this.data.questionData[nextIndex].options.split('~+~').map((item, i) => {
-          return {
-            text: util.convertToLetters(i.toString()) + '. ' + item,
-            selected: util.mappingOptions(i, that.data.questionData[nextIndex].answer, selectedOptions != undefined ? selectedOptions : -1)
-          }
-        })
+        // let options = this.data.questionData[nextIndex].options.split('~+~').map((item, i) => {
+        //   return {
+        //     text: util.convertToLetters(i.toString()) + '. ' + item,
+        //     selected: util.mappingOptions(i, that.data.questionData[nextIndex].answer, selectedOptions != undefined ? selectedOptions : -1)
+        //   }
+        // })
         if(this.data.questionData[nextIndex].user_answer.length == 0) {
           this.setData({
             showComments: false,
@@ -334,13 +346,14 @@ Page({
           questionIndex: nextIndex,
           currentIndex: currentIndex,
           selectedOptions: '',
-          options: options,
+          options: this.switchOption(this.data.questionData[nextIndex].option_type, this.data.questionData[nextIndex].options, selectedOptions, Number(this.data.questionData[nextIndex].answer)),
           answer: util.convertToLetters(this.data.questionData[nextIndex].answer.toString()),
           userAnswer: util.convertToLetters(this.data.questionData[nextIndex].user_answer.toString()),
           currentRate: this.formateRate(this.data.questionData[nextIndex].correct_rate),
           favor: this.data.questionData[nextIndex].favor,
           favor_state: this.data.questionData[nextIndex].state,
           favors:  this.data.questionData[nextIndex].favors,
+          option_type: this.data.questionData[nextIndex].option_type,
           disfavors:  this.data.questionData[nextIndex].disfavors,
           showModal: false,
           point_name: this.data.questionData[nextIndex].point_name,
@@ -348,30 +361,11 @@ Page({
           tags,
         });
       } else {
-        // 没有下一题，可以显示完成页面或其他逻辑
-        if(this.data.auth == 'true') {
-          wx.showToast({
-            title: '最后一题',
-            icon: 'success',
-            duration: 2000
-          });
-        } else {
-          wx.showModal({
-            title: '暂无权限查看后续题目',
-            content: '是否前往开通权限',
-            complete: (res) => {
-              if (res.cancel) {
-                return
-              }
-          
-              if (res.confirm) {
-                wx.navigateTo({
-                  url: '/pages/unlockBank/unlockBank',
-                })
-              }
-            }
-          })
-        }
+        wx.showToast({
+          title: '最后一题',
+          icon: 'success',
+          duration: 2000
+        });
       }
     },
 
@@ -392,7 +386,7 @@ Page({
         },
         data: {
           user_id: app.globalData.uid,
-          first_id: that.data.firstID,
+          first_id: that.data.mainIndex,
           second_id: that.data.catagoryID,
           exercise_id: that.data.questionIndex,
           exercise_type: exercise_type,
@@ -431,14 +425,9 @@ Page({
         })
         return
       } 
-      util.feedback(this.data.questionIndex, this.data.questionData[this.data.questionIndex], app.globalData.uid, e.detail.value1, e.detail.value2)
-      let feedbacks = this.data.feedback_list
-      let fb = e.detail.value1 + ' - ' + e.detail.value2
-      feedbacks[this.data.currentIndex] = fb
+    
       this.setData({
         showModal: false,
-        feedback_list: feedbacks,
-        feedback: fb,
       })
     },  
 
@@ -449,30 +438,30 @@ Page({
       });  
     }, 
 
-    requestComment(index, exercise_id) {
-      let that = this
-      wx.request({
-        url: 'https://www.skyseaee.cn/routine/auth_api/get_feedback_exercise',
-        header: {
-          "content-type": "application/x-www-form-urlencoded",
-        },
-        data: {
-          uid: app.globalData.uid,
-          exercise_id: exercise_id,
-        },
-        success: function(res) {
-          let feedbacks = that.data.feedback_list
-          let feedback = ''
-          if(res.data.count == 0) {
-            feedbacks[index] = ''
-          } else {
-            feedback = res.data.data[0]['correct_answer'] + ' - ' + res.data.data[0]['comment']
-            feedbacks[index] = feedback
-          }
-          that.setData({feedback_list: feedbacks, feedback: feedback,})
-        }
-      })
-    },
+    // requestComment(index, exercise_id) {
+    //   let that = this
+    //   wx.request({
+    //     url: 'https://www.skyseaee.cn/routine/auth_api/get_feedback_exercise',
+    //     header: {
+    //       "content-type": "application/x-www-form-urlencoded",
+    //     },
+    //     data: {
+    //       uid: app.globalData.uid,
+    //       exercise_id: exercise_id,
+    //     },
+    //     success: function(res) {
+    //       let feedbacks = that.data.feedback_list
+    //       let feedback = ''
+    //       if(res.data.count == 0) {
+    //         feedbacks[index] = ''
+    //       } else {
+    //         feedback = res.data.data[0]['correct_answer'] + ' - ' + res.data.data[0]['comment']
+    //         feedbacks[index] = feedback
+    //       }
+    //       that.setData({feedback_list: feedbacks, feedback: feedback,})
+    //     }
+    //   })
+    // },
     
     showModal() {  
       // 显示模态框的方法  
@@ -557,7 +546,7 @@ Page({
         },
         data: {
           uid: app.globalData.uid,
-          first_id: that.data.firstID,
+          first_id: that.data.mainIndex,
           second_id: that.data.catagoryID,
           exercise_id: that.data.questionIndex,
           exercise_type: exercise_type,
@@ -608,7 +597,7 @@ Page({
         },
         data: {
           uid: app.globalData.uid,
-          first_id: that.data.firstID,
+          first_id: that.data.mainIndex,
           second_id: that.data.catagoryID,
           exercise_id: that.data.questionIndex,
           exercise_type: exercise_type,
@@ -633,5 +622,25 @@ Page({
           });
         }
       })
-    }
+    },
+
+    previewQuestionImage() {
+      const currentImage = this.data.questionData[this.data.indexList[this.data.currentIndex]].question_img;
+      if (!currentImage) return;
+    
+      wx.previewImage({
+        current: currentImage, // 当前显示图片的链接
+        urls: [currentImage]   // 图片列表（可预览多张）
+      });
+    },
+
+    previewCommentImage() {
+      const currentImage = this.data.questionData[this.data.indexList[this.data.currentIndex]].comment_img;
+      if (!currentImage) return;
+    
+      wx.previewImage({
+        current: currentImage, // 当前显示图片的链接
+        urls: [currentImage]   // 图片列表（可预览多张）
+      });
+    },
 })

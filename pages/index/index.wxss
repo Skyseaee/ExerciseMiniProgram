@@ -155,6 +155,7 @@
 
 .covers {
   width: 100%;
+  border-radius: 8rpx;
 }
 
 .title-text{
@@ -165,4 +166,19 @@
   font-size: 36rpx;
   letter-spacing: 2rpx;
   color: #202020;
+}
+
+.mid-border {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 680rpx;
+  height: 60rpx;
+  margin: 8rpx auto;
+}
+
+.zixun-img {
+  height: 42rpx;
+  width: 42rpx;
 }

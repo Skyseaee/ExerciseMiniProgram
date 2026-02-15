@@ -366,6 +366,7 @@ module.exports.getHost = function () {
 }
 
 module.exports.logins = function (code) {
+  let that = this
   wx.login({
     success: function (res) {
       if (res.code) {
@@ -373,17 +374,20 @@ module.exports.logins = function (code) {
         wx.request({
           url: 'https://www.skyseaee.cn/routine/login/login', // 后端接口地址
           method: 'POST',
+          header: {
+            'Content-Type': 'application/json', // 确保和服务器一致
+          },
           data: {
             code: res.code // 将前端返回的code作为参数发送给后端
           },
           success: function (loginRes) {
             if (loginRes.statusCode === 200) {
-              console.log(loginRes.data);
+              console.log(loginRes.data.data);
               // 假设后端返回的数据中包含openid和uid
-              const { openid, uid } = loginRes.data;
+              const { openid, uid } = loginRes.data.data;
               wx.setStorageSync('openid', openid); // 存储openid
-              wx.setStorageSync('userInfo', loginRes.data); // 存储用户信息
-              that.globalData.uid = uid; // 设置全局变量uid
+              wx.setStorageSync('userInfo', loginRes.data.data); // 存储用户信息
+              // that.globalData.uid = uid; // 设置全局变量uid
               wx.hideLoading();
             } else {
               wx.showToast({

@@ -20,7 +20,8 @@ Page({
       currentRate: 0,
       options: [],
       exam_id: 0, 
-      selectedOptions: [], // 用户选择的选项
+      objectiveScore: [],
+      selectedOptions: '', // 用户选择的选项
       allOptions: [], // 控制所有选项的样式
       showComments: false, // 是否显示题解
       favor: false,
@@ -34,6 +35,12 @@ Page({
       showModal: false,
       questionImageHeight: 0,
       commentImageHeight: 0,
+      option_type: 0,
+      countdown: "180:00:00", // 默认 180分钟
+      timer: null,
+      uploadImages: '',
+      imgHeight: 100,
+      imgWidth: 100,
     },
 
     /**
@@ -47,7 +54,7 @@ Page({
         startTime,
         exam_id: options.id
       })
-      
+
       let record = []
       let info = null
       if(options.records) {
@@ -71,15 +78,15 @@ Page({
         },
         success: function(res) {
           let data = res.data.data
+          console.log(data)
           if(data.score == -1 && options.class == 'mock') {
             for(let i=0; i<data.question.length; i++) {
               record.push({"index": i, "isAnswer": false, "userAnswer": '', 'first_id': data.question[i].first_id, 'second_id': data.question[i].second_id, 'exercise_id': data.question[i].id, "correctAnswer": data.question[i].answer})
               data.question[i].user_answer = ''
             }
-          } else if(options.class == 'mock'){
+          } else if(options.class == 'answer'){
             record = JSON.parse(data.record)
             let classMode = that.generateStyleMap(data.question, record)
-            console.log(record)
             that.setData({
               allDown: true,
               showComments: true,
@@ -92,19 +99,17 @@ Page({
             })
             wx.disableAlertBeforeUnload()
           }
-          let selectedOptions = record[0].userAnswer.toString().split('').map(Number)
+          // let selectedOptions = record[0].userAnswer.toString().split('').map(Number)
+          let option = that.switchOptions(data.question[0].option_type, data.question[0].options, record[0].userAnswer, record[0].correctAnswer, that.data.showComments)
           that.setData({
             is_first: data.is_first,
             first_id: options.category,
             questions: data.question,
-            options: data.question[0].options.split('~+~').map((item, i) => {
-              return {
-                text: utils.convertToLetters(i.toString()) + '. ' + item,
-                selected: selectedOptions.includes(i),
-              }
-            }),
+            options: option,
             records: record,
             favor: data.question[0].favor,
+            option_type: data.question[0].option_type,
+            uploadImages: data.question[0].user_answer,
           })
           // console.log(that.data.is_first) 
 
@@ -133,6 +138,8 @@ Page({
           }
         }
       })
+
+      this.startCountdown(180 * 60);
 
       wx.enableAlertBeforeUnload({
         message: '离开页面后答题记录将消失',
@@ -165,7 +172,7 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload() {
-
+      clearInterval(this.data.timer);
     },
 
     /**
@@ -201,30 +208,23 @@ Page({
       const index = e.currentTarget.dataset.index;
       let selectedOptions = this.data.selectedOptions;
   
-      selectedOptions = []
-      selectedOptions.push(index)
+      selectedOptions = index
       
-      const allOptions = this.data.options.map((item, i) => {
-        return {
-          text: item.text,
-          selected: selectedOptions.includes(i),
-        }
-      })
-      
+      let allOptions = this.switchOptions(this.data.option_type, this.data.questions[this.data.indexes].options, selectedOptions, this.data.questions[this.data.indexes].answer, this.data.showComments)
+
       let record = this.data.records
       let questions = this.data.questions
-      if(selectedOptions.length > 0) {
+      if(selectedOptions != undefined) {
         record[this.data.indexes].isAnswer = true
         record[this.data.indexes].exercise_type = questions[this.data.indexes].exercise_type
-        record[this.data.indexes]['userAnswer'] = selectedOptions.join('')
+        record[this.data.indexes]['userAnswer'] = selectedOptions
         questions[this.data.indexes]['isAnswer'] = 'answered'
       }
-
 
       this.setData({
         selectedOptions: selectedOptions,
         options: allOptions,
-        record,
+        records: record,
         questions,
       });
     },
@@ -257,17 +257,18 @@ Page({
 
       if (index < this.data.questions.length) {
         // 还有下一题，重置状态
-        let selectedOptions = this.data.records[index].userAnswer.toString().split('').map(Number)
-        let options = this.data.questions[index].options.split('~+~').map((item, i) => {
-          return {
-            text: utils.convertToLetters(i.toString()) + '. ' + item,
-            selected: selectedOptions.includes(i),
-          }
-        })
+        // let selectedOptions = this.data.records[index].userAnswer.toString().split('').map(Number)
+        // let options = this.data.questions[index].options.split('~+~').map((item, i) => {
+        //   return {
+        //     text: utils.convertToLetters(i.toString()) + '. ' + item,
+        //     selected: selectedOptions.includes(i),
+        //   }
+        // })
+        let options = this.switchOptions(this.data.questions[index].option_type, this.data.questions[index].options, this.data.records[index].userAnswer, this.data.records[index].correctAnswer, this.data.showComments)
         let record = this.data.records
-        if(this.data.selectedOptions.length > 0 && this.data.selectedOptions[0] !== "") {
+        if(this.data.selectedOptions.length > 0 && this.data.selectedOptions !== "") {
           record[this.data.indexes].isAnswer = true
-          record[this.data.indexes]['userAnswer'] = this.data.selectedOptions.join('')
+          record[this.data.indexes]['userAnswer'] = this.data.selectedOptions
         }
         if(!this.data.allDown) {
           this.setData({
@@ -281,13 +282,15 @@ Page({
         }
         this.setData({
           indexes: index,
-          selectedOptions: this.data.records[index].userAnswer.split(),
+          selectedOptions: this.data.records[index].userAnswer,
           options: options,
           answer: utils.convertToLetters(this.data.questions[index].answer.toString()),
           userAnswer: utils.convertToLetters(this.data.records[index].userAnswer.toString()),
           currentRate: this.formateRate(this.data.questions[index].correct_rate),
           favor: this.data.questions[index].favor,
           showModal: false,
+          option_type: this.data.questions[index].option_type,
+          uploadImages: this.data.questions[index].user_answer,
         })
       } else {
         // 没有下一题，可以显示完成页面或其他逻辑
@@ -359,7 +362,7 @@ Page({
 
       if(!isDown) {
         wx.showToast({
-          title: '无答题记录，无法提交',
+          title: '无客观题答题记录，无法提交',
           icon: 'none'
         })
         return
@@ -405,18 +408,21 @@ Page({
       let finishTime = new Date()
       let internal = (finishTime.getTime() - this.data.startTime) / 1000
       let question_id = []
-      let score = 0
       let classMode = this.generateStyleMap(this.data.questions, this.data.records)
+      let objectiveScore = [0, 0]
       for(let i=0; i<this.data.questions.length; i++) {
         question_id.push(this.data.questions[i].id)
-        if(this.data.questions[i].answer === this.data.records[i].userAnswer) {
-          score++
-        }
+        if (this.data.questions[i].option_type != 2) {
+          objectiveScore[1] += 1
+          if (this.data.records[i].userAnswer != undefined && this.data.records[i].userAnswer == this.data.records[i].correctAnswer) {
+            objectiveScore[0] += 1
+          }
+        } 
       }
       
       let params = JSON.stringify({
         "uid": app.globalData.uid,
-        'score': score,
+        'score': -1,
         'use_time': internal,
         'category_id': this.data.first_id,
         'question_id': question_id.join(','),
@@ -438,9 +444,10 @@ Page({
             allDown: true,
             showComments: true,
             showResult: true,
-            score,
+            score: -1,
             spendTime: that.secondsToHMS(internal),
             classMode,
+            objectiveScore: objectiveScore,
           })
           wx.disableAlertBeforeUnload()
         },
@@ -469,7 +476,9 @@ Page({
   generateStyleMap: function(questions, records) {
     let classMode = []
     for(let i=0; i<questions.length; i++) {
-      if(questions[i].answer === records[i].userAnswer) {
+      if (questions[i].option_type == 2) {
+        classMode.push('stableAnswer')
+      } else if(questions[i].answer === records[i].userAnswer) {
         classMode.push('trueAnswer')
       } else if(records[i].userAnswer === "") {
         classMode.push('emptyAnswer')
@@ -609,5 +618,186 @@ Page({
     this.setData({
       commentImageHeight: Math.ceil(height*0.8)
     });
+  },
+
+  startCountdown(totalSeconds) {
+    let that = this;
+    let remain = totalSeconds;
+
+    function update() {
+      let h = Math.floor(remain / 3600);
+      let m = Math.floor((remain % 3600) / 60);
+      let s = remain % 60;
+
+      let timeStr = 
+        (h < 10 ? "0" + h : h) + ":" +
+        (m < 10 ? "0" + m : m) + ":" +
+        (s < 10 ? "0" + s : s);
+
+      that.setData({ countdown: timeStr });
+
+      if (remain <= 0) {
+        clearInterval(that.data.timer);
+        wx.showToast({
+          title: '考试时间到',
+          icon: 'none'
+        });
+        // 这里可以自动提交答案
+      }
+      remain--;
+    }
+
+    update(); // 先执行一次
+    let timer = setInterval(update, 1000);
+    this.setData({ timer });
+  },
+
+  chooseImage: function() {
+    let that = this
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      sizeType: ['original', 'compressed'],
+      success(res) {
+        console.log('选择结果:', res);
+
+        const path = res.tempFiles[0].tempFilePath;
+        that.setData({
+          uploadImages: path
+        });
+
+        wx.uploadFile({
+          url: 'https://www.skyseaee.cn/routine/auth_api/update_image', // 换成后端接口
+          filePath: path,
+          name: 'img_file',
+          formData: {
+            type: 'subjective' // 自定义目录，比如主观题图片
+          },
+          success(uploadRes) {
+            // 后端返回的图片 URL
+            const data = JSON.parse(uploadRes.data);
+            if (data.code === 200) {  
+              // 你的 JsonService::successful 返回的格式应该是 { code:200, data:url }
+              let records = that.data.records
+              let questions = that.data.questions
+              records[that.data.indexes].isAnswer = true
+              records[that.data.indexes].exercise_type = questions[that.data.indexes].exercise_type
+              records[that.data.indexes]['userAnswer'] = data.msg
+              questions[that.data.indexes]['user_answer'] = data.msg
+              questions[that.data.indexes]['isAnswer'] = 'answered'
+              that.setData({
+                uploadImages: data.data.msg,
+                questions: questions,
+                records: records,
+              });
+              wx.showToast({
+                title: '上传成功',
+                icon: 'success'
+              });
+            } else {
+              wx.showToast({
+                title: '上传失败',
+                icon: 'none'
+              });
+            }
+          },
+          fail(err) {
+            console.error('上传失败:', err);
+            wx.showToast({
+              title: '上传失败',
+              icon: 'none'
+            });
+          }
+        });
+      },
+      fail(err) {
+        console.error('选择失败:', err);
+        wx.showToast({
+          title: '图片上传失败',
+          icon: 'error'
+        })
+      }
+    })
+  },
+
+  switchOption: function(option_type, options, selectedOptions, answer, mode) {
+    if (option_type == 1) {
+      return ['A', 'B', 'C', 'D'].map((item, i) => {
+        return {
+          text: item,
+          selected: utils.mappingOptions(i, answer, selectedOptions != undefined ? selectedOptions : -1, mode),
+        }
+      });
+    } else {
+      return options.split('~+~').map((item, i) => {
+        return {
+          text: utils.convertToLetters(i.toString()) + '. ' + item,
+          selected: utils.mappingOptions(i, answer, selectedOptions != undefined ? selectedOptions : -1),
+        }
+      })
+    }
+  },
+
+  switchOptionExamMode: function(option_type, options, selectedOptions, answer, mode) {
+    if (option_type == 1) {
+      return ['A', 'B', 'C', 'D'].map((item, i) => {
+        return {
+          text: item,
+          selected: utils.mappingOptionsExamMode(i, answer, selectedOptions != undefined ? selectedOptions : -1, mode),
+        }
+      });
+    } else {
+      return options.split('~+~').map((item, i) => {
+        return {
+          text: utils.convertToLetters(i.toString()) + '. ' + item,
+          selected: utils.mappingOptionsExamMode(i, answer, selectedOptions != undefined ? selectedOptions : -1),
+        }
+      })
+    }
+  },
+
+  switchOptions: function(option_type, options, selectedOptions, answer, mode) {
+    if (mode) {
+      return this.switchOption(option_type, options, selectedOptions, answer, mode)
+    } else {
+      return this.switchOptionExamMode(option_type, options, selectedOptions, answer, mode)
+    }
+  },
+
+  previewQuestionImage() {
+    const currentImage = this.data.questions[this.data.indexes].question_img;
+    if (!currentImage) return;
+  
+    wx.previewImage({
+      current: currentImage, // 当前显示图片的链接
+      urls: [currentImage]   // 图片列表（可预览多张）
+    });
+  },
+
+  previewCommentImage() {
+    const currentImage = this.data.questions[this.data.indexes].comment_img;
+    if (!currentImage) return;
+  
+    wx.previewImage({
+      current: currentImage, // 当前显示图片的链接
+      urls: [currentImage]   // 图片列表（可预览多张）
+    });
+  },
+
+  onImageLoad(e) {
+    const { width, height } = e.detail;
+    const scale = height / width;
+    const baseWidth = wx.getSystemInfoSync().windowWidth * 0.9;
+  
+    // 想放大 1.5 倍，比如
+    const displayWidth = baseWidth;
+    const displayHeight = displayWidth * scale;
+
+    this.setData({
+      imgWidth: displayWidth,
+      imgHeight: displayHeight
+    });
   }
+
 })

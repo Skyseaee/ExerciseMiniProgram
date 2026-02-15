@@ -1,7 +1,0 @@
-<!--pages/userInfo/userInfo.wxml-->
-<input type="text" class="weui-input" bindblur="getRealName" placeholder="请输入姓名"/>
-<input type="number" maxlength="11" class="weui-input" bindblur="getPhone" placeholder="请输入手机号码" />
-
-<view style="width: 90%;margin:auto;">
-  <van-button round type="info" color="#46C6BA" size="large" bind:click="saveUserInfo">提交</van-button>
-</view>

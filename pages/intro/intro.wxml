@@ -1,8 +1,0 @@
-<!--pages/intro/intro.wxml-->
-<view class="content">
-  <block wx:for="{{intros}}" wx:key="index">
-    <view class="{{item.class}}">{{item.text}}</view>
-  </block>
-  <wemark md="{{mds}}" link highlight type="wemark"></wemark>
-</view>
-<view class="button"></view>

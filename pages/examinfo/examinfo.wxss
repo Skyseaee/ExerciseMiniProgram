@@ -1,206 +1,302 @@
-/* pages/examinfo.wxss */
 .selectBank{
-    text-align: center;
-    margin: 200rpx 100rpx 10rpx 100rpx;
-    line-height: 2;
-    color: #333;
-    font-size: 24px; /* 设置字体大小为24像素，可以根据需要调整 */
-    word-wrap: break-word;
-    white-space: normal;
+  text-align: center;
+  margin: 200rpx 100rpx 10rpx 100rpx;
+  line-height: 2;
+  color: #333;
+  font-size: 24px; /* 设置字体大小为24像素，可以根据需要调整 */
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .up-area {
-  width: 100%;
-  margin: 0 auto;
-  padding-top: 28rpx;
-  box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.5);
+width: 100%;
+margin: 0 auto;
+padding-top: 28rpx;
+box-shadow: 0px 4px 8px 0px rgba(219,220,233,0.5);
 }
 
 .questioninfo{
-    display: flex;
-    align-items: center;
-    margin: 30rpx 24rpx 20rpx 32rpx;
+  display: flex;
+  align-items: center;
+  margin: 30rpx 24rpx 20rpx 32rpx;
 }
 
 .quesiontcover {
-  width: 200rpx;
-  height: 120rpx;
-  border-radius: 12rpx;
-  margin-right: 30rpx; /* 根据需要调整间距 */
-  object-fit: cover;
+width: 200rpx;
+height: 120rpx;
+border-radius: 12rpx;
+margin-right: 30rpx; /* 根据需要调整间距 */
+object-fit: cover;
 }
 
 .question {
+display: flex;
+width: 420rpx;
+justify-content: space-between;
+font-size: 36rpx;
+letter-spacing: 2rpx;
+margin-bottom: 12rpx;
+color: #333;
+font-weight: 700;
+}
+
+.question-num {
   display: flex;
   width: 420rpx;
   justify-content: space-between;
-  font-size: 36rpx;
+  font-size: 28rpx;
   letter-spacing: 2rpx;
   margin-bottom: 12rpx;
-  color: #333;
+  color: #666;
   font-weight: 700;
-}
+  }
 
 .reset-img {
-  height: 36rpx;
-  width: 32rpx;
+height: 36rpx;
+width: 32rpx;
 }
 
 .answerinfo {
-    font-size: 28rpx;
-    color: #838383;
-    letter-spacing: 2rpx;
-    margin-right: 24rpx;
-    font-weight: 500;
+  font-size: 28rpx;
+  color: #838383;
+  letter-spacing: 2rpx;
+  margin-right: 24rpx;
+  font-weight: 500;
 }
 
 .answer {
-  display: flex;
-  align-items: center;
+display: flex;
+align-items: center;
 }
 
 .infos {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #505050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #505050;
 }
 
 .icons{
-  width: 700rpx;
-  margin: 0 auto;
-  margin-top: 24rpx;
-  padding-bottom: 28rpx;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+width: 700rpx;
+margin: 0 auto;
+margin-top: 24rpx;
+padding-bottom: 28rpx;
+display: flex;
+justify-content: space-around;
+align-items: center;
 }
 
 .image-item {
   display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .button-hover {
-  display: flex;
-  align-items: center;
-  background-color: #ccc;
+display: flex;
+align-items: center;
+background-color: #ccc;
 }
-  
+
 .infoicon {
-    width: 96rpx;
-    height: 96rpx;
-    object-fit: cover;
-    border-radius: 5%;
+  width: 72rpx;
+  height: 72rpx;
+  object-fit: cover;
+  border-radius: 5%;
 }
 
 .icondescription {
-  margin-left: 36rpx;
-  font-size: 30rpx;
-  letter-spacing: 2rpx;
-  text-align: center;
-  color: #211B54;
+font-size: 26rpx;
+letter-spacing: 2rpx;
+margin-top: 10rpx;
+text-align: center;
+color: #344;
 }
 
 .answersinfo {
-  display: flex;
-  font-size: 28rpx;
-  color: #505050;
-  margin-top: 12rpx;
+display: flex;
+font-size: 28rpx;
+color: #505050;
+margin-top: 12rpx;
 }
 
 .examlist {
-  margin: 48rpx 0rpx 0 0rpx;
+margin: 48rpx 0rpx 0 0rpx;
 }
 
 .item {
-  padding-bottom: 30rpx;
-  padding-left: 30rpx;
-  padding-right: 30rpx;
-  border-bottom: solid 2rpx  rgba(241,241,241,1);
+padding-bottom: 30rpx;
+padding-left: 30rpx;
+padding-right: 30rpx;
+border-bottom: solid 2rpx  rgba(241,241,241,1);
 }
 
 .examTitle {
-  margin-bottom: 16rpx;
-  margin-top: 24rpx;
-  font-size: 16px;
-  font-weight: 700;
-  color: #333;
+margin-bottom: 16rpx;
+margin-top: 24rpx;
+font-size: 16px;
+font-weight: 700;
+color: #333;
 }
 
 .examProcess {
-  margin-bottom: 24rpx;
-  font-size: 26rpx;
-  color: #505050;
+margin-bottom: 24rpx;
+font-size: 26rpx;
+color: #505050;
 }
 
 .divider {
-  height: 1rpx; /* 分界线的高度，可以根据需求调整 */
-  background-color: #ccc; /* 分界线的颜色，可以根据需求调整 */
-  margin-top: 8rpx; /* 分界线与上方内容的间距，可以根据需求调整 */
-  margin-bottom: 8rpx; /* 分界线与下方内容的间距，可以根据需求调整 */
-}
-
-.progress {
-  border-radius: 40rpx; /* 设置进度条的圆角 */
-  height: 40rpx; /* 设置进度条的高度 */
+height: 1rpx; /* 分界线的高度，可以根据需求调整 */
+background-color: #ccc; /* 分界线的颜色，可以根据需求调整 */
+margin-top: 8rpx; /* 分界线与上方内容的间距，可以根据需求调整 */
+margin-bottom: 8rpx; /* 分界线与下方内容的间距，可以根据需求调整 */
 }
 
 .progress50 .wx-progress-inner-bar {
-  border-radius: 16rpx !important;
-  background: linear-gradient(to right, #f3f3f3, #6dd5fa) !important;
+border-radius: 16rpx !important;
+background: linear-gradient(to right, #f3f3f3, #6dd5fa) !important;
 }
 .progress90 .wx-progress-inner-bar {
-  border-radius: 16rpx !important;
-  background: linear-gradient(to right, #f3f3f3, #6dd5fa, #2980b9) !important;  
+border-radius: 16rpx !important;
+background: linear-gradient(to right, #f3f3f3, #6dd5fa, #2980b9) !important;  
 }
 
 .auth-info {
-  width: 90%;
-  color: #505050;
-  margin: auto;
-  margin-top: 30rpx;
-  padding: 20rpx;
-  background-color: rgb(219, 233, 250);
+width: 90%;
+color: #505050;
+margin: auto;
+margin-top: 30rpx;
+padding: 20rpx;
+background-color: rgb(219, 233, 250);
 }
 
 .lines {
-  margin: 0 auto;
-  border-top: 2rpx dashed rgb(227, 227, 227); /* 设置为虚线并指定颜色和宽度 */
-  width: 340px; /* 设置虚线的长度 */
+margin: 0 auto;
+border-top: 2rpx dashed rgb(227, 227, 227); /* 设置为虚线并指定颜色和宽度 */
+width: 340px; /* 设置虚线的长度 */
 }
 
 .small-icon {
-  width: 40rpx;
-  height: 40rpx;
-  margin-right: 20rpx;
+width: 28rpx;
+height: 28rpx;
+margin-right: 20rpx;
 }
 
 .class-tap {
-  display: flex;
-  margin: 60rpx auto;
-  width: 90%;
-  height: 200rpx;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 8rpx;
-  box-shadow: 0 0rpx 12rpx rgba(0, 0, 0, 0.1);
+display: flex;
+margin: 60rpx auto;
+width: 90%;
+height: 200rpx;
+align-items: center;
+justify-content: space-between;
+border-radius: 8rpx;
+box-shadow: 0 0rpx 12rpx rgba(0, 0, 0, 0.1);
 }
 
 .class-icon {
-  margin-left: 80rpx;
-  width: 130rpx;
-  height: 120rpx;
+margin-left: 80rpx;
+width: 130rpx;
+height: 120rpx;
 }
 
 .class-info {
-  margin-right: 140rpx;
-  font-size: 36rpx;
-  letter-spacing: 8rpx;
-  font-weight: 600;
-  color: #4a71aa;
+margin-right: 140rpx;
+font-size: 36rpx;
+letter-spacing: 8rpx;
+font-weight: 600;
+color: #4a71aa;
 }
 
 .top {
-  margin-top: 80rpx;
+margin-top: 80rpx;
+}
+
+.new-class-list {
+  width: 100%;
+  margin-top: 40rpx;
+}
+
+.new-class-tap {
+  margin: 48rpx auto;
+  /* margin-bottom: 30rpx; */
+  border-radius: 8rpx;
+}
+
+.new-class-icon {
+  margin-left: 20rpx;
+  width: 300rpx;
+  height: 140rpx;
+}
+
+.new-class-info {
+  font-size: 32rpx;
+  letter-spacing: 4rpx;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 14rpx;
+}
+
+.num {
+  font-size: 24rpx;
+  color: #888;
+  font-weight: 600;
+}
+
+.inner-class-tap {
+  display: flex;
+  align-items: flex-start;
+  border-radius: 8rpx;
+}
+
+.cate-info {
+  display: flex;
+  flex-direction: column;
+  height: 120rpx;
+  width: 300rpx;
+  justify-content: flex-start;
+}
+
+.up-down {
+  width: 34rpx;
+  height: 16rpx;
+}
+
+.cate-control{
+  display: flex;
+  width: 360rpx;
+  justify-content:space-between;
+  align-items: center;
+}
+
+.chapter-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 88%;
+  margin: 0 auto;
+  margin-top: 12rpx;
+  justify-content: space-between; /* 让左右分布均匀 */
+}
+
+.chapter-item {
+  width: 48%; /* 两个一行留些间隔 */
+  padding: 6rpx;
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: #555;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+  border-radius: 6rpx;
+  text-align: center;
+}
+
+.chapter-item-hover {
+  width: 48%; /* 两个一行留些间隔 */
+  padding: 6rpx;
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: #fff;
+  box-sizing: border-box;
+  background-color: #e6a96b;
+  border-radius: 6rpx;
+  text-align: center;
 }

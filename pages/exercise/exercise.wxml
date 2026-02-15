@@ -19,25 +19,36 @@
         </view>
       </block>
     </view>
-    <view class="questionTexts">
+    <view class="questionTexts" wx:if="{{option_type != 1}}">
       <wemark md="{{questionData[indexList[currentIndex]].question}}" link highlight type="wemark"></wemark>
     </view>
-    <view wx:if="{{questionData[indexList[currentIndex]].question_img.length != 0}}" style="width: 80%; height: {{questionImageHeight}}rpx; overflow: hidden;">
-      <image src="{{questionData[indexList[currentIndex]].question_img}}" bindload="onQuestionImageLoad" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    <view wx:if="{{questionData[indexList[currentIndex]].question_img.length != 0}}" style="width: 100%; height: {{questionImageHeight}}rpx; overflow: hidden;" bind:tap="previewQuestionImage">
+      <image src="{{questionData[indexList[currentIndex]].question_img}}" bindload="onQuestionImageLoad" mode="widthFix" style="width: 100%; height: auto;"/>
     </view>
   </view>
 
-  <view class="options" bind:tap="closeMenu">
-    <!-- 假设选项格式为 "a,b,c,d,e"，以逗号分隔 -->
+  <view class="{{option_type == 0 ? 'options': 'optionType'}}" bind:tap="closeMenu">
     <block wx:for="{{options}}" wx:key="index">
-      <view wx:if="{{showComments || mode}}" class="option {{item.selected}}" data-index="{{index}}" bindtap="selectOption">
-        <wemark md="{{item.text}}" link highlight type="wemark"></wemark>
-        <!-- <text class="optionText">{{item.text}}</text> -->
-      </view>
-      <view class="option" data-index="{{index}}" bindtap="selectOption" wx:else="{{showComments || mode}}">
-        <wemark md="{{item.text}}" link highlight type="wemark"></wemark>
-        <!-- <text class="optionText">{{item.text}}</text> -->
-      </view>
+      <block wx:if="{{option_type == 0}}">
+        <view wx:if="{{showComments || mode}}" class="option {{item.selected}}" data-index="{{index}}" bindtap="selectOption">
+          <!-- <wemark md="{{item.text}}" link highlight type="wemark"></wemark> -->
+          <view>{{item.text}}</view>
+          <!-- <text class="optionText">{{item.text}}</text> -->
+        </view>
+        <view class="option" data-index="{{index}}" bindtap="selectOption" wx:else="{{showComments || mode}}">
+          <!-- <wemark md="{{item.text}}" link highlight type="wemark"></wemark> -->
+          <view>{{item.text}}</view>
+          <!-- <text class="optionText">{{item.text}}</text> -->
+        </view>
+      </block>
+      <block wx:else>
+        <view wx:if="{{showComments || mode}}" class="optionTyped {{item.selected}}" data-index="{{index}}" bindtap="selectOption">
+          <text class="optionText">{{item.text}}</text>
+        </view>
+        <view class="optionTyped" data-index="{{index}}" bindtap="selectOption" wx:else="{{showComments || mode}}">
+          <text class="optionText">{{item.text}}</text>
+        </view>
+      </block>
     </block>
   </view>
 
@@ -64,17 +75,17 @@
         <view>
           <view class="correct answers">正确答案：{{answer}}</view><view class=" answers {{answer === userAnswer ? 'correct' : 'wrong'}}">你的答案：{{userAnswer}}</view>
         </view>
-        <view class="feedback" bind:tap="showModal"><image src="/images/feedback.png" class="icon" mode=""/>题目反馈</view>
+        <view>正确率：{{currentRate}}%</view>
       </view>
-      <view>本题正确率：{{currentRate}}%</view>
     </view>
     <view class="separator"></view>
     <view class="borders">
-      <wemark md="{{questionData[questionIndex].comments}}" link highlight type="wemark"></wemark>
+      <wemark wx:if="{{option_type==0}}" md="{{questionData[questionIndex].comments}}" link highlight type="wemark"></wemark>
+      <!-- <view wx:if="{{questionData[indexList[currentIndex]].comment_img.length != 0}}" class="commentsimg"> -->
+      <view wx:if="{{questionData[indexList[currentIndex]].comment_img.length != 0}}" class="commentsimg" bind:tap="previewCommentImage">
+        <image bindload="onCommentImageLoad" src="{{questionData[indexList[currentIndex]].comment_img}}" mode="aspectFit" style="width: 100%; height: {{commentImageHeight}}rpx;"/>
+      </view>
     </view>
-  </view>
-  <view wx:if="{{(showComments || mode) && questionData[indexList[currentIndex]].comment_img.length != 0}}" class="commentsimg">
-    <image bindload="onCommentImageLoad" src="{{questionData[indedxList[currentIndex]].comment_img}}" mode="aspectFit" style="width: 80%; height: {{commentImageHeight}}rpx;"/>
   </view>
   
   <view class="knowledge-points" wx:if="{{showComments || mode}}">
@@ -82,14 +93,11 @@
     <view wx:if="{{point_name.length != 0}}" class="points">
       <text class="point-name">{{point_name}}</text>
     </view>
-    <view wx:if="{{origin_time.length != 0}}" class="points">
-      <text class="point-name">{{origin_time}}</text>
-    </view>
     <view class="borders">
     </view>
   </view>
 
-  <view class="knowledge-points" wx:if="{{showComments || mode}}">
+  <!-- <view class="knowledge-points" wx:if="{{showComments || mode}}">
     <view class="title">我的反馈</view>
     <view wx:if="{{feedback.length != 0}}" class="feed-area">
       <text class="feedback-name">{{feedback}}</text>
@@ -99,10 +107,10 @@
     </view>
     <view class="borders">
     </view>
-  </view>
+  </view> -->
   
-  <view style="height:270rpx; width:200rpx;"></view>
-  <feedbackInput wx:if="{{showModal}}" showModal="{{showModal}}" bindconfirm="handleConfirm" bindcloseModal="handleCloseModal"></feedbackInput>
+  <view style="height:200rpx; width:200rpx;"></view>
+  <!-- <feedbackInput wx:if="{{showModal}}" showModal="{{showModal}}" bindconfirm="handleConfirm" bindcloseModal="handleCloseModal"></feedbackInput> -->
 </view>
 <view style="width: 10%; height: 40rpx;"></view>
 <view wx:if="{{showTable}}" class="control">

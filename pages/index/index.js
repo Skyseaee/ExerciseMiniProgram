@@ -1,9 +1,11 @@
 const app = getApp()
+const util = require('../../utils/util')
 
 Page({
   data: {
     bannerList: [],
     firstCategory1: [],
+    firstCategory2: [],
     notice: '',
     days: Number,
     persistDays: 0,
@@ -74,11 +76,18 @@ Page({
       })
     });
 
+    this.getFirstCategory2()
+
     // 计算考研天数
-    const targetDate = new Date('2025-12-21');
-    let today = new Date();
-    let timeDifference = targetDate.getTime() - today.getTime();
-    that.setData({days: Math.ceil(timeDifference / (1000 * 60 * 60 * 24))});
+    const targetDate = Date.UTC(2026, 11, 20);
+    const today = Date.UTC(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()
+    );
+    const days = (targetDate - today) / (1000 * 60 * 60 * 24);
+    that.setData({ days });
+
   },
   onShow() {
     var userInfo = wx.getStorageSync('userInfo');
@@ -99,19 +108,106 @@ Page({
 
     var id = t.currentTarget.dataset.id;
     app.globalData.mainActiveIndex = id;
-    wx.setStorageSync('mainActiveIndex', id)
-    wx.switchTab({
-      url: '/pages/examinfo/examinfo',
-    })
+    if(id == 21) {
+      wx.setStorageSync('mainActiveIndex', 20)
+    } else {
+      wx.setStorageSync('mainActiveIndex', id)
+    }
+    
+    if(id == 20 || id == 21) {
+      // validate auth
+      let uid = app.globalData.uid
+      let that = this
+      wx.request({
+        url: 'https://www.skyseaee.cn/routine/auth_api/has_auth_firstID',
+        header: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        data: {
+          "userid": uid,
+          "first_id": id,
+        },
+        success: function(res) {
+          if(res.data.data == 1) {
+            if (id == 20) {
+              wx.switchTab({
+                url: '/pages/examinfo/examinfo',
+              })
+            } else {
+              wx.navigateTo({
+                url: '/pages/mockexam/mockexam?firstCategory=' + encodeURIComponent(JSON.stringify(that.data.firstCategory2[5])),
+              })
+            }
+          } else {
+            wx.showModal({
+              title: '请入群联系小助手获得激活码',
+              content: '',
+              editable: true,
+              complete: (res) => {
+                if (res.cancel) {
+                  return
+                }
+            
+                if (res.confirm) {
+                  wx.request({
+                    url: 'https://www.skyseaee.cn/routine/auth_api/use_code',
+                    header: {
+                      "content-type": "application/x-www-form-urlencoded",
+                    },
+                    data: {
+                      "code": res.content,
+                      "userid": app.globalData.uid,
+                    },
+                    success: function(res) {
+                      let data = res.data
+                      console.log(data)
+                      if(data.code == 400){
+                        wx.showToast({
+                          title: '当前激活码无效，如有疑问请入群联系小助手',
+                          icon: 'none'
+                        })
+                      } else if(data.code == 200) {
+                        if(data.msg == 'existed') {
+                          wx.showToast({
+                            title: '您已激活激活码对应题库，请勿重复激活',
+                            icon: 'none',
+                            duration: 2000,
+                          })
+                        } else {
+                          wx.showToast({
+                            title: '激活成功',
+                            icon: 'success'
+                          })
+                        }
+                      } else {
+                        wx.showToast({
+                          title: '激活失败，如有疑问请联系小助手',
+                          icon: 'none'
+                        })
+                      }
+                    }
+                  })
+                }
+              }
+            })
+          }
+        }
+      })
+    } else {
+      wx.switchTab({
+        url: '/pages/examinfo/examinfo',
+      })
+    }
   },
   goDetail(t) {
     wx.navigateTo({
       url: '/pages/detail/detail?id=' + t.currentTarget.dataset.id + '&name=' + t.currentTarget.dataset.name + '&time=' + t.currentTarget.dataset.time
     })
   },
+
   onShareAppMessage: function () {
     return {
-      title: "研题帮，考试助手 ！",
+      title: "Top帮研题集，考试助手 ！",
       path: "pages/index/index",
       imageUrl: "/images/share.png"
     };
@@ -147,5 +243,18 @@ Page({
     wx.navigateTo({
         url: '/pages/exerciseCharts/exerciseCharts',
     })
-  }
+  },
+
+  getFirstCategory2: function() {
+    let that = this
+    wx.request({
+      url: 'https://www.skyseaee.cn/routine/auth_api/get_first_category2',
+      method: "GET",
+      success: function(res) {
+        that.setData({
+          firstCategory2: res.data.data,
+        })
+      }
+    })
+  },
 })

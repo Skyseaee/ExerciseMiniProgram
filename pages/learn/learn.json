@@ -1,6 +1,0 @@
-{
-    "usingComponents": {
-        "van-rate": "/dist/rate/index",
-        "van-toast": "/dist/toast/index"
-    }
-}

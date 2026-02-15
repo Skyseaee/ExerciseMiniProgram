@@ -1,19 +1,17 @@
 <!--pages/examine/examine.wxml-->
-<view class="texts"> 点击前往待审核题库 </view>
+<view class="texts"> 点击前往专属题库 </view>
 <view class="items">
     <view wx:for="{{first_cate}}" wx:key="index" class="container">
-      <view class="cates">
-        <view class="left-area">
+        <view class="left-area" data-index="{{index}}" bind:tap="goExamInfoBasic">
           <image class="quesiontcover" src="{{item.pic_url}}" mode=""/>
-          <view class="infos">{{item.name}}</view>
+          <!-- <view class="infos">{{item.name}}</view> -->
         </view>
-        <view class="right-area">
-          <view class="stages"  bind:tap="goExamInfoBasic" data-index="{{index}}">基础阶段</view>
-          <view class="stages"  bind:tap="goExamInfoImprove" data-index="{{index}}">强化阶段</view>
+        <!-- <view class="right-area"> -->
+          <!-- <view class="stages"  bind:tap="goExamInfoBasic" data-index="{{index}}">基础难度</view>
+          <view class="stages"  bind:tap="goExamInfoImprove" data-index="{{index}}">中等难度</view> -->
           <!-- <view class="stages"  bind:tap="goExamInfoFinal" data-index="{{index}}">冲刺阶段</view> -->
-          <view class="stages"  bind:tap="goExamInfoStimuate" data-index="{{index}}">真题速刷</view>
-        </view>
-      </view>
+          <!-- <view class="stages"  bind:tap="goExamInfoStimuate" data-index="{{index}}">混合难度</view> -->
+        <!-- </view> -->
     </view>
   </view>
 

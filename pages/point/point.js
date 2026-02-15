@@ -151,7 +151,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: "研题帮，考试助手 ！",
+      title: "Top帮研题集，考试助手 ！",
       path: "pages/index/index",
       imageUrl: "/images/share.png"
     };

@@ -1,7 +1,0 @@
-{
-  "usingComponents": {
-    "van-search": "/dist/search/index",
-    "van-empty": "/dist/empty/index"
-  },
-  "backgroundColor": "#FFF"
-}

@@ -1,9 +1,0 @@
-<!--pages/question/question.wxml-->
-<import src="../component/moniq/moniq.wxml"></import>
-<view class="page">
-    <swiper autoplay="{{autoplay}}" bindchange="pageChange" circular="{{xiejie}}" class="{{videoMedia&&videoctrl?'flexauto':'noflex'}}" current="{{current}}" duration="500" indicatorDots="{{false}}" interval="{{interval}}"  wx:if="{{!iconIndtwo}}">
-        <swiper-item wx:for="{{questions}}" wx:for-item="downContent" wx:key="key">
-                <template is="answer" data="{{downContent:downContent,model:model,testMode:testMode,options:options,indexInd:indexInd,length:length}}"></template>
-        </swiper-item>
-    </swiper>
-</view>

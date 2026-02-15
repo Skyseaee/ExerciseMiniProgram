@@ -32,8 +32,9 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad(options) {
+      console.log(options)
       let stage = options.stage
-      let examinetype = options.examinetype
+      let examinetype = options.mainActiveIndex
       this.setData({
         stage,
       })
@@ -78,18 +79,18 @@ Page({
      */
     onShow() {
         // 查看用户数是否已经选择了题库
-        let mainActiveIndex = wx.getStorageSync('mainActiveIndex')
+        let mainActiveIndex = this.data.examinetype
         
         // 如果选择了则加载题库对应的二级题库
         if(mainActiveIndex != 0) {
             wx.Apis.api.firstShowCategory((code, data) => {
                 for(let i=0; i<data.length; i++) {
-                    if(data[i].id == this.data.current_question_bank_type) {
+                    if(data[i].id == mainActiveIndex) {
                         this.setData({
-                            current_question_bank: data[i],
+                          current_question_bank: data[i],
                         })
                     } else {
-                        continue
+                      continue
                     }
                 }
             });
@@ -146,7 +147,7 @@ Page({
       let that = this
       
       wx.request({
-        url: 'https://www.skyseaee.cn/routine/auth_api/get_exercise_by_first_category',
+        url: 'https://www.skyseaee.cn/routine/auth_api/get_exercises_by_first_category',
         method: "POST",
         header:{
           "content-type": "application/x-www-form-urlencoded",
@@ -159,7 +160,7 @@ Page({
           examinetype: this.data.examinetype,
         },
         success: function(res) {
-          // console.log(res.data.data.secondMap)
+          console.log(res.data.data.secondMap)
           let data = res.data.data.secondMap
           for(let id in data) {
             if(data[id].count == 0) continue

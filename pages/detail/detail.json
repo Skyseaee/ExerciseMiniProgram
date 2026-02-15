@@ -1,9 +1,0 @@
-{
-    "usingComponents": {
-        "van-icon": "/dist/icon/index",
-        "van-toast": "/dist/toast/index",
-        "component-empower": "../component/empower/empower"
-    },
-    "navigationBarTitleText": "题库详情",
-    "backgroundColor": "#FFF"
-}

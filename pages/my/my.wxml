@@ -38,28 +38,28 @@
           </button>
           <image src="/images/goto.png" class="small-icon" mode=""/>
         </view>
-        <view class="item" bind:tap="goUnlock">
+        <!-- <view class="item" bind:tap="goUnlock">
           <view class="inside">
             <image src="/images/init.png" class="icon" mode=""/>
             <text class="texts">在线激活</text>
           </view>
           <image src="/images/goto.png" class="small-icon" mode=""/>
-        </view>
-        <view class="item" bind:tap="goBank">
+        </view> -->
+        <!-- <view class="item" bind:tap="goBank">
           <view class="inside">
             <image src="/images/change.png" class="icon" mode=""/>
             <text class="texts">兑换码</text>
           </view>
           <image src="/images/goto.png" class="small-icon" mode=""/>
-        </view>
-        <view class="item" bind:tap="goCategory">
+        </view> -->
+        <!-- <view class="item" bind:tap="goCategory">
           <view class="inside">
             <image src="/images/inited.png" class="icon" mode=""/>
             <text class="texts">已激活题库</text>
           </view>
           <image src="/images/goto.png" class="small-icon" mode=""/>
-        </view>
-        <view class="item">
+        </view> -->
+        <!-- <view class="item">
           <button class="contract" open-type="contact" bindcontact="handleContact">
             <view class="inside">
               <image src="/images/kefu.png" class="icon" mode=""/>
@@ -67,21 +67,21 @@
             </view>
           </button>
           <image src="/images/goto.png" class="small-icon" mode=""/>
-        </view>
+        </view> -->
         <view class="item" bind:tap="goMove">
           <view class="inside">
             <image src="/images/move.png" class="icon" mode=""/>
-            <text class="texts">题目审核</text>
+            <text class="texts">全程班专属题库激活</text>
           </view>
           <image src="/images/goto.png" class="small-icon" mode=""/>
         </view>
-        <view class="item" bind:tap="goAbout">
+        <!-- <view class="item" bind:tap="goAbout">
           <view class="inside">
             <image src="/images/aboutus.png" class="icon" mode=""/>
             <text class="texts">关于我们</text>
           </view>
           <image src="/images/goto.png" class="small-icon" mode=""/>
-        </view>
+        </view> -->
     </view>
 </view>
 <component-empower bindmyevent="onMyEvent" isLogin="{{isLogin}}"></component-empower>

@@ -1,7 +1,0 @@
-/* pages/category/category.wxss */
-.main-item-class{
-    font-size: 50rpx;
-}
-.main-active-class{
-    font-size: 50rpx;
-}

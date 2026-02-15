@@ -2,9 +2,9 @@
 <view class="page">
  <view class="title">
     <view class="point"></view>
-    研题帮积分的作用
+    Top帮研题集积分的作用
   </view>
- <view class="content">1、研题帮积分可用于抵扣题库激活。</view>
+ <view class="content">1、Top帮研题集积分可用于抵扣题库激活。</view>
  <view class="content">2、积分兑换后，无法撤销。</view>
  <view class="title">
   <view class="point"></view>
@@ -13,6 +13,6 @@
  <view class="title">
   <view class="point"></view>
   注意事项</view>
- <view class="content">1、如用户存在违规恶意刷积分的行为，研题帮有权取消获得的积分，已获得积分将被扣回。</view>
- <view class="content">2、为了持续改善用户体验，将不定期更新积分任务，积分规则也可能更新。一切解释权归研题帮所有。</view>
+ <view class="content">1、如用户存在违规恶意刷积分的行为，Top帮研题集有权取消获得的积分，已获得积分将被扣回。</view>
+ <view class="content">2、为了持续改善用户体验，将不定期更新积分任务，积分规则也可能更新。一切解释权归Top帮研题集所有。</view>
 </view>

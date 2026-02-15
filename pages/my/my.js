@@ -79,12 +79,9 @@ Page({
                                 }
                               }
                             })
-
                             that.onLoad()
                         });
                     }
-
-
                 }
             });
         } else {
@@ -244,7 +241,7 @@ Page({
      */
     onShareAppMessage: function () {
         return {
-          title: "研题帮，考试助手 ！",
+          title: "Top帮研题集，考试助手 ！",
           path: "pages/index/index",
           imageUrl: "/images/share.png"
         };
@@ -267,13 +264,16 @@ Page({
         return false;
       }
 
-      if(!app.globalData.uid) {
+      const userInfo = wx.getStorageSync('userInfo') || {};
+      let uid = app.globalData.uid || userInfo.uid;
+      if(!uid) {
         wx.showToast({
           title: '请您先登录',
           icon: 'error'
         })
         return
       }
+      app.globalData.uid = uid
 
       wx.showModal({
         title: '请输入激活码',
@@ -349,7 +349,7 @@ Page({
 
     onShareAppMessage: function () {
       return {
-        title: "研题帮，考试助手 ！",
+        title: "Top帮研题集，考试助手 ！",
         path: "pages/index/index",
         imageUrl: "/images/share.png"
       };
@@ -360,62 +360,79 @@ Page({
         this.login()
         return false;
       }
-
-      if(!app.globalData.uid) {
+      const userInfo = wx.getStorageSync('userInfo') || {};
+      let uid = app.globalData.uid || userInfo.uid;
+      if(!uid) {
         wx.showToast({
           title: '请您先登录',
           icon: 'error'
         })
         return
       }
-
+      app.globalData.uid = uid
       wx.request({
-        url: 'https://www.skyseaee.cn/routine/auth_api/is_teacher',
+        url: 'https://www.skyseaee.cn/routine/auth_api/has_auth_firstID',
         header: {
           "content-type": "application/x-www-form-urlencoded",
         },
         data: {
-          "uid": app.globalData.uid,
+          "userid": uid,
+          "first_id": 20,
         },
         success: function(res) {
-          console.log(res.data)
           if(res.data.data == 1) {
-            wx.navigateTo({
-              url: '/pages/examine/examine',
+            wx.showToast({
+              title: '您已解锁该权限',
+              icon: 'success',
             })
           } else {
             wx.showModal({
-              title: '请输入权限码',
+              title: '请入群联系小助手获得激活码',
               content: '',
               editable: true,
               complete: (res) => {
-                if(res.cancel) {
+                if (res.cancel) {
                   return
                 }
-
-                if(res.confirm) {
+            
+                if (res.confirm) {
                   wx.request({
-                    url: 'https://www.skyseaee.cn/routine/auth_api/register_teacher',
+                    url: 'https://www.skyseaee.cn/routine/auth_api/use_code',
                     header: {
                       "content-type": "application/x-www-form-urlencoded",
                     },
                     data: {
                       "code": res.content,
-                      "uid": app.globalData.uid,
+                      "userid": app.globalData.uid,
                     },
                     success: function(res) {
-                      if(res.data.data == 200) {
+                      let data = res.data
+                      console.log(data)
+                      if(data.code == 400){
                         wx.showToast({
-                          title: '已获得权限，请刷新',
+                          title: '当前激活码无效，如有疑问请入群联系小助手',
                           icon: 'none'
                         })
+                      } else if(data.code == 200) {
+                        if(data.msg == 'existed') {
+                          wx.showToast({
+                            title: '您已激活对应题库，请勿重复激活',
+                            icon: 'none',
+                            duration: 2000,
+                          })
+                        } else {
+                          wx.showToast({
+                            title: '激活成功',
+                            icon: 'success'
+                          })
+                        }
                       } else {
                         wx.showToast({
-                          title: '权限码错误',
-                          icon: 'error'
+                          title: '激活失败，如有疑问请联系小助手',
+                          icon: 'none'
                         })
                       }
-                    },
+                    }
                   })
                 }
               }

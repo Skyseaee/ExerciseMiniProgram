@@ -1,0 +1,97 @@
+<view class="container" wx:if="{{!showResult}}" bind:tap="handleCloseModal">
+  <view class="question">
+    <view class="questionInfo">
+      <view class="process">
+        <progress percent="{{(indexes + 1) * 100 /questions.length}}" strokeWidth="8" active activeColor="#3a448a" borderRadius="16" class="{{item.percent == 50 ? 'progress50' : 'progress90'}}" active-mode="forwards"></progress>
+        <text>{{indexes + 1}}/{{questions.length}}</text>
+      </view>
+      <view class="functions">
+        <image class="favorQuestion" bind:tap="favorQuestion" src="{{favor? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
+        <!-- <view class="submit-button" bindtap="submitAnswer" wx:if="{{!allDown}}">
+          <text>全部提交</text>
+        </view> -->
+      </view>
+    </view>
+    <view class="questionTexts" wx:if="{{option_type != 1}}">
+      <wemark md="{{questions[indexes].question}}" link highlight type="wemark"></wemark>
+    </view>
+    <!-- <wemark md="{{questions[indexes].question}}" link highlight style="width: 90%;" type="wemark"></wemark> -->
+    <view wx:if="{{questions[indexes].question_img.length != 0}}" style="width: 100%; height: {{questionImageHeight}}rpx; overflow: hidden;">
+      <image src="{{questions[indexes].question_img}}" bindload="onQuestionImageLoad" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    </view>
+  </view>
+
+  <view class="{{option_type == 0 ? 'options': 'optionType'}}" bind:tap="closeMenu">
+    <block wx:for="{{options}}" wx:key="index">
+      <block wx:if="{{option_type == 0}}">
+        <view wx:if="{{showComments || mode}}" class="option {{item.selected}}" data-index="{{index}}" bindtap="selectOption">
+          <wemark md="{{item.text}}" link highlight type="wemark"></wemark>
+          <!-- <text class="optionText">{{item.text}}</text> -->
+        </view>
+        <view class="option" data-index="{{index}}" bindtap="selectOption" wx:else="{{showComments || mode}}">
+          <wemark md="{{item.text}}" link highlight type="wemark"></wemark>
+          <!-- <text class="optionText">{{item.text}}</text> -->
+        </view>
+      </block>
+      <block wx:else>
+        <view wx:if="{{showComments || mode}}" class="optionTyped {{item.selected}}" data-index="{{index}}" bindtap="selectOption">
+          <text class="optionText">{{item.text}}</text>
+        </view>
+        <view class="optionTyped" data-index="{{index}}" bindtap="selectOption" wx:else="{{showComments || mode}}">
+          <text class="optionText">{{item.text}}</text>
+        </view>
+      </block>
+    </block>
+  </view>
+
+  <view class="comments" wx:if="{{showComments}}">
+    <view class="feeds">
+      <view>
+        <view class="correct answers">正确答案：{{answer}}</view><view class=" answers {{answer === userAnswer ? 'correct' : 'wrong'}}">你的答案：{{userAnswer}}</view>
+      </view>
+      <view>本题正确率：{{currentRate}}%</view>
+    </view>
+    <view class="separator"></view>
+    <view class="borders" wx:if="{{option_type==0}}">
+      <wemark md="{{questions[indexes].comments}}" link highlight type="wemark"></wemark>
+    </view>
+    <!-- <text user-select="true">{{questions[indexes].comments}}</text> -->
+    <view wx:if="{{showComments && questions[indexes].comment_img.length != 0}}" class="commentsimg">
+      <image bindload="onCommentImageLoad" src="{{questions[indexes].comment_img}}" mode="aspectFit" style="width: 100%; height: {{commentImageHeight}}rpx;"/>
+    </view>
+  </view>
+  <view class="knowledge-points" wx:if="{{showComments || mode}}">
+    <view wx:if="{{questions[indexes].point_name.length != 0}}" class="points">
+      <text class="point-name">{{questions[indexes].point_name}}</text>
+    </view>
+    <view class="borders">
+    </view>
+  </view>
+  <view style="height:270rpx; width:200rpx;"></view>
+
+  <view class="control {{!showMenu ? 'short' : 'long'}}">
+    <view class="menu-btn" wx:if="{{!showMenu}}" bindtap="showMenu"><image class="icon" src="/images/icon_listed@3x.png" mode=""/></view>
+    <view wx:else="{{!showMenu}}" class="menu">
+      <view>
+        <image class="close-btn" src="/images/close.png" mode="" bind:tap="showMenu"/></view>
+        <scroll-view scroll-y="true" class="info-con">
+          <view class="answer-container">
+            <block wx:for="{{questions}}" wx:key="index" wx:for-index="key" wx:for-item="value">
+              <view class="exam-info {{value.class}} {{key === indexes ? 'current' : 'null'}}" bind:tap="switchExam" data-index="{{key}}">{{key+1}}</view>
+              <view wx:if="{{(key + 1) % 5 === 0}}" class="line-break"></view>
+            </block>
+          </view>
+        </scroll-view>
+        <view class="example">
+          <view class="example-icon unanswered">未答</view>
+          <view class="example-icon trueAnswer">正确</view>
+          <view class="example-icon wrongAnswer">错误</view>
+          <view class="example-icon current">当前题</view>
+        </view>
+    </view>
+    <view class="switch">
+      <view class="last-icon" bind:tap="lastQuestion"><image class="icon" src="/images/last.png" mode=""/></view>
+      <view class="next-icon" bind:tap="nextQuestion"><image class="icon" src="/images/next.png" mode=""/></view>
+    </view>
+  </view>
+</view>

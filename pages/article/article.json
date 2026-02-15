@@ -1,8 +1,0 @@
-{
-  "usingComponents": {
-    "van-dropdown-menu": "/dist/dropdown-menu/index",
-    "van-dropdown-item": "/dist/dropdown-item/index",
-    "van-icon": "/dist/icon/index"
-  },
-  "backgroundColor": "#FFF"
-}

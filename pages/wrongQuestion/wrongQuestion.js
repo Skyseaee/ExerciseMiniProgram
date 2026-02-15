@@ -12,7 +12,7 @@ Page({
       totalData: 1,
       questionIndex: 1, // 当前题目ID
       currentIndex: 0, //当前题目索引
-      selectedOptions: [], // 用户选择的选项
+      selectedOptions: '', // 用户选择的选项
       allOptions: [], // 控制所有选项的样式
       indexList: [], // 用于题目的索引对应
       currentRate: "",
@@ -22,13 +22,14 @@ Page({
       noData: false,
       favor: false,
       showModal: false,
-      mode: true,
+      mode: false,
       stage: 'none',
       show_answer: false,
       already_answer: [],
       origin_time: '',
       questionImageHeight: 0,
       commentImageHeight: 0,
+      option_type: 0,
     },
 
     /**
@@ -88,6 +89,25 @@ Page({
 
     },
 
+    switchOption(option_type, options, selectedOptions, answer, mode) {
+      console.log(options, selectedOptions, answer)
+      if (option_type == 1) {
+        return ['A', 'B', 'C', 'D'].map((item, i) => {
+          return {
+            text: item,
+            selected: util.mappingOptions(i, answer, selectedOptions != undefined ? selectedOptions : -1, mode),
+          }
+        });
+      } else {
+        return options.split('~+~').map((item, i) => {
+          return {
+            text: util.convertToLetters(i.toString()) + '. ' + item,
+            selected: util.mappingOptions(i, answer, selectedOptions != undefined ? selectedOptions : -1),
+          }
+        })
+      }
+    },
+
     getQuestionData: function(id) {
       let that = this
       wx.request({
@@ -122,24 +142,20 @@ Page({
               indexList.push(key)
             }
   
-            let selectedOptions = res.data.data[indexList[0]].correct_answer.toString().split("").map(Number)
+            let selectedOptions = res.data.data[indexList[0]].correct_answer.toString()
             
             that.setData({
               questionData: res.data.data,
               currentIndex: 0,
               indexList: indexList,
-              options: res.data.data[indexList[0]].options.split('~+~').map((item, i) => {
-                return {
-                  text: util.convertToLetters(i.toString()) + '. ' + item,
-                  selected: selectedOptions.includes(i),
-                }
-              }),
+              options: that.switchOption(res.data.data[indexList[0]].option_type, res.data.data[indexList[0]].options, selectedOptions, res.data.data[indexList[0]].correct_answer.toString()),
               totalData: res.data.count,
               questionIndex: indexList[0],
               currentRate: that.formateRate(res.data.data[indexList[0]].correct_rate),
               answer: util.convertToLetters(res.data.data[indexList[0]].correct_answer.toString()),
               userAnswer: util.convertToLetters(res.data.data[indexList[0]].answer.toString()),
               favor: res.data.data[indexList[0]].favor,
+              option_type: res.data.data[indexList[0]].option_type,
             })
           }
         },
@@ -160,17 +176,10 @@ Page({
     selectOption: function (e) {
       if(this.data.mode || this.data.show_answer) return;
       const index = e.currentTarget.dataset.index;
-      const selectedOptions = this.data.selectedOptions;
-  
-      selectedOptions[0] = index
+      const selectedOptions = index
 
-      const allOptions = this.data.options.map((item, i) => {
-        return {
-          text: item.text,
-          selected: selectedOptions.includes(i),
-        }
-      })
-
+      const allOptions = this.switchOption(this.data.option_type, this.data.questionData[this.data.questionIndex].options, selectedOptions, this.data.questionData[this.data.questionIndex].correct_answer)
+      console.log(allOptions)
       this.addToSet(this.data.questionIndex)
       this.setData({
         selectedOptions: selectedOptions,
@@ -185,7 +194,7 @@ Page({
       let key = this.data.questionData[this.data.questionIndex].correct_answer
       let that = this
       let is_correct = 0
-      let user_answer = this.data.selectedOptions.join('')
+      let user_answer = this.data.selectedOptions
       let questionData = this.data.questionData
 
       if(key == user_answer) {
@@ -217,7 +226,7 @@ Page({
           first_id: that.data.firstID,
           exercise_id: that.data.questionIndex,
           answer_time: util.getCurrentTime(),
-          answer: this.data.selectedOptions.join(''),
+          answer: this.data.selectedOptions,
           exercise_type: exercise_type,
         },
         success: function(res) {
@@ -262,28 +271,18 @@ Page({
       if (currentIndex < this.data.totalData) {
         // 还有下一题，重置状态
         const nextIndex = this.data.indexList[currentIndex]
-        let selectedOptions = this.data.questionData[nextIndex].correct_answer.toString().split('').map(Number)
+        let selectedOptions = this.data.questionData[nextIndex].correct_answer
         let options = []
         let show_answer = true
         if(this.data.mode) {
-          options = this.data.questionData[nextIndex].options.split('~+~').map((item, i) => {
-            return {
-              text: util.convertToLetters(i.toString()) + '. ' + item,
-              selected: selectedOptions.includes(i),
-            }
-          })
+          options = this.switchOption(this.data.questionData[nextIndex].option_type, this.data.questionData[nextIndex].options, selectedOptions, this.data.questionData[nextIndex].correct_answer)
         } else {
-          selectedOptions = this.data.questionData[nextIndex].answer.toString().split('').map(Number)
+          selectedOptions = this.data.questionData[nextIndex].answer
           if(!this.isInSet(nextIndex)) {
             show_answer = false
-            selectedOptions = []
+            selectedOptions = -1
           }
-          options = this.data.questionData[nextIndex].options.split('~+~').map((item, i) => {
-            return {
-              text: util.convertToLetters(i.toString()) + '. ' + item,
-              selected: selectedOptions.includes(i),
-            }
-          })
+          options = this.switchOption(this.data.questionData[nextIndex].option_type, this.data.questionData[nextIndex].options, selectedOptions, this.data.questionData[nextIndex].correct_answer)
         }
 
         this.setData({
@@ -295,6 +294,7 @@ Page({
           userAnswer: util.convertToLetters(this.data.questionData[nextIndex].answer.toString()),
           currentRate: this.formateRate(this.data.questionData[nextIndex].correct_rate),
           favor:  this.data.questionData[nextIndex].favor,
+          option_type: this.data.questionData[nextIndex].option_type,
           show_answer,
         });
       } else {
@@ -314,18 +314,21 @@ Page({
 
     switchMode() {
       let mode = this.data.mode
+
       this.setData({
         mode: !mode,
       })
 
-      if(this.data.mode) {
-        let selectedOptions = this.data.questionData[this.data.questionIndex].correct_answer.toString().split('').map(Number)
-        let options = this.data.options.map((item, i) => {
-          return {
-            text: item.text,
-            selected: selectedOptions.includes(i),
-          }
+      if (!this.data.mode) {
+        this.setData({
+          show_answer: false,
         })
+      }
+
+      if(this.data.mode) {
+        let selectedOptions = this.data.questionData[this.data.questionIndex].correct_answer.toString()
+        let options = this.switchOption(this.data.option_type, this.data.questionData[this.data.questionIndex].options, selectedOptions, this.data.questionData[this.data.questionIndex].answer)
+
         this.setData({
           options,
         })

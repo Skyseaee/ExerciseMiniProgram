@@ -51,13 +51,13 @@ page {
 .big-img {
   width: 100rpx;
   height:100rpx;
+  margin-right: 20rpx;
 }
 
 .exam-name {
   color: #222;
   letter-spacing: 0.4px;
   font-size: 32rpx;
-  margin-left: 20rpx;
 }
 
 .down-area {

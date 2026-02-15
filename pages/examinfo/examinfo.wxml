@@ -6,12 +6,13 @@
   <view class="up-area">
     <view class="questioninfo">
       <image class="quesiontcover" src="{{current_question_bank.pic_url}}"></image>
-        <view class="description">
-            <view class="question">
-              {{current_question_bank.name}}
-            </view>
-            <!-- <view class="answerinfo">总题数：{{total_questions_num}}</view> -->
-        </view>
+      <view class="description">
+          <view class="question">
+            {{current_question_bank.name}}
+          </view>
+          <view class="question-num">共{{total_count}}题</view>
+      </view>
+      <image class="small-icon" bind:tap="resetAnswer" src="/images/reset.png" mode=""/>
     </view>
     <view class="lines"></view>
     <view class="icons">
@@ -29,22 +30,45 @@
         <text>尚未购买该题库，可预览部分题目和功能。开通本题库权限请联系客服。</text>
       </view>
     </block>
-    <view class="class-tap top" bind:tap="goToBasic">
-      <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a13987ca680.png" class="class-icon" mode=""/>
-      <text class="class-info base">基础阶段</text>
-    </view>
-    <view class="class-tap" bind:tap="goToImprove">
-      <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a1399a7bb81.png" class="class-icon" mode=""/>
-      <text class="class-info improve">强化阶段</text>
-    </view>
-    <!-- <view class="class-tap" bind:tap="goToFinal">
-      <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a139aad71d6.png" class="class-icon" mode=""/>
-      <text class="class-info">冲刺阶段</text>
-    </view> -->
-    <view class="class-tap" bind:tap="goToSimulate">
-      <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a139bbbe7b0.png" class="class-icon" mode=""/>
-      <text class="class-info">真题速刷</text>
-    </view>
-    <view style="width: 20rpx; height: 20rpx;"></view>
+    <block wx:if="{{display == 0}}">
+      <view class="class-tap top" bind:tap="goToBasic">
+        <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a13987ca680.png" class="class-icon" mode=""/>
+        <text class="class-info base">基础阶段</text>
+      </view>
+      <view class="class-tap" bind:tap="goToImprove">
+        <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a1399a7bb81.png" class="class-icon" mode=""/>
+        <text class="class-info improve">强化阶段</text>
+      </view>
+      <!-- <view class="class-tap" bind:tap="goToFinal">
+        <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a139aad71d6.png" class="class-icon" mode=""/>
+        <text class="class-info">冲刺阶段</text>
+      </view> -->
+      <view class="class-tap" bind:tap="goToSimulate">
+        <image src="http://www.skyseaee.cn/uploads/exercise_img/20240725/66a139bbbe7b0.png" class="class-icon" mode=""/>
+        <text class="class-info">真题速刷</text>
+      </view>
+      <view style="width: 20rpx; height: 20rpx;"></view>
+    </block>
+    <block wx:else>
+      <view class="new-class-list">
+        <view wx:for="{{categorys}}" wx:key="id" class="new-class-tap">
+        <view class="inner-class-tap">
+          <image src="{{item.pic_url}}" class="new-class-icon" mode="aspectFit" bind:tap="goToCategory" data-id="{{item.id}}"/>
+          <view class="cate-control">
+            <view class="cate-info" bind:tap="goToCategory" data-id="{{item.id}}">
+              <text class="new-class-info">{{item.name}}</text>
+              <text class="num">共{{item.exercise_num}}题</text>
+            </view>
+          <image class="up-down" bind:tap="showChapter" data-id="{{index}}" wx:if="{{item.up}}" src="/images/down.png" mode=""/>
+          <image class="up-down" bind:tap="showChapter" data-id="{{index}}" wx:if="{{!item.up}}" src="/images/up.png" mode=""/>
+          </view>
+        </view>
+        <view wx:if="{{item.up}}" class="chapter-wrapper">
+          <view wx:for="{{item.chapters}}" wx:for-item="chapterItem" wx:for-index="chapterIndex"  class="chapter-item" hover-class="chapter-item-hover" bind:tap="swicthChapter" data-id="{{chapterItem.id}}">{{chapterItem.name}}</view>
+        </view>
+        </view>
+        <view style="width: 20rpx; height: 20rpx;"></view>
+      </view>
+    </block>
 </view>
 <component-empower bindmyevent="onMyEvent" isLogin="{{isLogin}}"></component-empower>

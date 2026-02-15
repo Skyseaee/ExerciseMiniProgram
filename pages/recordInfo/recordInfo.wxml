@@ -28,9 +28,8 @@
         <view>
           <view class="correct answers">正确答案：{{answer}}</view><view class=" answers {{answer === userAnswer ? 'correct' : 'wrong'}}">你的答案：{{userAnswer}}</view>
         </view>
-        <view class="feedback" bind:tap="showModal"><image src="/images/feedback.png" class="icon" mode=""/>答案反馈</view>
+        <view>本题正确率：{{currentRate}}%</view>
       </view>
-      <view>本题正确率：{{currentRate}}%</view>
     </view>
     <view class="separator"></view>
     <view class="borders">
@@ -48,6 +47,5 @@
     <view class="borders">
     </view>
   </view>
-  <feedbackInput wx:if="{{showModal}}" showModal="{{showModal}}" bindconfirm="handleConfirm" bindcloseModal="handleCloseModal"></feedbackInput>
 </view>
 <view style="height:100rpx; width:200rpx;"></view>

@@ -21,6 +21,7 @@ Page({
         category_info: info
       })
       let that = this
+
       wx.request({
         url: 'https://www.skyseaee.cn/routine/auth_api/get_mock_exam',
         method: 'POST',
@@ -37,9 +38,16 @@ Page({
           if(count == 0) {
             return
           }
+          
+          let exams = []
+          for(let i = 0; i < count; i++) {
+            data[i].exercise_list = data[i].exercise_list.split(',')
+            data[i].count = data[i].exercise_list.length
+            exams.push(data[i])
+          }  
 
           that.setData({
-            mock_exam: data,
+            mock_exam: exams,
             nodata: false,
           })
         }
@@ -98,8 +106,58 @@ Page({
     gotoExam: function(e) {
       const index = e.currentTarget.dataset.index;
       let exam = this.data.mock_exam[index]
-      wx.navigateTo({
-        url: '/pages/exammode/exammode?class=mock&question=' + exam.exercise_list + "&category=" + exam.category_id + "&id=" + exam.id,
+      // TODO: 如果有 score 需要再去获得答题记录
+      wx.request({
+        url: 'https://www.skyseaee.cn/routine/auth_api/get_mock_exam_score',
+        method: 'POST',
+        header:{
+          "content-type": "application/x-www-form-urlencoded",
+          'personal': 'skyseaee',
+        },
+        data: {
+          exam_id: exam.id,
+          uid: app.globalData.uid,
+        },
+        success: function(res) {
+          let msg = res.data.msg
+          if(msg == 'scoring') {
+            wx.showModal({
+              title: '提示',
+              content: '批改中暂时无法修改答题记录',
+              complete: (res) => {
+                if (res.cancel) {
+                  return
+                }
+                if (res.confirm) {
+                  wx.navigateTo({
+                    url: '/pages/exammode/exammode?class=answer&question=' + exam.exercise_list + "&category=" + exam.category_id + "&id=" + exam.id,
+                  })
+                }
+              }
+            })
+          } else if (msg == 'scored') {
+            wx.navigateTo({
+              url: '/pages/exammode/exammode?class=answer&question=' + exam.exercise_list + "&category=" + exam.category_id + "&id=" + exam.id,
+            })
+          } else {
+            wx.showModal({
+              title: '提示',
+              content: exam.hints,
+              success: (res) => {
+                if (res.confirm) {               
+                  wx.navigateTo({
+                    url: '/pages/exammode/exammode?class=mock&question=' + exam.exercise_list + "&category=" + exam.category_id + "&id=" + exam.id,
+                  })
+                } else if (res.cancel) {
+                  return
+                }
+              },
+              complete: () => {
+                wx.hideLoading()
+              }
+            })
+          }
+        }
       })
     },
 
@@ -126,9 +184,22 @@ Page({
                 'exam_id': exam.id,
               },
               success: function(res) {
-                wx.showToast({
-                  title: '已重置记录',
-                })
+                let msg = res.data.msg
+                if (msg == 'scoring') {
+                  wx.showToast({
+                    title: '成绩批改中，暂时无法重置',
+                    icon: 'none'
+                  })
+                } else if (msg == 'no') {
+                  wx.showToast({
+                    title: '暂无记录',
+                    icon: 'none'
+                  })
+                }else {
+                  wx.showToast({
+                    title: '已重置记录',
+                  })
+                }
               },
               fail: function(res) {
                 wx.showToast({

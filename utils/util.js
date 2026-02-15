@@ -177,11 +177,19 @@ const convertToLetters = (str) => {
   return result;
 }
 
-const mappingOptions = (i, answer, user_answer) => {
-  if(i == answer) {
+const mappingOptions = (i, answer, user_answer, mode) => {
+  if(i === answer) {
     return 'optionCorrect'
   } else if(i === user_answer && answer != user_answer) {
     return 'optionWrong'
+  } else {
+    return 'optionUnselected'
+  }
+}
+
+const mappingOptionsExamMode = (i, answer, user_answer, mode) => {
+  if(i === user_answer) {
+    return 'optionSelected'
   } else {
     return 'optionUnselected'
   }
@@ -217,6 +225,15 @@ const base64_encode = (str) => {
   return string
 }
 
+const numberToLetter = (num) => {
+  switch(num) {
+    case 'A': return 0;
+    case 'B': return 1;
+    case 'C': return 2;
+    case 'D': return 3;
+    default: return num;
+  }
+}
 
 module.exports = {
   formatTime,
@@ -232,4 +249,6 @@ module.exports = {
   convertToLetters,
   base64_encode,
   mappingOptions,
+  numberToLetter,
+  mappingOptionsExamMode,
 }

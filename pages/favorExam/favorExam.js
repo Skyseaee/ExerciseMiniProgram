@@ -12,7 +12,7 @@ Page({
     totalData: 1,
     questionIndex: 1, // 当前题目ID
     currentIndex: 0, //当前题目索引
-    selectedOptions: [], // 用户选择的选项
+    selectedOptions: "", // 用户选择的选项
     allOptions: [], // 控制所有选项的样式
     indexList: [], // 用于题目的索引对应
     currentRate: "",
@@ -25,6 +25,7 @@ Page({
     origin_time: '',
     questionImageHeight: 0,
     commentImageHeight: 0,
+    option_type: 0,
   },
 
   /**
@@ -84,6 +85,25 @@ Page({
 
   },
 
+  switchOption(option_type, options, selectedOptions, answer, mode) {
+    console.log(options, selectedOptions, answer)
+    if (option_type == 1) {
+      return ['A', 'B', 'C', 'D'].map((item, i) => {
+        return {
+          text: item,
+          selected: util.mappingOptions(i, answer, selectedOptions != undefined ? selectedOptions : -1, mode),
+        }
+      });
+    } else {
+      return options.split('~+~').map((item, i) => {
+        return {
+          text: util.convertToLetters(i.toString()) + '. ' + item,
+          selected: util.mappingOptions(i, answer, selectedOptions != undefined ? selectedOptions : -1),
+        }
+      })
+    }
+  },
+
   getQuestionData: function(id) {
     let that = this
     wx.request({
@@ -116,23 +136,19 @@ Page({
             indexList.push(key)
           }
           // console.log(res.data.data[indexList[0]])
-          let selectedOptions = res.data.data[indexList[0]].correct_answer.toString().split("").map(Number)
-          
+          let selectedOptions = res.data.data[indexList[0]].correct_answer.toString()
+
           that.setData({
             questionData: res.data.data,
             currentIndex: 0,
             indexList: indexList,
-            options: res.data.data[indexList[0]].options.split('~+~').map((item, i) => {
-              return {
-                text: util.convertToLetters(i.toString()) + '. ' + item,
-                selected: selectedOptions.includes(i),
-              }
-            }),
+            options: that.switchOption(res.data.data[indexList[0]].option_type, res.data.data[indexList[0]].options, selectedOptions, res.data.data[indexList[0]].correct_answer.toString()),
             totalData: res.data.count,
             questionIndex: indexList[0],
             currentRate: that.formateRate(res.data.data[indexList[0]].correct_rate),
             answer: util.convertToLetters(res.data.data[indexList[0]].correct_answer.toString()),
             favor: res.data.data[indexList[0]].favor,
+            option_type: res.data.data[indexList[0]].option_type,
           })
         }
       },
@@ -174,13 +190,8 @@ Page({
     if (currentIndex < this.data.totalData) {
       // 还有下一题，重置状态
       const nextIndex = this.data.indexList[currentIndex]
-      let selectedOptions = this.data.questionData[nextIndex].correct_answer.toString().split('').map(Number)
-      let options = this.data.questionData[nextIndex].options.split('~+~').map((item, i) => {
-        return {
-          text: util.convertToLetters(i.toString()) + '. ' + item,
-          selected: selectedOptions.includes(i),
-        }
-      })
+      let selectedOptions = this.data.questionData[nextIndex].correct_answer.toString()
+      let options = this.switchOption(this.data.questionData[nextIndex].option_type, this.data.questionData[nextIndex].options, selectedOptions, this.data.questionData[nextIndex].correct_answer)
 
       this.setData({
         questionIndex: nextIndex,
@@ -190,6 +201,7 @@ Page({
         answer: util.convertToLetters(this.data.questionData[nextIndex].correct_answer.toString()),
         currentRate: this.formateRate(this.data.questionData[nextIndex].correct_rate),
         favor: this.data.questionData[nextIndex].favor,
+        option_type: this.data.questionData[nextIndex].option_type,
       });
     } else {
       // 没有下一题，可以显示完成页面或其他逻辑

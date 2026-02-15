@@ -93,6 +93,13 @@
   padding: 20rpx;
 }
 
+.optionType {
+  width: 90%;
+  padding: 20rpx;
+  display: flex;
+  justify-content: space-between;
+}
+
 .questionTexts {
   width: 90%;
 }
@@ -105,6 +112,19 @@
   margin-bottom: 30rpx;
   cursor: pointer;
   box-shadow: 0px 2px 8px 0px rgba(219,220,233,0.7);
+  color: #444;
+}
+
+.optionTyped {
+  display: flex;
+  width: 18%;
+  align-items:center;
+  justify-content: center;
+  padding: 10rpx;
+  border-radius: 12rpx;
+  margin-right: 30rpx;
+  cursor: pointer;
+  box-shadow: 0px 4rpx 16rpx 0px rgba(219,220,233,0.7);
   color: #444;
 }
 
@@ -152,12 +172,12 @@
 }
 
 .comments {
-  width: 90%;
+  width: 95%;
   color: #505050;
   font-size: 28rpx;
   line-height: 50rpx;
   font-weight: 500;
-  padding: 20rpx;
+  padding: 10rpx;
   padding-bottom: 40rpx;
   border-radius: 24rpx;
   box-shadow: 0 0rpx 8rpx rgba(0, 0, 0, 0.3);
@@ -189,6 +209,7 @@
 
 .feeds {
   display: flex;
+  padding: 0 32rpx;
   justify-content:space-between;
   align-items: center;
 }
@@ -211,7 +232,6 @@
 
 .commentsimg {
   width: 100%;
-  height: 35vh;
 }
 
 .upmargin {
@@ -227,9 +247,9 @@
 }
 
 .borders {
-  padding: 16rpx;
+  padding: 16rpx 0;
   border-radius: 20rpx;
-  margin-bottom: 16rpx;
+  /* margin-bottom: 16rpx; */
   font-size: 28rpx;
 }
 
@@ -445,6 +465,7 @@ wemark view {
   margin-top: 0rpx !important;
   margin-bottom: 0rpx !important;
   font-size: 30rpx;
+  background-color: transparent !important;
 }
 
 .tags {
@@ -461,5 +482,4 @@ wemark view {
   padding: 0 8rpx;
   border-radius: 30rpx;
   letter-spacing: 2rpx;
-  
 }

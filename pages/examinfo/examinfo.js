@@ -13,11 +13,14 @@ Page({
         isLogin: false,
         current_question_bank_type: 0, // 当前题库的ID
         current_question_bank: null,  // 当前题库的具体信息
+        categorys: [],
+        total_count: 0,
         total_exams: [],
-        total_questions_num: 0,
-        check_days: 0,
+        display: 1, // 0 - 本页为难度分级 1 - 本页为学科分级
         info_images: [
-            { src: '/images/tests.png', id: 0, description: '模拟考试', func: 'genTest'},
+            { src: '/images/tests.png', id: 0, description: '随机抽题', func: 'genRandomTest'},
+            { src: '/images/wrong_answers.png', id: 1, description: '错题集', func: 'wrongAnswer' },
+            { src: '/images/favor.png', id: 2, description: '我的收藏', func: 'myFavor' },
             { src: '/images/ranking.png', id: 4, description: '刷题排行', func: 'ranking' },
         ],
         auth: 'false',
@@ -33,9 +36,8 @@ Page({
           wx.login({
               success(res) {
                   if (res.code) {
-                      console.log(res.code)
                       wx.Apis.login.login(res.code, (code, data) => {
-                          console.log(data);
+                          // console.log(data);
                           wx.Apis.setUid(data.openid); //openid
                           wx.Apis.set('openid', data.openid);
                           wx.setStorageSync('userInfo', data);
@@ -46,6 +48,37 @@ Page({
                   }
               }
           });
+      }
+      // 查看用户数是否已经选择了题库
+      let mainActiveIndex = wx.getStorageSync('mainActiveIndex')
+        
+      // 如果选择了则加载题库对应的二级题库
+      if(mainActiveIndex != 0) {
+          let that = this
+          wx.request({
+            url: 'https://www.skyseaee.cn/routine/auth_api/get_specfic_first_category',
+            method: "POST",
+            header:{
+              "content-type": "application/x-www-form-urlencoded",
+              'personal': 'skyseaee',
+            },
+            data: {
+              first_id: mainActiveIndex,
+            },
+            success: function(res) {
+              let data = res.data.data
+
+              that.setData({
+                current_question_bank: data,
+              })
+            }
+          })
+
+          this.setData({
+              current_question_bank_type: mainActiveIndex,
+          })
+
+          this.updateTotalExam()
       }
 
     },
@@ -61,29 +94,36 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow() {
-        // 查看用户数是否已经选择了题库
-        let mainActiveIndex = wx.getStorageSync('mainActiveIndex')
+      // 查看用户数是否已经选择了题库
+      let mainActiveIndex = wx.getStorageSync('mainActiveIndex')
         
-        // 如果选择了则加载题库对应的二级题库
-        if(mainActiveIndex != 0) {
-            wx.Apis.api.firstShowCategory((code, data) => {
-                for(let i=0; i<data.length; i++) {
-                    if(data[i].id == this.data.current_question_bank_type) {
-                        this.setData({
-                            current_question_bank: data[i],
-                        })
-                    } else {
-                        continue
-                    }
-                }
-            });
+      // 如果选择了则加载题库对应的二级题库
+      if(mainActiveIndex != 0) {
+          let that = this
+          wx.request({
+            url: 'https://www.skyseaee.cn/routine/auth_api/get_specfic_first_category',
+            method: "POST",
+            header:{
+              "content-type": "application/x-www-form-urlencoded",
+              'personal': 'skyseaee',
+            },
+            data: {
+              first_id: mainActiveIndex,
+            },
+            success: function(res) {
+              let data = res.data.data
+              that.setData({
+                current_question_bank: data,
+              })
+            }
+          })
 
-            this.setData({
-                current_question_bank_type: mainActiveIndex,
-            })
+          this.setData({
+              current_question_bank_type: mainActiveIndex,
+          })
 
-            // this.updateTotalExam()
-        }
+          this.updateTotalExam()
+      }
     },
 
     /**
@@ -126,45 +166,32 @@ Page({
      *  TODO: finish api 
      */
     updateTotalExam() {
-      let total_exams = []
       let that = this
       wx.request({
-        url: 'https://www.skyseaee.cn/routine/auth_api/get_exercise_by_first_category',
+        url: 'https://www.skyseaee.cn/routine/auth_api/get_first_category_by_first_categoryID',
         method: "POST",
         header:{
           "content-type": "application/x-www-form-urlencoded",
           'personal': 'skyseaee',
         },
         data: {
-          userid: app.globalData.uid,
-          first_id: this.data.current_question_bank_type,
+          first_id: that.data.current_question_bank_type,
         },
         success: function(res) {
-          // console.log(res.data.data.secondMap)
-          let data = res.data.data.secondMap
-          for(let id in data) {
-            if(data[id].count == 0) continue
-            total_exams.push({
-              "exam_id": id,
-              "exam_title": data[id].name,
-              "finish_question": data[id].alreadyPratice,
-              "total_question_num": data[id].count,
-              "correct_answer": data[id].correct,
-              "percent": Math.round(data[id].alreadyPratice * 100 / data[id].count),
-            })
+          console.log(res.data.data)
+          let categorys = res.data.data
+          let total = categorys.reduce((sum, item) => sum + (item.exercise_num || 0), 0)
+
+          for(let i=0; i<categorys.length; i++) {
+            categorys[i]['up'] = false;
+            categorys[i]['chapters'] = [];
           }
 
-          let temp_total_questions = 0
-          for(let i=0; i<total_exams.length; i++) {
-            temp_total_questions += total_exams[i]["total_question_num"]
-          }
-          
           that.setData({
-            auth: res.data.data.auth,
-            total_exams: total_exams,
-            total_questions_num: temp_total_questions,
+            categorys: categorys,
+            total_count: total,  // 可以用于页面展示总题数
+            display: 1,
           })
-          // console.log(total_exams)
         },
         fail: function(res) {
           wx.showToast({
@@ -180,15 +207,6 @@ Page({
       })
     },
 
-    redirectToExam(event) {
-      let id = event.currentTarget.dataset.id;
-      let exam_pointed = this.data.total_exams[id];
-      console.log(exam_pointed)
-      wx.navigateTo({
-        url: '/pages/exercise/exercise?id=' + exam_pointed.exam_id + '&firstID=' + this.data.current_question_bank_type + '&auth=' + this.data.auth,
-      })
-    },
-
     genTest: function() {
       if(!this.data.auth) {
         wx.showToast({
@@ -201,23 +219,19 @@ Page({
       wx.navigateTo({
         url: '/pages/mockexam/mockexam?firstCategory=' + encodeURIComponent(JSON.stringify(this.data.current_question_bank)),
       })
-      // let question = util.getRandomItems(5, this.data.total_questions_num - 1).join()
-      // let cate = this.data.current_question_bank_type
-      // console.log(this.data.current_question_bank_type)
-      // wx.navigateTo({
-      //   url: '/pages/exammode/exammode?class=mock&question=' + question + "&category=" + cate,
-      // })
     },
 
     wrongAnswer: function() {
+      this.checkAuth()
       wx.navigateTo({
-        url: '/pages/wrongQuestion/wrongQuestion?firstID=' + this.data.current_question_bank_type
+        url: '/pages/wrongQuestion/wrongQuestion?firstID=' + this.data.current_question_bank_type + '&stage=' + '',
       })
     },
 
     myFavor: function() {
+      this.checkAuth()
       wx.navigateTo({
-        url: '/pages/favorExam/favorExam?firstID=' + this.data.current_question_bank_type,
+        url: '/pages/favorExam/favorExam?firstID=' + this.data.current_question_bank_type + '&stage=' + '',
       })
     },
 
@@ -229,10 +243,88 @@ Page({
       });
     },
 
+    genRandomTest: function() {
+      this.checkAuth()
+      let that = this
+      wx.showModal({
+        title: '请输入题目数量',
+        editable: true, // 关键属性：允许输入
+        placeholderText: '输入 1 ～ 40 的整数',
+        success(res) {
+          if (res.confirm) {
+            const count = parseInt(res.content);
+            if (isNaN(count) || count <= 0 || count > 40) {
+              wx.showToast({
+                title: '请输入有效数字，请勿超过40题',
+                icon: 'none'
+              });
+              return;
+            }
+
+            wx.navigateTo({
+              url: '/pages/randexam/randexam?count=' + count + '&first_id=' + that.data.current_question_bank_type,
+            })
+
+            // 发起请求
+            // wx.request({
+            //   url: 'https://www.skyseaee.cn/routine/auth_api/gen_random_test', // 后端接口地址
+            //   method: 'POST',
+            //   data: {
+            //     count: count,
+            //     uid: app.globalData.uid,
+            //     first_id: that.data.current_question_bank_type,
+            //     stage: this.data.stage,
+            //   },
+            //   success(resp) {
+            //     if (resp.data && resp.data.questions) {
+            //       // 假设你用 questionList 渲染题目
+            //       that.setData({
+            //         questionList: resp.data.questions
+            //       });
+            //     } else {
+            //       wx.showToast({
+            //         title: '题目获取失败',
+            //         icon: 'none'
+            //       });
+            //     }
+            //   },
+            //   fail() {
+            //     wx.showToast({
+            //       title: '网络请求失败',
+            //       icon: 'none'
+            //     });
+            //   }
+            // });
+          }
+        }
+      });
+    },
+
     ranking: function() {
       wx.navigateTo({
         url: '/pages/rank/rank',
       })
+    },
+
+    checkAuth: function() {
+      var openid = wx.getStorageSync('openid')
+      if (openid == '' || openid == undefined) {
+        wx.login({
+          success(res) {
+                if (res.code) {
+                    wx.Apis.login.login(res.code, (code, data) => {
+                        // console.log(data);
+                        wx.Apis.setUid(data.openid); //openid
+                        wx.Apis.set('openid', data.openid);
+                        wx.setStorageSync('userInfo', data);
+                        that.setData({
+                            userInfo: data
+                        })
+                    });
+                }
+            }
+        });
+      } 
     },
     
     goToBasic: function() {
@@ -256,6 +348,146 @@ Page({
     goToSimulate: function() {
       wx.navigateTo({
         url: '/pages/examclass/examclass?stage=' + 'simulate',
+      })
+    },
+
+    goToCategory: function(t) {
+      // wx.setStorageSync('mainActiveIndex', t.currentTarget.dataset.id)
+      this.checkAuth()
+      if(this.data.current_question_bank_type == 16) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=' + 'basic'+'&firstID='+t.currentTarget.dataset.id,
+        })
+      } else if(this.data.current_question_bank_type == 17) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=' + 'improve'+'&firstID='+t.currentTarget.dataset.id,
+        })
+      } else if(this.data.current_question_bank_type == 18) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=' + 'final'+'&firstID='+t.currentTarget.dataset.id,
+        })
+      } else if(this.data.current_question_bank_type == 19) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=' + 'simulate'+'&firstID='+t.currentTarget.dataset.id,
+        })
+      } else if(this.data.current_question_bank_type == 20) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=' + 'vip'+'&firstID='+t.currentTarget.dataset.id,
+        })
+      }
+    },
+
+    showChapter: function(t) {
+      let id = t.target.dataset.id
+      let that = this
+      let categorys = this.data.categorys
+      if(categorys[id]['up'] == false && categorys[id]['chapters'].length == 0) {
+        wx.request({
+          url: 'https://www.skyseaee.cn/routine/auth_api/get_second_category_by_first_category',
+          method: 'POST',
+          data: {
+            'first_id': categorys[id]['id'],
+          },
+          success: function(res) {
+            let cates = res.data.data
+            categorys[id]['chapters'] = cates
+            categorys[id]['up'] = true
+            that.setData({
+              categorys: categorys,
+            })
+          },
+          fail: function(res) {
+            wx.showToast({
+              title: '列表获取失败，请稍后再试',
+            })
+          }
+        })
+      } else if(categorys[id]['up'] == false){
+        categorys[id]['up'] = true
+        that.setData({
+          categorys: categorys,
+        })
+      } else {
+        categorys[id]['up'] = false
+        that.setData({
+          categorys: categorys,
+        })
+      }
+    },
+
+    swicthChapter: function(t) {
+      let id = t.target.dataset.id
+      this.checkAuth()
+      if(this.data.current_question_bank_type == 16) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=basic'+'&secondID='+id,
+        })
+      } else if(this.data.current_question_bank_type == 17) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=improve'+'&secondID='+id,
+        })
+      } else if(this.data.current_question_bank_type == 18) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=final'+'&secondID='+id,
+        })
+      } else if(this.data.current_question_bank_type == 19) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=simulate'+'&secondID='+id,
+        })
+      } else if(this.data.current_question_bank_type == 20) {
+        wx.navigateTo({
+          url: '/pages/exercise/exercise?stage=vip'+'&secondID='+id,
+        })
+      }
+    },
+
+    resetAnswer: function() {
+      let that = this
+
+      wx.showModal({
+        title: '',
+        content: '请确认是否清空当前题库所有刷题记录以及错题记录',
+        complete: (res) => {
+          if (res.cancel) {
+            
+          }
+      
+          if (res.confirm) {
+            let stage = 'basic'
+            let id = this.data.current_question_bank_type
+            if (id == 17) {
+              stage = 'improve'
+            } else if (id == 18) {
+              stage = 'final'
+            } else if (id == 19) {
+              stage = 'simulate'
+            } else if (id == 20){
+              stage = 'vip'
+            }
+
+            wx.request({
+              url: 'https://www.skyseaee.cn/routine/auth_api/clear_exam_by_firstID',
+              method: "POST",
+              header:{
+                "content-type": "application/x-www-form-urlencoded",
+                'personal': 'skyseaee',
+              },
+              data: {
+                userid: app.globalData.uid,
+                first_id: id,
+                stage: stage,
+              },
+              success: function(res) {
+                wx.showToast({
+                  title: '已清空',
+                  icon: "success"
+                })
+
+                that.onShow()
+              }
+            })
+          }
+        }
       })
     },
 })

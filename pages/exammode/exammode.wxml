@@ -5,31 +5,51 @@
         <progress percent="{{(indexes + 1) * 100 /questions.length}}" strokeWidth="8" active activeColor="#3a448a" borderRadius="16" class="{{item.percent == 50 ? 'progress50' : 'progress90'}}" active-mode="forwards"></progress>
         <text>{{indexes + 1}}/{{questions.length}}</text>
       </view>
+      <view class="countdown" wx:if="{{!showComments}}">
+        <text>{{countdown}}</text>
+      </view>
+
       <view class="functions">
         <image class="favorQuestion" bind:tap="favorQuestion" src="{{favor? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
         <view class="submit-button" bindtap="submitAnswer" wx:if="{{!allDown}}">
-          <text>全部提交</text>
+          <text>试卷提交</text>
         </view>
         <view wx:else="{{allDown}}" class="submit-button" bindtap="showResult">
           <text>总结页面</text>
         </view>
       </view>
     </view>
-    <wemark md="{{questions[indexes].question}}" link highlight style="width: 90%;" type="wemark"></wemark>
-    <view wx:if="{{questions[indexes].question_img.length != 0}}" style="width: 80%; height: {{questionImageHeight}}rpx; overflow: hidden;">
+    <wemark wx:if="{{option_type==0}}" md="{{questions[indexes].question}}" link highlight style="width: 90%;" type="wemark"></wemark>
+    <view wx:if="{{questions[indexes].question_img.length != 0}}" style="width: 100%; height: {{questionImageHeight}}rpx; overflow: hidden;" bind:tap="previewQuestionImage">
       <image src="{{questions[indexes].question_img}}" bindload="onQuestionImageLoad" mode="aspectFit" style="width: 100%; height: 100%;"/>
     </view>
   </view>
 
-  <view class="options">
+  <view 
+  wx:if="{{option_type != 2}}" 
+  class="{{option_type == 0 ? 'options': 'optionType'}}">
     <!-- 假设选项格式为 "a,b,c,d,e"，以逗号分隔 -->
     <!-- <view>{{questionData[questionIndex].options}}</view> -->
     <block wx:for="{{options}}" wx:key="index">
-      <view class="{{item.selected? 'optionSelected': 'option'}}" data-index="{{index}}" bindtap="selectOption">
-        <wemark md="{{item.text}}" link highlight style="width: 90%;" type="wemark"></wemark>
+      <block wx:if="{{option_type == 0}}">
+        <view class="{{item.selected}} option" data-index="{{index}}" bindtap="selectOption">
+        <view>{{item.text}}</view>
         <!-- <text class="optionText">{{item.text}}</text> -->
-      </view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="{{item.selected}} optionTyped" data-index="{{index}}" bindtap="selectOption">
+          <text class="optionText">{{item.text}}</text>
+        </view>
+      </block>
     </block>
+  </view>
+  <view wx:else class="subjective" style="height: {{imgHeight}}px;">  
+    <!-- 已上传图片预览 -->
+    <image wx:if="{{uploadImages.length > 0}}" src="{{uploadImages}}" class="preview-img" style="width: {{imgWidth}}px; height: {{imgHeight}}px;" bindload="onImageLoad"></image>
+    <view class="upload-btn" bindtap="chooseImage">
+    {{ uploadImages.length > 0 ? '重新上传' : '上传图片' }}
+    </view>
   </view>
 
   <view class="comments" wx:if="{{allDown}}">
@@ -37,23 +57,12 @@
       <view>
         <view class="correct answers">正确答案：{{answer}}</view><view class=" answers {{answer === userAnswer ? 'correct' : 'wrong'}}">你的答案：{{userAnswer}}</view>
       </view>
-      <view class="feedback" bind:tap="showModal"><image src="/images/feedback.png" class="small-icon" mode=""/>答案反馈</view>
     </view>
     <view>本题正确率：{{currentRate}}%</view>
     <view class="separator"></view>
-    <text user-select="true">{{questions[indexes].comments}}</text>
-  </view>
-  <view wx:if="{{showComments && questions[indexes].comment_img.length != 0}}" class="commentsimg">
-    <image bindload="onCommentImageLoad" src="{{questions[indexes].comment_img}}" mode="aspectFit" style="width: 100%; height: {{commentImageHeight}}rpx;"/>
-  </view>
-  <view class="knowledge-points" wx:if="{{showComments || mode}}">
-    <view wx:if="{{questions[indexes].point_name.length != 0}}" class="points">
-      <text class="point-name">{{questions[indexes].point_name}}</text>
-    </view>
-    <view wx:if="{{origin_time.length != 0}}" class="points">
-      <text class="point-name">{{questions[indexes].origin_time}}</text>
-    </view>
-    <view class="borders">
+    <text user-select="true" wx:if="{{option_type == 0}}">{{questions[indexes].comments}}</text>
+    <view wx:if="{{showComments && questions[indexes].comment_img.length != 0}}" class="commentsimg" bind:tap="previewCommentImage">
+      <image bindload="onCommentImageLoad" src="{{questions[indexes].comment_img}}" mode="aspectFit" style="width: 100%; height: {{commentImageHeight}}rpx;"/>
     </view>
   </view>
   <view style="height:270rpx; width:200rpx;"></view>
@@ -91,6 +100,7 @@
           <view class="example-icon unanswered">未答</view>
           <view class="example-icon trueAnswer">正确</view>
           <view class="example-icon wrongAnswer">错误</view>
+          <view class="example-icon stableAnswer">应用题</view>
           <view class="example-icon current">当前题</view>
         </view>
       </block>
@@ -103,17 +113,20 @@
 </view>
 
 <view class="score-info" wx:else="{{!showResult}}" bind:tap="handleCloseModal">
-  <view class="scores">得分：{{score * 2.5}}</view>
+  <view class="scores" wx:if="{{score == -1}}">
+    得分：正在批改中</view>
+  <view class="scores" wx:else>得分：[ {{score}} ]</view>
   <view class="result">
-    <view style="display: flex;"><image src="/images/score.png" class="res-icon" mode=""/><view class="score">正确率 {{score}}/{{questions.length}}</view></view>
+    <view style="display: flex;"><image src="/images/score.png" class="res-icon" mode=""/><view class="score">客观题正确率 {{objectiveScore[0]}}/{{objectiveScore[1]}}</view></view>
     <view style="display: flex; margin-left: 80rpx;"><image src="/images/Time.png" class="res-icon" mode=""/><view class="score">{{spendTime}}</view></view>
   </view>
-  <view style="color: #808080; margin-bottom: 20rpx; font-size: 28rpx;">每题2.5分，可点击对应题号查看答题详情</view>
+  <view style="color: #808080; margin-bottom: 20rpx; font-size: 28rpx;">可点击对应题号查看答题详情</view>
   <view class="separator"></view>
   <view class="example conclusion">
     <view class="example-icon unanswered">未答</view>
     <view class="example-icon trueAnswer">正确</view>
     <view class="example-icon wrongAnswer">错误</view>
+    <view class="example-icon stableAnswer">应用题</view>
   </view>
   <scroll-view scroll-y="true" class="info-con con">
       <view class="answer-container">
@@ -124,11 +137,9 @@
       </view>
   </scroll-view>
   <view class="separator"></view>
-  <view class="ctn-area">
+  <!-- <view class="ctn-area">
     <view class="favor-btn" bind:tap="favorWrongQuestion">收藏错题</view>
     <view class="favor-btn" bind:tap="favorAll">收藏全部题目</view>
-  </view>
+  </view> -->
 </view>
 <view style="width: 10%; height: 100rpx;"></view>
-
-<feedbackInput wx:if="{{showModal}}" showModal="{{showModal}}" bindconfirm="handleConfirm" bindcloseModal="handleCloseModal"></feedbackInput>
