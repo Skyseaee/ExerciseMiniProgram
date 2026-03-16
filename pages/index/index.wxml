@@ -30,6 +30,24 @@
     </view>
   </view>
 
+  <view class="hots-college" bind:tap="goCollegeRank">
+    <view class="hots-icon">🔥</view>
+    <view class="hots-title">站内校园热度榜</view>
+    <view class="hots-scroll-box">
+      <swiper class="hots-swiper" autoplay="true" interval="3000" duration="500" circular="true" vertical="{{true}}" display-multiple-items="1">
+        <block wx:for="{{top3Colleges}}" wx:key="index">
+          <swiper-item>
+            <view class="hots-college-item">
+              <text class="hots-rank">{{index+1}}</text>
+              <text class="hots-name">{{item.name}}</text>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+    <view class="hots-more">查看全部 ></view>
+  </view>
+
   <!-- <view class="mid-border">
     <image src="/images/zixun.png" class="zixun-img" mode=""/>
   </view> -->

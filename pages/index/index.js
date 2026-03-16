@@ -10,6 +10,7 @@ Page({
     days: Number,
     persistDays: 0,
     correctRate: 100,
+    top3Colleges: [],
   },
   onLoad() {
     var that = this;
@@ -77,6 +78,9 @@ Page({
     });
 
     this.getFirstCategory2()
+
+    // 获取前三名高校
+    this.getTop3Colleges()
 
     // 计算考研天数
     const targetDate = Date.UTC(2026, 11, 20);
@@ -253,6 +257,44 @@ Page({
       success: function(res) {
         that.setData({
           firstCategory2: res.data.data,
+        })
+      }
+    })
+  },
+
+  goCollegeRank: function() {
+    wx.navigateTo({
+      url: '/pages/collegeRank/collegeRank',
+    })
+  },
+
+  getTop3Colleges: function() {
+    let that = this;
+    wx.request({
+      url: 'https://www.skyseaee.cn/routine/auth_api/get_top3_liked_colleges',
+      method: 'GET',
+      success: function(res) {
+        if(res.statusCode === 200 && res.data && res.data.data) {
+          that.setData({
+            top3Colleges: res.data.data
+          })
+        } else {
+          that.setData({
+            top3Colleges: [
+              { id: 1, name: '北京大学', like_count: 818 },
+              { id: 2, name: '清华大学', like_count: 737 },
+              { id: 3, name: '复旦大学', like_count: 716 }
+            ]
+          })
+        }
+      },
+      fail: function() {
+        that.setData({
+          top3Colleges: [
+            { id: 1, name: '北京大学', like_count: 818 },
+            { id: 2, name: '清华大学', like_count: 737 },
+            { id: 3, name: '复旦大学', like_count: 716 }
+          ]
         })
       }
     })

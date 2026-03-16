@@ -1,6 +1,7 @@
 {
     "pages": [
         "pages/index/index",
+        "pages/collegeRank/collegeRank",
         "pages/my/my",
         "pages/sign/sign",
         "pages/feedback/feedback",

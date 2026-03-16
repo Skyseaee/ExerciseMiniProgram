@@ -1,0 +1,74 @@
+<view class="page">
+  <view wx:if="{{rankList.length > 0}}" class="content">
+    <view class="podium-section">
+      <view class="podium-item second-place" wx:if="{{rankList[1]}}">
+        <view class="rank-badge">2</view>
+        <view class="college-name">{{rankList[1].name}}</view>
+        <view class="college-votes">{{rankList[1].like_num}} 票</view>
+        <view class="vote-btn" data-id="{{rankList[1].id}}" bind:tap="voteForCollege">助力</view>
+      </view>
+      
+      <view class="podium-item first-place" wx:if="{{rankList[0]}}">
+        <view class="rank-badge">1</view>
+        <view class="college-name">{{rankList[0].name}}</view>
+        <view class="college-votes">{{rankList[0].like_num}} 票</view>
+        <view class="vote-btn primary" data-id="{{rankList[0].id}}" bind:tap="voteForCollege">助力打榜</view>
+      </view>
+      
+      <view class="podium-item third-place" wx:if="{{rankList[2]}}">
+        <view class="rank-badge">3</view>
+        <view class="college-name">{{rankList[2].name}}</view>
+        <view class="college-votes">{{rankList[2].like_num}} 票</view>
+        <view class="vote-btn" data-id="{{rankList[2].id}}" bind:tap="voteForCollege">助力</view>
+      </view>
+    </view>
+
+    <view class="search-section">
+      <scroll-view scroll-x class="province-scroll" enable-flex>
+        <view class="province-tag {{selectedProvince === '' ? 'active' : ''}}" bind:tap="clearProvinceSearch">全部</view>
+        <block wx:for="{{provinceList}}" wx:key="index">
+          <view class="province-tag {{selectedProvince === item ? 'active' : ''}}" bind:tap="selectProvince" data-province="{{item}}">{{item}}</view>
+        </block>
+      </scroll-view>
+    </view>
+
+    <view wx:if="{{provinceCollegeList.length > 0}}" class="province-result">
+      <view class="result-title">{{selectedProvince}}高校</view>
+      <view class="province-item" wx:for="{{provinceCollegeList}}" wx:key="id">
+        <view class="province-rank">{{index + 1}}</view>
+        <view class="province-info">
+          <view class="province-name-row">
+            <text class="province-name">{{item.name}}</text>
+            <text class="province-votes">{{item.like_num || 0}} 票</text>
+          </view>
+        </view>
+        <view class="province-vote-btn" data-id="{{item.id}}" bind:tap="voteForCollege">助力</view>
+      </view>
+      <view class="clear-provinve" bind:tap="clearProvinceSearch">清除筛选</view>
+    </view>
+
+    <view wx:if="{{selectedProvince === ''}}" class="list-section">
+      <view class="section-title">全部榜单</view>
+      <block wx:for="{{rankList}}" wx:for-item="item" wx:for-index="idx" wx:key="id">
+        <view wx:if="{{idx >= 3}}" class="list-item">
+          <view class="list-rank {{idx < 6 ? 'top-six' : ''}}">{{idx + 1}}</view>
+          <view class="list-info">
+            <view class="list-name-row">
+              <text class="list-name">{{item.name}}</text>
+              <text class="list-votes">{{item.like_num}} 票</text>
+            </view>
+          </view>
+          <view class="list-vote-btn" data-id="{{item.id}}" bind:tap="voteForCollege">助力</view>
+        </view>
+      </block>
+      <view class="load-more" bind:tap="loadMoreRank" wx:if="{{hasMore}}">
+        <text>加载更多</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{rankList.length === 0}}" class="empty-state">
+    <image class="empty-image" src="/images/no-record.png"></image>
+    <view class="empty-text">暂无数据</view>
+  </view>
+</view>

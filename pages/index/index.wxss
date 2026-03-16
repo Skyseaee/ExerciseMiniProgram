@@ -178,6 +178,83 @@
   margin: 8rpx auto;
 }
 
+.hots-college {
+  display: flex;
+  align-items: center;
+  margin: 16rpx 30rpx;
+  background-color: #fff;
+  padding: 16rpx 24rpx;
+  border-radius: 8rpx;
+}
+
+.hots-icon {
+  font-size: 28rpx;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+}
+
+.hots-title {
+  font-size: 26rpx;
+  font-weight: 400;
+  color: #202020;
+  flex-shrink: 0;
+  margin-right: 12rpx;
+}
+
+.hots-scroll-box {
+  flex: 1;
+  height: 40rpx;
+  overflow: hidden;
+  margin-right: 12rpx;
+  margin-left: 16rpx;
+}
+
+.hots-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.hots-college-item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+}
+
+.hots-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 20rpx;
+  font-weight: 600;
+  margin-right: 8rpx;
+  flex-shrink: 0;
+}
+
+.hots-name {
+  font-size: 24rpx;
+  color: #202020;
+  margin-right: 8rpx;
+  flex-shrink: 0;
+}
+
+.hots-votes {
+  font-size: 20rpx;
+  color: #ff6b6b;
+  flex-shrink: 0;
+}
+
+.hots-more {
+  font-size: 22rpx;
+  color: #808080;
+  flex-shrink: 0;
+}
+
 .zixun-img {
   height: 42rpx;
   width: 42rpx;

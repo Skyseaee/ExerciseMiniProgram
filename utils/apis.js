@@ -347,6 +347,10 @@ module.exports.api = {
         _req('auth_api/user_code_list', 'post', {
             uid
         }, callback);
+    },
+    //获取点赞最多的前三名高校
+    getTop3LikedColleges(callback){
+        _req('auth_api/get_top3_liked_colleges', 'post', {}, callback);
     }
 }
 
