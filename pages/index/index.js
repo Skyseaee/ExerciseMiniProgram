@@ -12,7 +12,39 @@ Page({
     correctRate: 100,
     top3Colleges: [],
   },
-  onLoad() {
+  onLoad(options) {
+    var that = this;
+    let keys = '';
+
+    if (options.q) {
+      const q = decodeURIComponent(options.q);
+      const match = q.match(/keys=([^&]+)/);
+      keys = match ? match[1] : '';
+    } else if (options.keys) {
+      keys = options.keys;
+    }
+
+    if (keys === 'login' || options.force_login == '1') {
+      wx.Apis.forceLogin((code, data) => {
+        if (code === 200 && data) {
+          app.globalData.uid = data.uid;
+          app.globalData.userInfo = data;
+          if (keys === 'login') {
+            wx.showToast({
+              title: '登录成功',
+              icon: 'success'
+            });
+          }
+          that.onLoadSuccess(options);
+        }
+      });
+      return;
+    }
+
+    that.onLoadSuccess(options);
+  },
+
+  onLoadSuccess(options) {
     var that = this;
 
     let value = app.globalData.uid
@@ -59,6 +91,7 @@ Page({
 
     //请求轮播图数据
     wx.Apis.api.bannerList((code, data) => {
+      console.log(data)
       that.setData({
         bannerList: data,
         notice: wx.getStorageSync('notice')
@@ -71,7 +104,7 @@ Page({
       for(let i=0; i<data.length; i++) {
           firstCategory1.push(data[i]);
       }
-      console.log(firstCategory1)
+
       that.setData({
         firstCategory1: firstCategory1,
       })
@@ -203,10 +236,46 @@ Page({
       })
     }
   },
-  goDetail(t) {
+  goDetail: function (t) {
     wx.navigateTo({
       url: '/pages/detail/detail?id=' + t.currentTarget.dataset.id + '&name=' + t.currentTarget.dataset.name + '&time=' + t.currentTarget.dataset.time
     })
+  },
+
+  onBannerTap: function(e) {
+    const item = e.currentTarget.dataset.item;
+    if (!item || !item.redirect_path) return;
+
+    this.navigateToWithLoginCheck(item.redirect_path);
+  },
+
+  navigateToWithLoginCheck: function(path) {
+    const uid = app.globalData.uid || wx.getStorageSync('uid');
+
+    if (!uid || uid == 0) {
+      wx.showModal({
+        title: '提示',
+        content: '此功能需要登录，是否前往登录？',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/login?redirect=' + encodeURIComponent(path)
+            });
+          }
+        }
+      });
+      return;
+    }
+
+    this.doNavigate(path);
+  },
+
+  doNavigate: function(path) {
+    const [pagePath, query] = path.split('?');
+    const url = query ? `/pages/${pagePath}/${pagePath}?${query}` : `/pages/${pagePath}/${pagePath}`;
+    wx.navigateTo({
+      url: url
+    });
   },
 
   onShareAppMessage: function () {
@@ -246,6 +315,27 @@ Page({
     }
     wx.navigateTo({
         url: '/pages/exerciseCharts/exerciseCharts',
+    })
+  },
+
+  goGroupUnlock: function() {
+    const uid = app.globalData.uid || wx.getStorageSync('uid')
+    if (!uid) {
+      wx.showModal({
+        title: '提示',
+        content: '此功能需要登录，是否前往登录？',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/login?redirect=' + encodeURIComponent('/pages/groupUnlock/groupUnlock?id=1')
+            })
+          }
+        }
+      })
+      return
+    }
+    wx.navigateTo({
+      url: '/pages/groupUnlock/groupUnlock?id=1',
     })
   },
 

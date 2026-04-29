@@ -105,7 +105,7 @@ module.exports.login = {
 module.exports.api = {
     //获取轮播图
     bannerList(callback) {
-        _req('auth_api/banner_list', 'post', {}, callback);
+        _req('auth_api/banner_point_list', 'post', {}, callback);
     },
     //获取配置
     getConfigValue(key, callback) {
@@ -369,35 +369,38 @@ module.exports.getHost = function () {
     return host;
 }
 
-module.exports.logins = function (code) {
+module.exports.logins = function (code, callback) {
   let that = this
   wx.login({
     success: function (res) {
       if (res.code) {
-        // 发起网络请求
         wx.request({
-          url: 'https://www.skyseaee.cn/routine/login/login', // 后端接口地址
+          url: 'https://www.skyseaee.cn/routine/login/login',
           method: 'POST',
           header: {
-            'Content-Type': 'application/json', // 确保和服务器一致
+            'Content-Type': 'application/json',
           },
           data: {
-            code: res.code // 将前端返回的code作为参数发送给后端
+            code: res.code
           },
           success: function (loginRes) {
             if (loginRes.statusCode === 200) {
               console.log(loginRes.data.data);
-              // 假设后端返回的数据中包含openid和uid
-              const { openid, uid } = loginRes.data.data;
-              wx.setStorageSync('openid', openid); // 存储openid
-              wx.setStorageSync('userInfo', loginRes.data.data); // 存储用户信息
-              // that.globalData.uid = uid; // 设置全局变量uid
+              const data = loginRes.data.data;
+              const { openid, uid, unionid } = data;
+              wx.setStorageSync('openid', openid);
+              wx.setStorageSync('userInfo', data);
+              if (unionid) {
+                wx.setStorageSync('unionid', unionid);
+              }
               wx.hideLoading();
+              if (callback) callback(loginRes.statusCode, data);
             } else {
               wx.showToast({
                 title: '登录失败',
                 icon: 'none'
               });
+              if (callback) callback(loginRes.statusCode, null);
             }
           },
           fail: function (error) {
@@ -406,10 +409,70 @@ module.exports.logins = function (code) {
               title: '请求失败',
               icon: 'none'
             });
+            if (callback) callback(null, null);
           }
         });
       } else {
         console.log('获取用户登录态失败！' + res.errMsg);
+        if (callback) callback(null, null);
+      }
+    }
+  });
+}
+
+module.exports.forceLogin = function (callback) {
+  wx.showLoading({
+    title: '重新登录中',
+    mask: true
+  });
+
+  wx.login({
+    success: function (res) {
+      if (res.code) {
+        wx.request({
+          url: 'https://www.skyseaee.cn/routine/login/login',
+          method: 'POST',
+          header: {
+            'Content-Type': 'application/json',
+          },
+          data: {
+            code: res.code
+          },
+          success: function (loginRes) {
+            wx.hideLoading();
+            if (loginRes.statusCode === 200) {
+              console.log(loginRes.data.data);
+              const data = loginRes.data.data;
+              const { openid, uid, unionid } = data;
+              wx.setStorageSync('openid', openid);
+              wx.setStorageSync('userInfo', data);
+              wx.setStorageSync('uid', uid);
+              if (unionid) {
+                wx.setStorageSync('unionid', unionid);
+              }
+              if (callback) callback(200, data);
+            } else {
+              wx.showToast({
+                title: '重新登录失败',
+                icon: 'none'
+              });
+              if (callback) callback(loginRes.statusCode, null);
+            }
+          },
+          fail: function (error) {
+            wx.hideLoading();
+            console.error('请求登录接口失败', error);
+            wx.showToast({
+              title: '请求失败',
+              icon: 'none'
+            });
+            if (callback) callback(null, null);
+          }
+        });
+      } else {
+        wx.hideLoading();
+        console.log('获取用户登录态失败！' + res.errMsg);
+        if (callback) callback(null, null);
       }
     }
   });

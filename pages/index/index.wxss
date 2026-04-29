@@ -47,8 +47,8 @@
 .persisticon {
     display: inline-block;
     margin: 12rpx;
-    width: 86rpx;
-    height: 86rpx;
+    width: 64rpx;
+    height: 64rpx;
 }
 
 .cards {

@@ -12,7 +12,8 @@ Page({
   onLoad: function (options) {
     var that = this;
     this.setData({
-      isWrite: wx.getStorageSync('isWrite')
+      isWrite: wx.getStorageSync('isWrite'),
+      redirect: options.redirect || ''
     })
     if(this.data.isWrite == 'true') {
       //请求通知模板id
@@ -164,8 +165,8 @@ Page({
                 showCancel: !1,
                 confirmText: "关闭",
                 confirmColor: "#46C6BA",
-                success: function (e) {
-                  wx.navigateBack();
+                success: (e) => {
+                  this.handleLoginSuccess();
                 }
               });
             }else{
@@ -189,6 +190,7 @@ Page({
   },
   submitUserInfo(userInfo) {
     console.log('submit')
+    var that = this;
     wx.Apis.login.save(userInfo, (code, data) => {
       if (code == 200) {
         console.log('submit success')
@@ -201,9 +203,7 @@ Page({
                   icon: 'none',
                   duration: 1500
               })
-              wx.navigateBack({
-                delta: 1
-              });
+              that.handleLoginSuccess();
           }, 500);
       } else {
           setTimeout(function () {
@@ -217,6 +217,20 @@ Page({
       }
     })
   },
+
+  handleLoginSuccess: function() {
+    const redirect = this.data.redirect;
+    if (redirect) {
+      const [pagePath, query] = redirect.split('?');
+      const url = query ? `/pages/${pagePath}/${pagePath}?${query}` : `/pages/${pagePath}/${pagePath}`;
+      wx.redirectTo({
+        url: url
+      });
+    } else {
+      wx.navigateBack();
+    }
+  },
+
   onShareAppMessage: function () {
     return {
       title: "Top帮研题集，考试助手 ！",

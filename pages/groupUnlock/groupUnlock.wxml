@@ -1,0 +1,171 @@
+<view class="page">
+  <!-- 顶部封面区域 -->
+  <view class="header">
+    <image class="header-image" src="{{productInfo.class_img}}" mode="aspectFill"/>
+    <view class="header-overlay">
+    </view>
+  </view>
+
+  <view class="container">
+    <!-- 课程信息卡片 -->
+    <view class="product-card">
+      <view class="product-info">
+        <view class="product-name">{{productInfo.class_name}}</view>
+        <view class="product-desc">{{productInfo.class_info}}</view>
+        <view class="subtitle">邀请好友拼团，即可享受折扣价 ¥{{productInfo.group_price}}</view>
+        <view class="price-row">
+          <text class="group-price">¥{{productInfo.group_price}}</text>
+          <text class="original-price">¥{{productInfo.original_price}}</text>
+          <text class="price-tag">2人团</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 拼单成员 -->
+    <view class="section" wx:if="{{hasGroup}}">
+      <view class="section-header">
+        <text class="section-title">拼单成员</text>
+        <text class="member-count-inline">{{joinedCount}}/2</text>
+        <text class="countdown-text" wx:if="{{countdown && groupStatus === 'pending'}}">⏰ {{countdown}}</text>
+        <text class="success-badge" wx:if="{{groupStatus === 'success'}}">拼团成功</text>
+      </view>
+      <view class="members-card">
+        <view class="member-list">
+          <view class="member-item {{item.isEmpty ? 'empty' : ''}}" wx:for="{{groupMembers}}" wx:key="index">
+            <image class="member-avatar" src="{{item.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill" wx:if="{{!item.isEmpty}}"/>
+            <button class="member-avatar placeholder share-btn" wx:if="{{item.isEmpty}}" open-type="share">
+              <text class="placeholder-text">+</text>
+            </button>
+            <text class="member-name">{{item.nickName || '待加入'}}</text>
+          </view>
+        </view>
+        <!-- 开团中状态：邀请按钮 -->
+        <view class="invite-btn-wrapper" wx:if="{{groupStatus === 'pending' && isGroupOwner}}">
+          <button class="invite-btn share-btn" open-type="share">
+            <text class="invite-icon">📤</text>
+            <text class="invite-text">邀请好友参团</text>
+          </button>
+          <view class="cancel-btn" bindtap="cancelGroup">取消开团</view>
+        </view>
+        <!-- 成团成功：查看发货 -->
+        <view class="success-action" wx:if="{{groupStatus === 'success' && isGroupOwner}}">
+          <view class="view-delivery-btn" bindtap="showActivationCode">
+            <text>查看发货</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 被邀请人视角：加入拼团 -->
+    <view class="section" wx:if="{{hasGroup && !isGroupOwner && groupStatus === 'pending'}}">
+      <view class="join-section">
+        <text class="join-tip">好友邀请你一起拼团</text>
+        <view class="join-btn" bindtap="joinGroupAndPay">
+          <text>加入拼团 ¥{{productInfo.group_price}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 拼单规则 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">拼单规则</text>
+      </view>
+      <view class="rules-card">
+        <view class="rule-item">
+          <view class="rule-icon">1</view>
+          <view class="rule-text">点击"开团购买"支付 ¥{{productInfo.group_price}} 即可开团</view>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon">2</view>
+          <view class="rule-text">分享邀请好友，好友支付参团</view>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon">3</view>
+          <view class="rule-text">2人成团成功，发放激活码</view>
+        </view>
+        <view class="rule-item">
+          <view class="rule-icon">4</view>
+          <view class="rule-text">拼团有效期 24 小时，过期自动解散</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 - 未开团 -->
+  <view class="bottom-bar" wx:if="{{!hasGroup}}">
+    <view class="price-info">
+      <text class="price-label">拼团价</text>
+      <view class="price-row-bottom">
+        <text class="group-price">¥{{productInfo.group_price}}</text>
+        <text class="original-price-small">¥{{productInfo.original_price}}</text>
+      </view>
+    </view>
+    <view class="btn-group">
+      <view class="btn-buy" bind:tap="createGroupAndPay">开团购买</view>
+      <view class="btn-direct" bind:tap="buyNow">直接购买</view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 - 开团中（团长视角） -->
+  <view class="bottom-bar" wx:if="{{hasGroup && groupStatus === 'pending' && isGroupOwner}}">
+    <view class="price-info">
+      <text class="price-label">开团中</text>
+      <text class="group-price">¥{{productInfo.group_price}}</text>
+    </view>
+    <view class="btn-group">
+      <view class="btn-buy disabled">开团中</view>
+      <view class="btn-direct" bind:tap="buyNow">直接购买</view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 - 被邀请人视角（有团可加入） -->
+  <view class="bottom-bar" wx:if="{{hasGroup && !isGroupOwner && groupStatus === 'pending'}}">
+    <view class="price-info">
+      <text class="price-label">拼团价</text>
+      <text class="group-price">¥{{productInfo.group_price}}</text>
+    </view>
+    <view class="btn-group">
+      <view class="btn-buy" bind:tap="joinGroupAndPay">加入拼团</view>
+      <view class="btn-direct" bind:tap="buyNow">直接购买</view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 - 成团成功 -->
+  <view class="bottom-bar" wx:if="{{groupStatus === 'success' && isGroupOwner}}">
+    <view class="price-info">
+      <text class="price-label">拼团成功</text>
+      <text class="group-price">¥{{productInfo.group_price}}</text>
+    </view>
+    <view class="btn-group">
+      <view class="btn-buy" bind:tap="showActivationCode">查看发货</view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 - 成团成功（参团人视角） -->
+  <view class="bottom-bar" wx:if="{{groupStatus === 'success' && !isGroupOwner}}">
+    <view class="price-info">
+      <text class="price-label">拼团成功</text>
+      <text class="group-price">¥{{productInfo.group_price}}</text>
+    </view>
+    <view class="btn-group">
+      <view class="btn-buy" bind:tap="showActivationCode">查看发货</view>
+    </view>
+  </view>
+</view>
+
+<!-- 激活码弹窗 -->
+<view class="modal-mask" wx:if="{{showCodeModal}}" bindtap="closeCodeModal"></view>
+<view class="code-modal" wx:if="{{showCodeModal}}">
+  <view class="modal-header">
+    <text class="modal-title">激活码</text>
+    <text class="modal-close" bindtap="closeCodeModal">×</text>
+  </view>
+  <view class="modal-body">
+    <view class="code-display">{{activationCode}}</view>
+    <view class="code-tip">请复制激活码，添加客服微信进行核销</view>
+    <view class="copy-btn" bindtap="copyCode">复制激活码</view>
+    <image class="qr-code" src="/images/customer_service_qr.png" mode="aspectFit"/>
+    <view class="qr-tip">客服微信二维码</view>
+  </view>
+</view>

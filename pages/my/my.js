@@ -12,6 +12,9 @@ Page({
         canIUseGetUserProfile: false,
         show: false,
         encode: '',
+        correctRate: 0,
+        totalQuestions: 0,
+        persistDays: 0,
     },
 
     /**
@@ -136,6 +139,57 @@ Page({
     onShow: function () {
         this.setData({
             userInfo: wx.getStorageSync('userInfo'),
+        })
+        this.getUserStats()
+    },
+
+    getUserStats() {
+        const uid = app.globalData.uid
+        if (!uid) return
+
+        // 获取正确率
+        wx.request({
+            url: 'https://www.skyseaee.cn/routine/auth_api/get_user_correct_rate',
+            method: 'POST',
+            header: {
+                'content-type': 'application/x-www-form-urlencoded'
+            },
+            data: { uid: uid },
+            success: (res) => {
+                if (res.data && res.data.code === 200) {
+                    this.setData({
+                        correctRate: res.data.data.correct_rate || 0,
+                        totalQuestions: res.data.data.total_questions || 0
+                    })
+                }
+            }
+        })
+
+        // 获取连续打卡天数
+        wx.request({
+            url: 'https://www.skyseaee.cn/routine/auth_api/get_user_persist_days',
+            method: 'POST',
+            header: {
+                'content-type': 'application/x-www-form-urlencoded'
+            },
+            data: { uid: uid },
+            success: (res) => {
+                if (res.data && res.data.code === 200) {
+                    this.setData({
+                        persistDays: res.data.data.persist_days || 0
+                    })
+                }
+            }
+        })
+    },
+
+    goExerciseCharts() {
+        if (this.data.userInfo.nickName == undefined || this.data.userInfo.nickName == '') {
+            this.login()
+            return false;
+        }
+        wx.navigateTo({
+            url: '/pages/exerciseCharts/exerciseCharts',
         })
     },
 

@@ -1,0 +1,94 @@
+<view class="question-viewer">
+  <view class="question">
+    <view class="questionInfo">
+      <view class="process">
+        <progress percent="{{progress}}" strokeWidth="8" active activeColor="#3a448a" borderRadius="16" active-mode="forwards"></progress>
+        <text>{{currentIndex + 1}}/{{totalCount}}</text>
+      </view>
+      <view class="mode-class" wx:if="{{showModeSwitch}}">
+        <text>背题</text>
+        <switch class="wx-switch-input" checked="{{mode}}" bindchange="switchMode" color="#1569E4"/>
+        <text>刷题</text>
+      </view>
+    </view>
+
+    <view class="tags" wx:if="{{tags.length > 0}}">
+      <block wx:for="{{tags}}" wx:key="index">
+        <view wx:if="{{item.length > 0}}" class="box-bound">
+          {{item}}推荐
+        </view>
+      </block>
+    </view>
+
+    <view class="questionTexts" wx:if="{{optionType != 1}}">
+      <wemark md="{{currentQuestion.question}}" link highlight type="wemark"></wemark>
+    </view>
+    <view wx:if="{{currentQuestion.question_img && currentQuestion.question_img.length > 0}}" style="width: 100%; height: {{questionImageHeight}}rpx; overflow: hidden;" bindtap="onQuestionImageTap">
+      <image src="{{currentQuestion.question_img}}" bindload="onQuestionImageLoad" mode="aspectFit" style="width: 100%; height: 100%;"/>
+    </view>
+  </view>
+
+  <view class="{{optionType == 0 ? 'options': 'optionType'}}">
+    <block wx:for="{{displayOptions}}" wx:key="index">
+      <block wx:if="{{optionType == 0}}">
+        <view wx:if="{{showAnswer || mode}}" class="option {{item.selected}}" data-index="{{index}}" bindtap="selectOption">
+          <view>{{item.text}}</view>
+        </view>
+        <view class="option" data-index="{{index}}" bindtap="selectOption" wx:else>
+          <view>{{item.text}}</view>
+        </view>
+      </block>
+      <block wx:else>
+        <view wx:if="{{showAnswer || mode}}" class="optionTyped {{item.selected}}" data-index="{{index}}" bindtap="selectOption">
+          <text class="optionText">{{item.text}}</text>
+        </view>
+        <view class="optionTyped" data-index="{{index}}" bindtap="selectOption" wx:else>
+          <text class="optionText">{{item.text}}</text>
+        </view>
+      </block>
+    </block>
+  </view>
+
+  <view class="icons">
+    <view class="like" wx:if="{{showLike}}">
+      <image wx:if="{{likeState === 0 || likeState === 2}}" class="sm-icon" src="/images/dianzan.png" mode="" bindtap="onLike"/>
+      <image wx:if="{{likeState === 1}}" class="sm-icon" src="/images/dianzaned.png" mode="" bindtap="onLike"/>
+      {{likeCount}}
+      <image wx:if="{{likeState === 0 || likeState === 1}}" class="sm-icon" src="/images/diancai.png" mode="" bindtap="onDislike"/>
+      <image wx:if="{{likeState === 2}}" class="sm-icon" src="/images/diancaied.png" mode="" bindtap="onDislike"/>
+      {{dislikeCount}}
+    </view>
+    <view class="right-icon">
+      <image class="favorQuestion" bindtap="onFavor" src="{{isFavor ? '/images/favor_exams.png' : '/images/favor_exam.png'}}" mode=""/>
+      <image wx:if="{{showList}}" src="/images/icon_listed@3x.png" mode="" bindtap="onShowList" class="listQuestion"/>
+      <image class="foreQuestion" bindtap="onPrev" src="/images/last.png" mode=""/>
+      <image class="nextQuestion" bindtap="onNext" src="/images/next.png" mode=""/>
+    </view>
+  </view>
+
+  <view class="comments" wx:if="{{showAnswer || mode}}">
+    <view class="borders">
+      <view class="feeds">
+        <view>
+          <view class="correct answers">正确答案：{{answer}}</view><view class="answers {{answer === userAnswer ? 'correct' : 'wrong'}}">你的答案：{{userAnswer}}</view>
+          <view wx:if="{{showCorrectRate}}">正确率：{{currentRate}}%</view>
+        </view>
+      </view>
+    </view>
+    <view class="separator"></view>
+    <view class="borders">
+      <wemark wx:if="{{optionType == 0 && currentQuestion.comments}}" md="{{currentQuestion.comments}}" link highlight type="wemark"></wemark>
+      <view wx:if="{{currentQuestion.comment_img && currentQuestion.comment_img.length > 0}}" class="commentsimg" bindtap="onCommentImageTap">
+        <image bindload="onCommentImageLoad" src="{{currentQuestion.comment_img}}" mode="aspectFit" style="width: 100%; height: {{commentImageHeight}}rpx;"/>
+      </view>
+    </view>
+  </view>
+
+  <view class="knowledge-points" wx:if="{{showAnswer || mode}}">
+    <view class="title" wx:if="{{showLike}}">相关信息</view>
+    <view wx:if="{{pointName && pointName.length > 0}}" class="points">
+      <text class="point-name">{{pointName}}</text>
+    </view>
+    <view class="borders"></view>
+  </view>
+</view>

@@ -12,6 +12,24 @@
           </view>
         </button>
     </view>
+    <!-- 数据统计卡片 -->
+    <view class="stats-card" bind:tap="goExerciseCharts">
+      <view class="stats-item">
+        <view class="stats-value">{{correctRate}}%</view>
+        <view class="stats-label">刷题正确率</view>
+      </view>
+      <view class="stats-divider"></view>
+      <view class="stats-item">
+        <view class="stats-value">{{totalQuestions}}</view>
+        <view class="stats-label">总刷题数</view>
+      </view>
+      <view class="stats-divider"></view>
+      <view class="stats-item">
+        <view class="stats-value">{{persistDays}}</view>
+        <view class="stats-label">连续打卡</view>
+      </view>
+    </view>
+
     <view class="cell-g">
         <view class="item" bind:tap="goPoint">
           <view class="inside">

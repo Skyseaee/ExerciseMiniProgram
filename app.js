@@ -50,7 +50,13 @@ App({
                         wx.Apis.setUid(data.openid); //openid
                         wx.Apis.set('openid', data.openid);
                         wx.setStorageSync('userInfo', data);
+                        wx.setStorageSync('openid', data.openid);
+                        if (data.unionid) {
+                            wx.setStorageSync('unionid', data.unionid);
+                        }
+                        wx.setStorageSync('uid', data.uid);
                         that.globalData.uid = data.uid
+                        that.globalData.userInfo = data
                         wx.hideLoading({
                           success: (res) => {},
                         })
@@ -68,8 +74,13 @@ App({
         console.log(data);
         Apis.setUid(data.openid); //openid
         wx.setStorageSync('userInfo', data)
+        wx.setStorageSync('openid', data.openid)
+        if (data.unionid) {
+            wx.setStorageSync('unionid', data.unionid);
+        }
         wx.setStorageSync('uid', data.uid)
         that.globalData.uid = data.uid
+        that.globalData.userInfo = data
       });
     }
   },
